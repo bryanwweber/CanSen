@@ -14,7 +14,10 @@ def constant_volume_reactor(mechFilename,saveFilename,keywords):
         netw.rtol = keywords['reltol']
     tend = keywords['endTime']
     time = 0
-    tempLimit = keywords['tempLimit'] + keywords['temperature']
+    if 'tempLimit' in keywords:
+        tempLimit = keywords['tempLimit']
+    else:
+        tempLimit = keywords['tempThresh'] + keywords['temperature']
     while time < tend:
         time = netw.step(tend)
         #print(time,reac.T,reac.thermo.P)

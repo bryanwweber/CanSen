@@ -3,7 +3,10 @@ def read_input_file(inputFilename):
     reactants = []
     with open(inputFilename) as inputFile:
         for line in inputFile:
-            if line.upper().startswith('CONV'):
+            print(line)
+            if line.startswith('!') or line.startswith('.') or line.startswith('/'):
+                pass
+            elif line.upper().startswith('CONV'):
                 keywords['problemType'] = 1
             elif line.upper().startswith('CONP'):
                 keywords['problemType'] = 2
@@ -19,19 +22,22 @@ def read_input_file(inputFilename):
                 keywords['endTime'] = float(line.split()[1])
             elif line.upper().startswith('TLIM'):
                 keywords['tempLimit'] = float(line.split()[1])
+            elif line.upper().startswith('DTIGN'):
+                keywords['tempThresh'] = float(line.split()[1])
             elif line.upper().startswith('ATOL'):
                 keywords['abstol'] = float(line.split()[1])
             elif line.upper().startswith('RTOL'):
                 keywords['reltol'] = float(line.split()[1])
+            elif line.upper().startswith('DELT'):
+                keywords['prntTimeInt'] = float(line.split()[1])
+            elif line.upper().startswith('DTSV'):
+                keywords['saveTimeInt'] = float(line.split()[1])
             elif line.upper() == 'END':
                 break
             else:
                 print('Keyword not found',line)
                 sys.exit(1)
-    keywords['reactants'] = reactants
-    if 'tempLimit' not in keywords:
-        keywords['tempLimit'] = 400
-        
+
     if 'endTime' not in keywords:
         print('Error: End time must be specified with keyword TEND')
         
@@ -39,11 +45,17 @@ def read_input_file(inputFilename):
         print('Error: Temperature must be specified with keyword TEMP')
         
     if 'pressure' not in keywords:
-        print('Error: Pressure must be specified with keyword Pres')
+        print('Error: Pressure must be specified with keyword PRES')
         
     if 'problemType' not in keywords:
         print('Error: Problem type must be specified with the problem type keyword')
         
+    keywords['reactants'] = reactants
+    if 'tempThresh' not in keywords:
+        keywords['tempThresh'] = 400
+    
+    if 'prntTimeInt' not in keywords:
+        keywords['prntTimeInt'] = keywords['endTime']/100
     return keywords,
 
 def cli_parser(argv):

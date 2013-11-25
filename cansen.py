@@ -1,4 +1,6 @@
 #! /usr/bin/python3
+import parsers
+
 class Tee(object):
      def __init__(self, name, mode):
          self.file = open(name, mode)
@@ -24,7 +26,7 @@ def main(argv):
     import os
     version = '0.0.1'
     (inputFilename,outputFilename,mechFilename,
-     saveFilename,thermoFilename,convert,) = cli_parser(argv)
+     saveFilename,thermoFilename,convert,) = parsers.cli_parser(argv)
     
     out = Tee(outputFilename, 'w')
     print("This is CanSen, the SENKIN equivalent for Cantera, written in \
@@ -45,17 +47,17 @@ Python.\nVersion: ",version)
     if convert:
         sys.exit(0)
         
-    ret = read_input_file(inputFilename)
-    problemType = ret[0]['problemType']
+    ret, = parsers.read_input_file(inputFilename)
+    problemType = ret['problemType']
         
     if problemType == 1:
         from run_cases import constant_volume_reactor
         print("Problem Type 1")
-        constant_volume_reactor(mechFilename,saveFilename,ret[0])
+        constant_volume_reactor(mechFilename,saveFilename,ret)
     elif problemType == 2:
         from run_cases import constant_pressure_reactor
         print("Problem Type 2")
-        constant_pressure_reactor(mechFilename,saveFilename,ret[0])
+        constant_pressure_reactor(mechFilename,saveFilename,ret)
     else:
         print('Error: Unknown Problem Type')
     
