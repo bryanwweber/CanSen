@@ -1,6 +1,9 @@
 def read_input_file(inputFilename):
     keywords = {}
     reactants = []
+    oxidizer = []
+    fuel = []
+    completeProducts = []
     with open(inputFilename) as inputFile:
         for line in inputFile:
             print(line)
@@ -32,6 +35,20 @@ def read_input_file(inputFilename):
                 keywords['prntTimeInt'] = float(line.split()[1])
             elif line.upper().startswith('DTSV'):
                 keywords['saveTimeInt'] = float(line.split()[1])
+            elif line.upper().startswith('EQUI'):
+                keywords['eqRatio'] = float(line.split()[1])
+            elif line.upper().startswith('OXID'):
+                species = line.split()[1]
+                molefrac = line.split()[2]
+                oxidizer.append(':'.join([species,molefrac]))
+            elif line.upper().startswith('FUEL'):
+                species = line.split()[1]
+                molefrac = line.split()[2]
+                fuel.append(':'.join([species,molefrac]))
+            elif line.upper().startswith('CPRODS'):
+                species = line.split()[1]
+                molefrac = line.split()[2]
+                completeProducts.append(':'.join([species,molefrac]))
             elif line.upper() == 'END':
                 break
             else:
@@ -40,17 +57,26 @@ def read_input_file(inputFilename):
 
     if 'endTime' not in keywords:
         print('Error: End time must be specified with keyword TEND')
+        sys.exit(1)
         
     if 'temperature' not in keywords:
         print('Error: Temperature must be specified with keyword TEMP')
+        sys.exit(1)
         
     if 'pressure' not in keywords:
         print('Error: Pressure must be specified with keyword PRES')
+        sys.exit(1)
         
     if 'problemType' not in keywords:
         print('Error: Problem type must be specified with the problem type keyword')
-        
+        sys.exit(1)
+    
+    if reactants and (oxidizer or fuel or completeProducts):
+        print('Error: REAC and EQUI cannot both be specified.')
+        sys.exit(1)
+    elif 'eqRatio' in keywords and not (oxidizer or fuel or completeProducts):
     keywords['reactants'] = reactants
+    
     if 'tempThresh' not in keywords:
         keywords['tempThresh'] = 400
     
