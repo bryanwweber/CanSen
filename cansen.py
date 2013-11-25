@@ -41,12 +41,31 @@ def read_input_file(inputFilename):
                 keywords['endTime'] = float(line.split()[1])
             elif line.upper().startswith('TLIM'):
                 keywords['tempLimit'] = float(line.split()[1])
+            elif line.upper().startswith('ATOL'):
+                keywords['abstol'] = float(line.split()[1])
+            elif line.upper().startswith('RTOL'):
+                keywords['reltol'] = float(line.split()[1])
             elif line.upper() == 'END':
                 break
             else:
                 print('Keyword not found',line)
                 sys.exit(1)
-            keywords['reactants'] = reactants
+    keywords['reactants'] = reactants
+    if 'tempLimit' not in keywords:
+        keywords['tempLimit'] = 400
+        
+    if 'endTime' not in keywords:
+        print('Error: End time must be specified with keyword TEND')
+        
+    if 'temperature' not in keywords:
+        print('Error: Temperature must be specified with keyword TEMP')
+        
+    if 'pressure' not in keywords:
+        print('Error: Pressure must be specified with keyword Pres')
+        
+    if 'problemType' not in keywords:
+        print('Error: Problem type must be specified with the problem type keyword')
+        
     return keywords,
 
 def cli_parser(argv):
@@ -136,8 +155,9 @@ Python.\nVersion: ",version)
         print("Problem Type 1")
         constant_volume_reactor(mechFilename,saveFilename,ret[0])
     elif problemType == 2:
+        from run_cases import constant_pressure_reactor
         print("Problem Type 2")
-        #constant_pressure_reactor(mechFilename,ret[1:])
+        constant_pressure_reactor(mechFilename,saveFilename,ret[0])
     else:
         print('Error: Unknown Problem Type')
     
