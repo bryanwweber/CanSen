@@ -1,6 +1,27 @@
 #! /usr/bin/python3
+class Tee(object):
+     def __init__(self, name, mode):
+         self.file = open(name, mode)
+         self.stdout = sys.stdout
+         sys.stdout = self
+     def close(self):
+         if self.stdout is not None:
+             sys.stdout = self.stdout
+             self.stdout = None
+         if self.file is not None:
+             self.file.close()
+             self.file = None
+     def write(self, data):
+         self.file.write(data)
+         self.stdout.write(data)
+     def flush(self):
+         self.file.flush()
+         self.stdout.flush()
+     def __del__(self):
+         self.close()
+         
 def read_input_file(inputFilename):
-    reactants = {}
+    reactants = []
     with open(inputFilename) as inputFile:
         for line in inputFile:
             if line.upper().startswith('CONV'):
@@ -8,17 +29,17 @@ def read_input_file(inputFilename):
             elif line.upper().startswith('CONP'):
                 problemType = 2
             elif line.upper().startswith('TEMP'):
-                temperature = line.split()[1]
+                temperature = float(line.split()[1])
             elif line.upper().startswith('REAC'):
                 species = line.split()[1]
                 molefrac = line.split()[2]
-                reactants[species] = molefrac
+                reactants.append(':'.join([species,molefrac]))
             elif line.upper().startswith('PRES'):
-                pressure = line.split()[1]
+                pressure = float(line.split()[1])
             elif line.upper().startswith('TIME'):
-                endTime = line.split()[1]
+                endTime = float(line.split()[1])
             elif line.upper().startswith('TLIM'):
-                tempLimit = line.split()[1]
+                tempLimit = float(line.split()[1])
             elif line.upper() == 'END':
                 break
             else:
@@ -63,7 +84,7 @@ def cli_parser(argv):
     if '-c' in options:
         mechFilename = options['-c']
     else:
-        mechFilename = 'chem.cti'
+        mechFilename = 'chem.xml'
     
     if '-x' in options:
         saveFilename = options['-x']
@@ -82,10 +103,14 @@ def cli_parser(argv):
     
 def main(argv):
     import os
-    
+    version = '0.0.1'
     (inputFilename,outputFilename,mechFilename,
      saveFilename,thermoFilename,convert,) = cli_parser(argv)
-     
+    
+    out = Tee(outputFilename, 'w')
+    print("This is CanSen, the SENKIN equivalent for Cantera, written in \
+Python.\nVersion: ",version)
+    
     if mechFilename.endswith('.inp'):
         from cantera import ck2cti
         arg = list('--input='+mechFilename)
@@ -103,30 +128,21 @@ def main(argv):
         
     ret = read_input_file(inputFilename)
     problemType = ret[0]
+    print(ret[3])
         
     if problemType == 1:
-        constant_volume_reactor(ret[1:])
+        from run_cases import constant_volume_reactor
+        print("Problem Type 1")
+        constant_volume_reactor(mechFilename,saveFilename,ret[1:])
     elif problemType == 2:
-        constant_pressure_reactor(ret[1:])
+        print("Problem Type 2")
+        #constant_pressure_reactor(mechFilename,ret[1:])
     else:
         print('Error: Unknown Problem Type')
     
+    out.close()
 if __name__ == "__main__":
     import sys
     main(sys.argv[1:])
 
-
-
-#import cantera as ct
-#gas = ct.Solution('mech.cti')
-#gas.TPX = 1000,101325,'H2:2,O2:1,N2:3.76'
-#reac = ct.Reactor(gas)
-#netw = ct.ReactorNet([reac])
-#tend = 10
-#time = 0
-#while time < tend:
-#    time = netw.step(tend)
-#    print(time,reac.T,reac.thermo.P)
-#    if reac.T > 1400:
-#        break
 
