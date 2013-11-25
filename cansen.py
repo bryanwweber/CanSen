@@ -21,31 +21,33 @@ class Tee(object):
          self.close()
          
 def read_input_file(inputFilename):
+    keywords = {}
     reactants = []
     with open(inputFilename) as inputFile:
         for line in inputFile:
             if line.upper().startswith('CONV'):
-                problemType = 1
+                keywords['problemType'] = 1
             elif line.upper().startswith('CONP'):
-                problemType = 2
+                keywords['problemType'] = 2
             elif line.upper().startswith('TEMP'):
-                temperature = float(line.split()[1])
+                keywords['temperature'] = float(line.split()[1])
             elif line.upper().startswith('REAC'):
                 species = line.split()[1]
                 molefrac = line.split()[2]
                 reactants.append(':'.join([species,molefrac]))
             elif line.upper().startswith('PRES'):
-                pressure = float(line.split()[1])
+                keywords['pressure'] = float(line.split()[1])
             elif line.upper().startswith('TIME'):
-                endTime = float(line.split()[1])
+                keywords['endTime'] = float(line.split()[1])
             elif line.upper().startswith('TLIM'):
-                tempLimit = float(line.split()[1])
+                keywords['tempLimit'] = float(line.split()[1])
             elif line.upper() == 'END':
                 break
             else:
                 print('Keyword not found',line)
                 sys.exit(1)
-    return problemType,temperature,pressure,reactants,endTime,tempLimit,
+            keywords['reactants'] = reactants
+    return keywords,
 
 def cli_parser(argv):
     import getopt
@@ -127,13 +129,12 @@ Python.\nVersion: ",version)
         sys.exit(0)
         
     ret = read_input_file(inputFilename)
-    problemType = ret[0]
-    print(ret[3])
+    problemType = ret[0]['problemType']
         
     if problemType == 1:
         from run_cases import constant_volume_reactor
         print("Problem Type 1")
-        constant_volume_reactor(mechFilename,saveFilename,ret[1:])
+        constant_volume_reactor(mechFilename,saveFilename,ret[0])
     elif problemType == 2:
         print("Problem Type 2")
         #constant_pressure_reactor(mechFilename,ret[1:])
