@@ -21,6 +21,7 @@ class Tee(object):
          self.stdout.flush()
      def __del__(self):
          self.close()
+         
 
 def main(argv):
     import os
@@ -49,7 +50,7 @@ Python.\nVersion: ",version)
         
     ret, = parsers.read_input_file(inputFilename)
     problemType = ret['problemType']
-        
+    
     if problemType == 1:
         from run_cases import constant_volume_reactor
         print("Problem Type 1")

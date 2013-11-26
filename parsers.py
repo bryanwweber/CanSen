@@ -1,9 +1,12 @@
+import sys
+
 def read_input_file(inputFilename):
     keywords = {}
     reactants = []
-    oxidizer = []
-    fuel = []
+    oxidizer = {}
+    fuel = {}
     completeProducts = []
+    additionalSpecies = {}
     with open(inputFilename) as inputFile:
         for line in inputFile:
             print(line)
@@ -39,16 +42,19 @@ def read_input_file(inputFilename):
                 keywords['eqRatio'] = float(line.split()[1])
             elif line.upper().startswith('OXID'):
                 species = line.split()[1]
-                molefrac = line.split()[2]
-                oxidizer.append(':'.join([species,molefrac]))
+                molefrac = float(line.split()[2])
+                oxidizer[species] = molefrac
             elif line.upper().startswith('FUEL'):
                 species = line.split()[1]
-                molefrac = line.split()[2]
-                fuel.append(':'.join([species,molefrac]))
-            elif line.upper().startswith('CPRODS'):
+                molefrac = float(line.split()[2])
+                fuel[species] = molefrac
+            elif line.upper().startswith('CPROD'):
                 species = line.split()[1]
-                molefrac = line.split()[2]
-                completeProducts.append(':'.join([species,molefrac]))
+                completeProducts.append(species)
+            elif line.upper().startswith('ADD'):
+                species = line.split()[1]
+                molefrac = float(line.split()[2])
+                additionalSpecies[species] = molefrac
             elif line.upper() == 'END':
                 break
             else:
@@ -71,11 +77,22 @@ def read_input_file(inputFilename):
         print('Error: Problem type must be specified with the problem type keyword')
         sys.exit(1)
     
-    if reactants and (oxidizer or fuel or completeProducts):
+    if reactants and (oxidizer or fuel or completeProducts or additionalSpecies or ('eqRatio' in keywords)):
         print('Error: REAC and EQUI cannot both be specified.')
         sys.exit(1)
-    elif 'eqRatio' in keywords and not (oxidizer or fuel or completeProducts):
-    keywords['reactants'] = reactants
+    elif 'eqRatio' in keywords and not (oxidizer and fuel and completeProducts):
+        print('Error: If EQUI is specified, all of FUEL, OXID and CPROD must be as well')
+        sys.exit(1)
+    elif reactants:
+        keywords['reactants'] = reactants
+    elif 'eqRatio' in keywords:
+        keywords['oxidizer'] = oxidizer
+        keywords['fuel'] = fuel
+        keywords['completeProducts'] = completeProducts
+        keywords['additionalSpecies'] = additionalSpecies
+    else:
+        print('Error: You must specify the reactants with either REAC or EQUI')
+        sys.exit(1)
     
     if 'tempThresh' not in keywords:
         keywords['tempThresh'] = 400
