@@ -50,7 +50,7 @@ Python.\nVersion: ",version)
         sys.exit(0)
         
     ret, = parsers.read_input_file(inputFilename)
-    run_case(mechFilename,saveFilename,ret)    
+    run_case(mechFilename,saveFilename,ret)
     out.close()
     
 if __name__ == "__main__":

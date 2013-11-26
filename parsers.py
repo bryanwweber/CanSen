@@ -55,6 +55,8 @@ def read_input_file(inputFilename):
                 species = line.split()[1]
                 molefrac = float(line.split()[2])
                 additionalSpecies[species] = molefrac
+            elif line.upper().startswith('SENS'):
+                keywords['sensitivity'] = True
             elif line.upper() == 'END':
                 break
             else:
