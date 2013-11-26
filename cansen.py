@@ -25,6 +25,7 @@ class Tee(object):
 
 def main(argv):
     import os
+    from run_cases import run_case
     version = '0.0.1'
     (inputFilename,outputFilename,mechFilename,
      saveFilename,thermoFilename,convert,) = parsers.cli_parser(argv)
@@ -49,20 +50,9 @@ Python.\nVersion: ",version)
         sys.exit(0)
         
     ret, = parsers.read_input_file(inputFilename)
-    problemType = ret['problemType']
-    
-    if problemType == 1:
-        from run_cases import constant_volume_reactor
-        print("Problem Type 1")
-        constant_volume_reactor(mechFilename,saveFilename,ret)
-    elif problemType == 2:
-        from run_cases import constant_pressure_reactor
-        print("Problem Type 2")
-        constant_pressure_reactor(mechFilename,saveFilename,ret)
-    else:
-        print('Error: Unknown Problem Type')
-    
+    run_case(mechFilename,saveFilename,ret)    
     out.close()
+    
 if __name__ == "__main__":
     import sys
     main(sys.argv[1:])
