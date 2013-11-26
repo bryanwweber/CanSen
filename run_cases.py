@@ -59,12 +59,10 @@ def equivalence_ratio(gas,eqRatio,fuel,oxidizer,completeProducts,additionalSpeci
             num_O_cprod += num_O * H_multiplier
     
     O_mult = (num_O_cprod - num_O_fuel)/num_O_oxid
-    print(O_mult)
     
     totalOxidMoles = sum([O_mult * amt for amt in oxidizer.values()])
     totalFuelMoles = sum([eqRatio * amt for amt in fuel.values()])
     totalReactantMoles = totalOxidMoles + totalFuelMoles
-    print(totalReactantMoles)
     
     if additionalSpecies:
         totalAdditionalSpecies = sum(additionalSpecies.values())
@@ -76,21 +74,20 @@ def equivalence_ratio(gas,eqRatio,fuel,oxidizer,completeProducts,additionalSpeci
             reactants = ','.join([reactants,qwer])
     else:
         remain = 1
-    moles = []
     for species,ox_amt in oxidizer.items():
         molefrac = ox_amt * O_mult/totalReactantMoles * remain
-        moles.append(molefrac)
         qwer = ':'.join([species,str(molefrac)])
         reactants = ','.join([reactants,qwer])
     
     for species, fuel_amt in fuel.items():
         molefrac = fuel_amt * eqRatio /totalReactantMoles * remain
-        moles.append(molefrac)
         qwer = ':'.join([species,str(molefrac)])
         reactants = ','.join([reactants,qwer])
         
-    print(reactants,sum(moles))
-    sys.exit(0)
+    #Take off the first character, which is a comma
+    reactants = reactants[1:]
+        
+    return reactants,
 
 
 def constant_volume_reactor(mechFilename,saveFilename,keywords):
@@ -98,7 +95,7 @@ def constant_volume_reactor(mechFilename,saveFilename,keywords):
     initialTemp = keywords['temperature']
     initialPres = keywords['pressure']*ct.one_atm
     if 'eqRatio' in keywords:
-        reactants = equivalence_ratio(gas,keywords['eqRatio'],keywords['fuel'],
+        reactants, = equivalence_ratio(gas,keywords['eqRatio'],keywords['fuel'],
                                       keywords['oxidizer'],
                                       keywords['completeProducts'],
                                       keywords['additionalSpecies'],

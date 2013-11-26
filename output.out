@@ -4,30 +4,63 @@ CONV
 
 TEMP 1000
 
-TLIM 400
+DTIGN 400
 
 TIME 10
 
 PRES 1
 
-EQUI 1.5
+!EQUI 1.0
 
-FUEL H2 1
+!FUEL H2 1
 
-OXID O2 1
+!OXID O2 1
 
-OXID N2 3.76
+!OXID N2 3.76
 
-CPROD H2O
+!CPROD H2O
 
-CPROD N2
+!CPROD N2
 
-ATOL 1E-18
+REAC H2 2
 
-RTOL 1E-8
+REAC O2 1
+
+REAC N2 3.76
 
 END
 Problem Type 1
-0.5
-3.88
-,N2:0.4845360824742268,O2:0.1288659793814433,H2:0.3865979381443299 1.0
+ 
+  gas:
+ 
+       temperature            1000  K
+          pressure          101325  Pa
+           density        0.254839  kg/m^3
+  mean mol. weight         20.9114  amu
+ 
+                          1 kg            1 kmol
+                       -----------      ------------
+          enthalpy    1.02419e+006       2.142e+007     J
+   internal energy          626588        1.31e+007     J
+           entropy         10524.9       2.201e+005     J/K
+    Gibbs function    -9.50073e+006      -1.987e+008     J
+ heat capacity c_p         1545.28       3.231e+004     J/K
+ heat capacity c_v         1147.67         2.4e+004     J/K
+ 
+                           X                 Y          Chem. Pot. / RT    
+                     -------------     ------------     ------------
+                 H              0                0     
+                H2       0.295858         0.028521         -18.7103
+                 O              0                0     
+                OH              0                0     
+               H2O              0                0     
+                O2       0.147929         0.226362         -28.4657
+               HO2              0                0     
+              H2O2              0                0     
+                N2       0.556213         0.745117         -25.4371
+                AR              0                0     
+                HE              0                0     
+                CO              0                0     
+               CO2              0                0     
+
+0.0002442175841167275 1402.058562236727 139498.77380234108
