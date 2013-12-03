@@ -101,9 +101,7 @@ def read_input_file(inputFilename):
     
     if 'tempThresh' not in keywords:
         keywords['tempThresh'] = 400
-    
-    if 'prntTimeInt' not in keywords:
-        keywords['prntTimeInt'] = keywords['endTime']/100
+            
     return keywords,
 
 def cli_parser(argv):
