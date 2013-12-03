@@ -60,6 +60,7 @@ def read_input_file(inputFilename):
             elif line.upper().startswith('SENS'):
                 keywords['sensitivity'] = True
             elif line.upper() == 'END':
+                print('\n')
                 break
             else:
                 print('Keyword not found',line)
