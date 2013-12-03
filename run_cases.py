@@ -121,6 +121,7 @@ def run_case(mechFilename,saveFilename,keywords):
     if 'tempLimit' in keywords:
         tempLimit = keywords['tempLimit']
     else:
+        #tempThresh is set in the parser even if it is not present in the input file
         tempLimit = keywords['tempThresh'] + keywords['temperature']
     
     printTimeInt = keywords.get('prntTimeInt')
@@ -148,7 +149,7 @@ def run_case(mechFilename,saveFilename,keywords):
             gas()
             printTime += printTimeStep
             
-        if reac.T > tempLimit:
+        if reac.T >= tempLimit:
             print('Time: ',time)
             gas()
             break
