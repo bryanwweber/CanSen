@@ -105,7 +105,7 @@ def run_case(mechFilename,saveFilename,keywords):
     
     if keywords['problemType'] == 1:
         reac = ct.Reactor(gas)
-    elif keyworkds['problemType'] == 2:
+    elif keywords['problemType'] == 2:
         reac = ct.ConstPressureReactor(gas)
         
     netw = ct.ReactorNet([reac])
