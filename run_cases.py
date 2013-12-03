@@ -127,9 +127,16 @@ def run_case(mechFilename,saveFilename,keywords):
     printTimeInt = keywords.get('prntTimeInt')
     saveTimeInt = keywords.get('saveTimeInt')
     maxTimeInt = keywords.get('maxTimeStep')
+    
     timeInts = [value for value in [printTimeInt,saveTimeInt,maxTimeInt] if value is not None]
+    
     if timeInts:
         maxTimeStep = min(timeInts)
+    else:
+        maxTimeStep = None
+        
+    if maxTimeStep is not None:
+        netw.set_max_time_step(maxTimeStep)
     
     if printTimeInt is not None:
         printTimeStep = printTimeInt
@@ -144,6 +151,7 @@ def run_case(mechFilename,saveFilename,keywords):
     gas()    
     while time < tend:
         time = netw.step(tend)
+        
         if time >= printTime:
             print('Time: ',time)
             gas()
