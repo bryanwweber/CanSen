@@ -38,6 +38,8 @@ def read_input_file(inputFilename):
                 keywords['prntTimeInt'] = float(line.split()[1])
             elif line.upper().startswith('DTSV'):
                 keywords['saveTimeInt'] = float(line.split()[1])
+            elif line.upper().startswith('STPT'):
+                keywords['maxTimeStep'] = float(line.split()[1])
             elif line.upper().startswith('EQUI'):
                 keywords['eqRatio'] = float(line.split()[1])
             elif line.upper().startswith('OXID'):
@@ -58,6 +60,7 @@ def read_input_file(inputFilename):
             elif line.upper().startswith('SENS'):
                 keywords['sensitivity'] = True
             elif line.upper() == 'END':
+                print('\n')
                 break
             else:
                 print('Keyword not found',line)
