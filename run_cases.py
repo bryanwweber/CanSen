@@ -109,43 +109,46 @@ def run_case(mechFilename,saveFilename,keywords):
         reac = ct.ConstPressureReactor(gas)
         
     netw = ct.ReactorNet([reac])
+    
     if 'abstol' in keywords:
         netw.atol = keywords['abstol']
+        
     if 'reltol' in keywords:
         netw.rtol = keywords['reltol']
+        
     tend = keywords['endTime']
-    time = 0
+    
     if 'tempLimit' in keywords:
         tempLimit = keywords['tempLimit']
     else:
         tempLimit = keywords['tempThresh'] + keywords['temperature']
-        
-    if 'prntTimeInt' in keywords and 'saveTimeInt' in keywords and 'maxTimeStep' in keywords:
-        timeStep = min(keywords['prntTimeInt'],keywords['saveTimeInt'],keywords['maxTimeStep'])
-        timeStepPrint = keywords['prntTimeInt']
-        timeStepSave = keywords['saveTimeInt']
-    elif 'prntTimeInt' in keywords and 'saveTimeInt' not in keywords:
-        timeStep = keywords['prntTimeInt']
-        timeStepPrint = keywords['prntTimeInt']
-        timeStepSave = 0
-    elif 'saveTimeInt' in keywords and 'prntTimeInt' not in keywords:
-        timeStep = keywords['saveTimeInt']
-        timeStepPrint = tend/100
-        timeStepSave = keywords['saveTimeInt']
-    else:
-        timeStepPrint = tend/100
-        timeStepSave = tend/100
     
-    #while time < tend:
-    #    nextTime = time + timeStep
-    #    netw.advance(nextTime)
-    #    time = netw.time
-    #    print(time,reac.T,reac.thermo.P)
-    #    if reac.T > tempLimit:
-    #        print(time,reac.T,reac.thermo.P)
-    #        break
+    printTimeInt = keywords.get('prntTimeInt')
+    saveTimeInt = keywords.get('saveTimeInt')
+    maxTimeInt = keywords.get('maxTimeStep')
+    timeInts = [value for value in [printTimeInt,saveTimeInt,maxTimeInt] if value is not None]
+    if timeInts:
+        maxTimeStep = min(timeInts)
+    
+    if printTimeInt is not None:
+        printTimeStep = printTimeInt
+    else:
+        printTimeStep = tend/100
+        
+    saveTimeStep = saveTimeInt
+
+    time = 0
+    printTime = time + printTimeStep
+    print('Time: ',time)
+    gas()    
     while time < tend:
         time = netw.step(tend)
+        if time >= printTime:
+            print('Time: ',time)
+            gas()
+            printTime += printTimeStep
+            
         if reac.T > tempLimit:
-            print(time,reac.T,reac.thermo.P)
+            print('Time: ',time)
+            gas()
             break
