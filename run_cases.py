@@ -119,8 +119,9 @@ def run_case(mechFilename,saveFilename,keywords):
         tempLimit = keywords['tempLimit']
     else:
         tempLimit = keywords['tempThresh'] + keywords['temperature']
-    if 'prntTimeInt' in keywords and 'saveTimeInt' in keywords:
-        timeStep = min(keywords['prntTimeInt'],keywords['saveTimeInt'])
+        
+    if 'prntTimeInt' in keywords and 'saveTimeInt' in keywords and 'maxTimeStep' in keywords:
+        timeStep = min(keywords['prntTimeInt'],keywords['saveTimeInt'],keywords['maxTimeStep'])
         timeStepPrint = keywords['prntTimeInt']
         timeStepSave = keywords['saveTimeInt']
     elif 'prntTimeInt' in keywords and 'saveTimeInt' not in keywords:
@@ -132,7 +133,6 @@ def run_case(mechFilename,saveFilename,keywords):
         timeStepPrint = tend/100
         timeStepSave = keywords['saveTimeInt']
     else:
-        timeStep = tend/100
         timeStepPrint = tend/100
         timeStepSave = tend/100
     
