@@ -1,5 +1,6 @@
 import cantera as ct
 import sys
+import pickle
 
 def equivalence_ratio(gas,eqRatio,fuel,oxidizer,completeProducts,additionalSpecies,):
     num_H_fuel = 0
@@ -147,10 +148,21 @@ def run_case(mechFilename,saveFilename,keywords):
 
     time = 0
     printTime = time + printTimeStep
+    
+    if saveTimeStep is not None:
+        saveTime = time + saveTimeStep
+    
+    saveOut = {}
+    
     print('Time: ',time)
-    gas()    
+    gas()
+    
     while time < tend:
         time = netw.step(tend)
+        
+        if saveTimeStep is not None:
+            if time >= saveTime:
+                save(saveOut)
         
         if time >= printTime:
             print('Time: ',time)
