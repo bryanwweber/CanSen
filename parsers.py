@@ -9,7 +9,7 @@ def read_input_file(inputFilename):
     additionalSpecies = {}
     with open(inputFilename) as inputFile:
         for line in inputFile:
-            print(line)
+            print(line,end='')
             if line.startswith('!') or line.startswith('.') or line.startswith('/'):
                 pass
             elif line.upper().startswith('CONV'):
