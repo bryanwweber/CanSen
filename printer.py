@@ -28,8 +28,8 @@ class Tee(object):
 def reactor_state_printer(time,reactor,numPrintCols = 3,):
     print(divider)
     print('Solution time = {:E}'.format(time))
-    print('Reactor Temperature (K) = {0:.4f}\n\
-Reactor Pressure (Pa)   = {1:.4f}'.format(reactor.T,reactor.thermo.P))
+    print('Reactor Temperature (K) = {0:>13.4f}\n\
+Reactor Pressure (Pa)   = {1:>13.4f}'.format(reactor.T,reactor.thermo.P))
     print('Gas Phase Mole Fractions:')
     outlist = []
     for speciesName, x in zip(reactor.thermo.species_names, reactor.thermo.X):
