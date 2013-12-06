@@ -32,7 +32,7 @@ def main(argv):
     
     out = Tee(outputFilename, 'w')
     print("This is CanSen, the SENKIN equivalent for Cantera, written in \
-Python.\nVersion: ",version)
+Python.\nVersion: {!s}\n".format(version))
     
     if mechFilename.endswith('.inp'):
         from cantera import ck2cti

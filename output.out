@@ -1,5 +1,6 @@
 This is CanSen, the SENKIN equivalent for Cantera, written in Python.
-Version:  0.0.1
+Version: 0.0.1
+
 CONV
 TEMP 1000
 DTIGN 400
@@ -17,7 +18,7 @@ REAC O2 1
 REAC N2 3.76
 END
 
-Time:  0
+Time:  0.0
  
   gas:
  
