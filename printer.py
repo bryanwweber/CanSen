@@ -25,7 +25,7 @@ class Tee(object):
      def __del__(self):
          self.close()
          
-def reactor_state_printer(time,reactor,numPrintCols = 3,):
+def reactor_state_printer(time,reactor,numPrintCols = 3,end=False,):
     temperature = reactor[0][0]
     pressure = reactor[0][1]
     molefracs = reactor[0][2]

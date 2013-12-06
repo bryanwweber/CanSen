@@ -191,7 +191,7 @@ Total Gas Phase Reactions = {1}'.format(reac.kinetics.n_species,reac.kinetics.n_
                 print('Ignition found by exceeding temperature limit:\n\
 Temperature limit = {0:.4f}\n\
 Temperature       = {1:.4f}'.format(tempLimit,reac.T))
-                printer.reactor_state_printer(netw.time,(reac.thermo.TPX,reac.thermo.species_names))
+                printer.reactor_state_printer(netw.time,(reac.thermo.TPX,reac.thermo.species_names),end=True)
                 break
     finally:
         with tables.open_file(saveFilename, mode = 'w', title = 'CanSen Save File') as saveFile:
