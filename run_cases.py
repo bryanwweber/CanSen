@@ -3,6 +3,7 @@ import numpy as np
 import sys
 import tables
 import printer
+import utils
 
 def equivalence_ratio(gas,eqRatio,fuel,oxidizer,completeProducts,additionalSpecies,):
     num_H_fuel = 0
@@ -159,7 +160,7 @@ Total Gas Phase Reactions = {1}'.format(reac.kinetics.n_species,reac.kinetics.n_
         saveTime = saveTimeStep
     
     try:
-        printer.reactor_state_printer(netw.time,reac)
+        printer.reactor_state_printer(netw.time,(reac.thermo.TPX,reac.thermo.species_names))
         
         outArray = np.array([[netw.time,reac.T,reac.thermo.P]])
         outArray = np.hstack((outArray,reac.thermo.Y.reshape(1,reac.thermo.n_species)))
@@ -178,12 +179,19 @@ Total Gas Phase Reactions = {1}'.format(reac.kinetics.n_species,reac.kinetics.n_
                 temp = np.hstack((temp,reac.thermo.Y.reshape(1,reac.thermo.n_species)))
                 outArray = np.vstack((outArray,temp))
                                 
-            if netw.time >= printTime:
-                printer.reactor_state_printer(netw.time,reac)
+            if netw.time > printTime:
+                interpState = utils.reactor_interpolate(printTime,outArray[-1,:],outArray[-2,:])
+                printer.reactor_state_printer(printTime,((interpState[1],interpState[2],interpState[3:]),reac.thermo.species_names))
+                printTime += printTimeStep
+            elif netw.time == printTime:
+                printer.reactor_state_printer(netw.time,(reac.thermo.TPX,reac.thermo.species_names))
                 printTime += printTimeStep
                 
             if reac.T >= tempLimit:
-                printer.reactor_state_printer(netw.time,reac)
+                print('Ignition found by exceeding temperature limit:\n\
+Temperature limit = {0:.4f}\n\
+Temperature       = {1:.4f}'.format(tempLimit,reac.T))
+                printer.reactor_state_printer(netw.time,(reac.thermo.TPX,reac.thermo.species_names))
                 break
     finally:
         with tables.open_file(saveFilename, mode = 'w', title = 'CanSen Save File') as saveFile:

@@ -26,13 +26,17 @@ class Tee(object):
          self.close()
          
 def reactor_state_printer(time,reactor,numPrintCols = 3,):
+    temperature = reactor[0][0]
+    pressure = reactor[0][1]
+    molefracs = reactor[0][2]
+    speciesNames = reactor[1]
     print(divider)
     print('Solution time = {:E}'.format(time))
     print('Reactor Temperature (K) = {0:>13.4f}\n\
-Reactor Pressure (Pa)   = {1:>13.4f}'.format(reactor.T,reactor.thermo.P))
+Reactor Pressure (Pa)   = {1:>13.4f}'.format(temperature,pressure))
     print('Gas Phase Mole Fractions:')
     outlist = []
-    for speciesName, x in zip(reactor.thermo.species_names, reactor.thermo.X):
+    for speciesName, x in zip(speciesNames, molefracs):
             outlist.append('%(spec)15s = %(molefrac)10E' % {'spec':speciesName, 'molefrac':x})
     grouped = zip_longest(*[iter(outlist)]*numPrintCols, fillvalue = '')
     for items in grouped:

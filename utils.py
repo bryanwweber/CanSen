@@ -160,5 +160,7 @@ def cli_parser(argv):
     convert = '--convert' in options
     
     return inputFilename,outputFilename,mechFilename,saveFilename,thermoFilename,convert,
-    
-    
+
+def reactor_interpolate(interpTime,State2,State1,):
+    interpState = State1 + (State2 - State1)*(interpTime - State1[0])/(State2[0] - State1[0])
+    return interpState
