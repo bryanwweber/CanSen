@@ -1,36 +1,16 @@
 #! /usr/bin/python3
 import parsers
-
-class Tee(object):
-     def __init__(self, name, mode):
-         self.file = open(name, mode)
-         self.stdout = sys.stdout
-         sys.stdout = self
-     def close(self):
-         if self.stdout is not None:
-             sys.stdout = self.stdout
-             self.stdout = None
-         if self.file is not None:
-             self.file.close()
-             self.file = None
-     def write(self, data):
-         self.file.write(data)
-         self.stdout.write(data)
-     def flush(self):
-         self.file.flush()
-         self.stdout.flush()
-     def __del__(self):
-         self.close()
-         
+import printer
+import os
+from run_cases import run_case
 
 def main(argv):
-    import os
-    from run_cases import run_case
-    version = '0.0.1'
     (inputFilename,outputFilename,mechFilename,
      saveFilename,thermoFilename,convert,) = parsers.cli_parser(argv)
     
-    out = Tee(outputFilename, 'w')
+    out = printer.Tee(outputFilename, 'w')
+    
+    version = '0.0.1'
     print("This is CanSen, the SENKIN equivalent for Cantera, written in \
 Python.\nVersion: {!s}\n".format(version))
     

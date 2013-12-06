@@ -1,6 +1,7 @@
 import sys
 
 def read_input_file(inputFilename):
+    from printer import divider
     keywords = {}
     reactants = []
     oxidizer = {}
@@ -8,8 +9,10 @@ def read_input_file(inputFilename):
     completeProducts = []
     additionalSpecies = {}
     with open(inputFilename) as inputFile:
+        print(divider)
+        print('Keyword Input:\n')
         for line in inputFile:
-            print(line,end='')
+            print(' '*10,line,end='')
             if line.startswith('!') or line.startswith('.') or line.startswith('/'):
                 pass
             elif line.upper().startswith('CONV'):
@@ -65,7 +68,8 @@ def read_input_file(inputFilename):
             else:
                 print('Keyword not found',line)
                 sys.exit(1)
-
+        print(divider,'\n')
+        
     if 'endTime' not in keywords:
         print('Error: End time must be specified with keyword TEND')
         sys.exit(1)

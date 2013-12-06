@@ -2,6 +2,7 @@ import cantera as ct
 import numpy as np
 import sys
 import tables
+import printer
 
 def equivalence_ratio(gas,eqRatio,fuel,oxidizer,completeProducts,additionalSpecies,):
     num_H_fuel = 0
@@ -93,6 +94,8 @@ def equivalence_ratio(gas,eqRatio,fuel,oxidizer,completeProducts,additionalSpeci
 
 def run_case(mechFilename,saveFilename,keywords):
     gas = ct.Solution(mechFilename)
+
+    
     initialTemp = keywords['temperature']
     initialPres = keywords['pressure']*ct.one_atm
     if 'eqRatio' in keywords:
@@ -109,7 +112,13 @@ def run_case(mechFilename,saveFilename,keywords):
         reac = ct.Reactor(gas)
     elif keywords['problemType'] == 2:
         reac = ct.ConstPressureReactor(gas)
-        
+    
+    print(printer.divider)
+    print('Kinetic Mechanism Details:\n')
+    print('Total Gas Phase Species   = {0}\n\
+Total Gas Phase Reactions = {1}'.format(reac.kinetics.n_species,reac.kinetics.n_reactions))
+    print(printer.divider,'\n')
+    
     netw = ct.ReactorNet([reac])
     
     if 'abstol' in keywords:
@@ -150,8 +159,8 @@ def run_case(mechFilename,saveFilename,keywords):
         saveTime = saveTimeStep
     
     try:
-        print('Time: ',netw.time)
-        gas()
+        printer.reactor_state_printer(netw.time,reac)
+        
         outArray = np.array([[netw.time,reac.T,reac.thermo.P]])
         outArray = np.hstack((outArray,reac.thermo.Y.reshape(1,reac.thermo.n_species)))
         
@@ -170,13 +179,11 @@ def run_case(mechFilename,saveFilename,keywords):
                 outArray = np.vstack((outArray,temp))
                                 
             if netw.time >= printTime:
-                print('Time: ',netw.time)
-                gas()
+                printer.reactor_state_printer(netw.time,reac)
                 printTime += printTimeStep
                 
             if reac.T >= tempLimit:
-                print('Time: ',netw.time)
-                gas()
+                printer.reactor_state_printer(netw.time,reac)
                 break
     finally:
         with tables.open_file(saveFilename, mode = 'w', title = 'CanSen Save File') as saveFile:
