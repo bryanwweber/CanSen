@@ -1,12 +1,12 @@
 #! /usr/bin/python3
-import parsers
+import utils
 import printer
 import os
 from run_cases import run_case
 
 def main(argv):
     (inputFilename,outputFilename,mechFilename,
-     saveFilename,thermoFilename,convert,) = parsers.cli_parser(argv)
+     saveFilename,thermoFilename,convert,) = utils.cli_parser(argv)
     
     out = printer.Tee(outputFilename, 'w')
     
@@ -29,7 +29,7 @@ Python.\nVersion: {!s}\n".format(version))
     if convert:
         sys.exit(0)
         
-    ret, = parsers.read_input_file(inputFilename)
+    ret, = utils.read_input_file(inputFilename)
     run_case(mechFilename,saveFilename,ret)
     out.close()
     
