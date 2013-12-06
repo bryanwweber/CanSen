@@ -1,6 +1,7 @@
 import cantera as ct
+import numpy as np
 import sys
-import pickle
+import tables
 
 def equivalence_ratio(gas,eqRatio,fuel,oxidizer,completeProducts,additionalSpecies,):
     num_H_fuel = 0
@@ -132,12 +133,9 @@ def run_case(mechFilename,saveFilename,keywords):
     timeInts = [value for value in [printTimeInt,saveTimeInt,maxTimeInt] if value is not None]
     
     if timeInts:
-        maxTimeStep = min(timeInts)
+        netw.set_max_time_step(min(timeInts))
     else:
-        maxTimeStep = None
-        
-    if maxTimeStep is not None:
-        netw.set_max_time_step(maxTimeStep)
+        netw.set_max_time_step(tend/100)
     
     if printTimeInt is not None:
         printTimeStep = printTimeInt
@@ -146,30 +144,40 @@ def run_case(mechFilename,saveFilename,keywords):
         
     saveTimeStep = saveTimeInt
 
-    time = 0
-    printTime = time + printTimeStep
+    printTime = printTimeStep
     
     if saveTimeStep is not None:
-        saveTime = time + saveTimeStep
+        saveTime = saveTimeStep
     
-    saveOut = {}
-    
-    print('Time: ',time)
-    gas()
-    
-    while time < tend:
-        time = netw.step(tend)
+    try:
+        print('Time: ',netw.time)
+        gas()
+        outArray = np.array([[netw.time,reac.T,reac.thermo.P]])
+        outArray = np.hstack((outArray,reac.thermo.Y.reshape(1,reac.thermo.n_species)))
         
-        if saveTimeStep is not None:
-            if time >= saveTime:
-                save(saveOut)
-        
-        if time >= printTime:
-            print('Time: ',time)
-            gas()
-            printTime += printTimeStep
+        while netw.time < tend:
+            netw.step(tend)
             
-        if reac.T >= tempLimit:
-            print('Time: ',time)
-            gas()
-            break
+            if saveTimeStep is not None:
+                if netw.time >= saveTime:
+                    temp = np.array([[netw.time,reac.T,reac.thermo.P]])
+                    temp = np.hstack((temp,reac.thermo.Y.reshape(1,reac.thermo.n_species)))
+                    outArray = np.vstack((outArray,temp))
+                    saveTime += saveTimeStep
+            else:
+                temp = np.array([[netw.time,reac.T,reac.thermo.P]])
+                temp = np.hstack((temp,reac.thermo.Y.reshape(1,reac.thermo.n_species)))
+                outArray = np.vstack((outArray,temp))
+                                
+            if netw.time >= printTime:
+                print('Time: ',netw.time)
+                gas()
+                printTime += printTimeStep
+                
+            if reac.T >= tempLimit:
+                print('Time: ',netw.time)
+                gas()
+                break
+    finally:
+        with tables.open_file(saveFilename, mode = 'w', title = 'CanSen Save File') as saveFile:
+            saveFile.create_array(saveFile.root,'reactor',outArray,'Reactor State')

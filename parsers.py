@@ -146,7 +146,7 @@ def cli_parser(argv):
     if '-x' in options:
         saveFilename = options['-x']
     else:
-        saveFilename = 'save.pkl'
+        saveFilename = 'save.hdf'
     
     if '-d' in options:
         thermoFilename = options['-d']
