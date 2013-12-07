@@ -158,10 +158,25 @@ Total Gas Phase Reactions = {1}'.format(reac.kinetics.n_species,reac.kinetics.n_
     
     if saveTimeStep is not None:
         saveTime = saveTimeStep
+        
+    tableDef = {'time':tables.Float64Col(),
+                'temperature':tables.Float64Col(),
+                'pressure':tables.Float64Col(),
+                'massfractions':tables.Float64Col(shape=(reac.thermo.n_species)),
+               }
     
     try:
-        printer.reactor_state_printer(netw.time,(reac.thermo.TPX,reac.thermo.species_names))
+    #with tables.open_file(saveFilename, mode = 'w', title = 'CanSen Save File') as saveFile:
+        #table = saveFile.create_table(saveFile.root, 'reactor', tableDef, 'Reactor State')
+        #
+        #timestep = table.row
+        #timestep['time'] = netw.time
+        #timestep['temperature'],timestep['pressure'],timestep['massfractions'] = reac.thermo.TPY
+        #timestep.append()
+        #table.flush()
         
+        printer.reactor_state_printer(netw.time,(reac.thermo.TPX,reac.thermo.species_names))
+
         outArray = np.array([[netw.time,reac.T,reac.thermo.P]])
         outArray = np.hstack((outArray,reac.thermo.Y.reshape(1,reac.thermo.n_species)))
         
@@ -178,7 +193,11 @@ Total Gas Phase Reactions = {1}'.format(reac.kinetics.n_species,reac.kinetics.n_
                 temp = np.array([[netw.time,reac.T,reac.thermo.P]])
                 temp = np.hstack((temp,reac.thermo.Y.reshape(1,reac.thermo.n_species)))
                 outArray = np.vstack((outArray,temp))
-                                
+                #timestep['time'] = netw.time
+                #timestep['temperature'],timestep['pressure'],timestep['massfractions'] = reac.thermo.TPY
+                #timestep.append()
+                #table.flush()
+                
             if netw.time > printTime:
                 interpState = utils.reactor_interpolate(printTime,outArray[-1,:],outArray[-2,:])
                 printer.reactor_state_printer(printTime,((interpState[1],interpState[2],interpState[3:]),reac.thermo.species_names))
