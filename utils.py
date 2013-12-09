@@ -91,7 +91,7 @@ def read_input_file(inputFilename):
         sys.exit(1)
         
     if 'problemType' not in keywords:
-        print('Error: Problem type must be specified with the problem type keyword')
+        print('Error: Problem type must be specified with the problem type keywords')
         sys.exit(1)
     
     if reactants and (oxidizer or fuel or completeProducts or additionalSpecies or ('eqRatio' in keywords)):

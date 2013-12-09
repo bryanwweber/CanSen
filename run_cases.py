@@ -23,7 +23,6 @@ import utils
 def run_case(mechFilename,saveFilename,keywords):
     gas = ct.Solution(mechFilename)
 
-    
     initialTemp = keywords['temperature']
     initialPres = keywords['pressure']*ct.one_atm
     if 'eqRatio' in keywords:
@@ -34,6 +33,7 @@ def run_case(mechFilename,saveFilename,keywords):
                                       )
     else:
         reactants = ','.join(keywords['reactants'])
+    
     gas.TPX = initialTemp, initialPres, reactants
     
     if keywords['problemType'] == 1:
