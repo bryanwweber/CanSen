@@ -40,14 +40,24 @@ def run_case(mechFilename,saveFilename,keywords):
         reac = ct.Reactor(gas)
     elif keywords['problemType'] == 2:
         reac = ct.ConstPressureReactor(gas)
+
+    netw = ct.ReactorNet([reac])
+            
+    if keywords.get('sensitivity') is not None:
+        sensitivity = True
+        n_vars = reac.kinetics.n_species + 3
+        for i in range(reac.kinetics.n_reactions):
+            reac.add_sensitivity_reaction(i)
+    else:
+        sensitivity = False
     
     print(printer.divider)
     print('Kinetic Mechanism Details:\n')
-    print('Total Gas Phase Species   = {0}\n\
-Total Gas Phase Reactions = {1}'.format(reac.kinetics.n_species,reac.kinetics.n_reactions))
+    print('Total Gas Phase Species     = {0}\n\
+Total Gas Phase Reactions   = {1}'.format(reac.kinetics.n_species,reac.kinetics.n_reactions))
+    if sensitivity:
+        print('Total Sensitivity Reactions = {}'.format(netw.n_sensitivity_params))
     print(printer.divider,'\n')
-    
-    netw = ct.ReactorNet([reac])
     
     if 'abstol' in keywords:
         netw.atol = keywords['abstol']
@@ -86,11 +96,11 @@ Total Gas Phase Reactions = {1}'.format(reac.kinetics.n_species,reac.kinetics.n_
     if saveTimeStep is not None:
         saveTime = saveTimeStep
         
-    tableDef = {'time':tables.Float64Col(),
-                'temperature':tables.Float64Col(),
-                'pressure':tables.Float64Col(),
-                'massfractions':tables.Float64Col(shape=(reac.thermo.n_species)),
-               }
+    #tableDef = {'time':tables.Float64Col(),
+    #            'temperature':tables.Float64Col(),
+    #            'pressure':tables.Float64Col(),
+    #            'massfractions':tables.Float64Col(shape=(reac.thermo.n_species)),
+    #           }
     
     try:
     #with tables.open_file(saveFilename, mode = 'w', title = 'CanSen Save File') as saveFile:
@@ -106,7 +116,9 @@ Total Gas Phase Reactions = {1}'.format(reac.kinetics.n_species,reac.kinetics.n_
 
         outArray = np.array([[netw.time,reac.T,reac.thermo.P]])
         outArray = np.hstack((outArray,reac.thermo.Y.reshape(1,reac.thermo.n_species)))
-        
+        if sensitivity:
+            outArray = np.hstack((outArray,np.zeros((1,n_vars*netw.n_sensitivity_params))))
+            
         while netw.time < tend:
             netw.step(tend)
             
@@ -114,11 +126,16 @@ Total Gas Phase Reactions = {1}'.format(reac.kinetics.n_species,reac.kinetics.n_
                 if netw.time >= saveTime:
                     temp = np.array([[netw.time,reac.T,reac.thermo.P]])
                     temp = np.hstack((temp,reac.thermo.Y.reshape(1,reac.thermo.n_species)))
+                    if sensitivity:
+                        temp = np.hstack((temp,netw.sensitivities().reshape(1,netw.n_vars*netw.n_sensitivity_params)))
                     outArray = np.vstack((outArray,temp))
                     saveTime += saveTimeStep
             else:
                 temp = np.array([[netw.time,reac.T,reac.thermo.P]])
                 temp = np.hstack((temp,reac.thermo.Y.reshape(1,reac.thermo.n_species)))
+                if sensitivity:
+                    temp = np.hstack((temp,netw.sensitivities().reshape(1,netw.n_vars*netw.n_sensitivity_params)))
+                    
                 outArray = np.vstack((outArray,temp))
                 #timestep['time'] = netw.time
                 #timestep['temperature'],timestep['pressure'],timestep['massfractions'] = reac.thermo.TPY
@@ -126,8 +143,8 @@ Total Gas Phase Reactions = {1}'.format(reac.kinetics.n_species,reac.kinetics.n_
                 #table.flush()
                 
             if netw.time > printTime:
-                interpState = utils.reactor_interpolate(printTime,outArray[-1,:],outArray[-2,:])
-                printer.reactor_state_printer(printTime,((interpState[1],interpState[2],interpState[3:]),reac.thermo.species_names))
+                interpState = utils.reactor_interpolate(printTime,outArray[-1,:reac.kinetics.n_species+3],outArray[-2,:reac.kinetics.n_species+3])
+                printer.reactor_state_printer(printTime,((interpState[1],interpState[2],interpState[3:reac.kinetics.n_species+3]),reac.thermo.species_names))
                 printTime += printTimeStep
             elif netw.time == printTime:
                 printer.reactor_state_printer(netw.time,(reac.thermo.TPX,reac.thermo.species_names))
