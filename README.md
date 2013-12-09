@@ -1,3 +1,3 @@
 CANSEN
 =================
-SENKIN equivalent for Cantera
+SENKIN-like wrapper for Cantera
