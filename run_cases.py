@@ -37,15 +37,18 @@ def run_case(mechFilename,saveFilename,keywords):
     gas.TPX = initialTemp, initialPres, reactants
     
     if keywords['problemType'] == 1:
-        reac = ct.Reactor(gas)
+        reac = ct.IdealGasReactor(gas)
+        #Number of solution variables is number of species + mass, volume, temperature
+        n_vars = reac.kinetics.n_species + 3
     elif keywords['problemType'] == 2:
-        reac = ct.ConstPressureReactor(gas)
+        reac = ct.IdealGasConstPressureReactor(gas)
+        #Number of solution variables is number of species + mass, temperature
+        n_vars = reac.kinetics.n_species + 2
 
     netw = ct.ReactorNet([reac])
             
     if keywords.get('sensitivity') is not None:
         sensitivity = True
-        n_vars = reac.kinetics.n_species + 3
         for i in range(reac.kinetics.n_reactions):
             reac.add_sensitivity_reaction(i)
     else:
@@ -127,14 +130,15 @@ Total Gas Phase Reactions   = {1}'.format(reac.kinetics.n_species,reac.kinetics.
                     temp = np.array([[netw.time,reac.T,reac.thermo.P]])
                     temp = np.hstack((temp,reac.thermo.Y.reshape(1,reac.thermo.n_species)))
                     if sensitivity:
-                        temp = np.hstack((temp,netw.sensitivities().reshape(1,netw.n_vars*netw.n_sensitivity_params)))
+                        temp = np.hstack((temp,netw.sensitivities().reshape(1,n_vars*netw.n_sensitivity_params)))
+                        
                     outArray = np.vstack((outArray,temp))
                     saveTime += saveTimeStep
             else:
                 temp = np.array([[netw.time,reac.T,reac.thermo.P]])
                 temp = np.hstack((temp,reac.thermo.Y.reshape(1,reac.thermo.n_species)))
                 if sensitivity:
-                    temp = np.hstack((temp,netw.sensitivities().reshape(1,netw.n_vars*netw.n_sensitivity_params)))
+                    temp = np.hstack((temp,netw.sensitivities().reshape(1,n_vars*netw.n_sensitivity_params)))
                     
                 outArray = np.vstack((outArray,temp))
                 #timestep['time'] = netw.time
