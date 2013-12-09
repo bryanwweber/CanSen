@@ -127,10 +127,10 @@ def cli_parser(argv):
             options[o] = a
         
         if args:
-            raise getopt.GetOptError('Unknown command line option' + 
+            raise getopt.GetoptError('Unknown command line option' + 
                                      repr(' '.join(args))
                                     )
-    except getopt.GetOptError as e:
+    except getopt.GetoptError as e:
         print('You did not enter an option properly.')
         print(e)
         print(help)
