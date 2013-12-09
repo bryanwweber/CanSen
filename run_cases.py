@@ -1,7 +1,22 @@
-import cantera as ct
-import numpy as np
 import sys
-import tables
+try:
+    import cantera as ct
+except ImportError:
+    print("Cantera must be installed")
+    sys.exit(1)
+    
+try:    
+    import numpy as np
+except ImportError:
+    print('Numpy must be installed')
+    sys.exit(1)
+
+try:
+    import tables
+except ImportError:
+    print('PyTables must be installed')
+    sys.exit(1)
+
 import printer
 import utils
 

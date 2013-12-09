@@ -1,7 +1,9 @@
 #! /usr/bin/python3
+
+import os
+
 import utils
 import printer
-import os
 from run_cases import run_case
 
 def main(argv):

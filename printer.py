@@ -1,5 +1,4 @@
 import sys
-import numpy as np
 from itertools import zip_longest
 
 divider = '*'*120
