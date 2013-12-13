@@ -8,6 +8,8 @@ def read_input_file(inputFilename):
     fuel = {}
     completeProducts = []
     additionalSpecies = {}
+    vproTime = []
+    vproVol = []
     with open(inputFilename) as inputFile:
         print(divider)
         print('Keyword Input:\n')
@@ -27,6 +29,17 @@ def read_input_file(inputFilename):
                     sys.exit(1)
                 else:
                     keywords['problemType'] = 2
+            elif line.upper().startswith('VPRO'):
+                if 'problemType' in keywords and keywords.get('problemType') != 3:
+                    print('Error: More than one problem type keyword was specified.')
+                    sys.exit(1)
+                elif 'problemType' in keywords and keywords.get('problemType') == 3:
+                    vproTime.append(float(line.split()[1]))
+                    vproVol.append(float(line.split()[2]))
+                else:
+                    keywords['problemType'] = 3
+                    vproTime.append(float(line.split()[1]))
+                    vproVol.append(float(line.split()[2]))
             elif line.upper().startswith('TEMP'):
                 keywords['temperature'] = float(line.split()[1])
             elif line.upper().startswith('REAC'):
@@ -93,6 +106,9 @@ def read_input_file(inputFilename):
     if 'problemType' not in keywords:
         print('Error: Problem type must be specified with the problem type keywords')
         sys.exit(1)
+    elif keywords.get('problemType') == 3:
+        keywords['vproTime'] = vproTime
+        keywords['vproVol'] = vproVol
     
     if reactants and (oxidizer or fuel or completeProducts or additionalSpecies or ('eqRatio' in keywords)):
         print('Error: REAC and EQUI cannot both be specified.')

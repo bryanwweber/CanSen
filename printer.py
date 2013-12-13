@@ -28,11 +28,15 @@ def reactor_state_printer(time,reactor,numPrintCols = 3,end=False,):
     temperature = reactor[0][0]
     pressure = reactor[0][1]
     molefracs = reactor[0][2]
-    speciesNames = reactor[1]
+    volume = reactor[1]
+    vdot = reactor[2]
+    speciesNames = reactor[3]
     print(divider)
     print('Solution time = {:E}'.format(time))
     print('Reactor Temperature (K) = {0:>13.4f}\n\
-Reactor Pressure (Pa)   = {1:>13.4f}'.format(temperature,pressure))
+Reactor Pressure (Pa)   = {1:>13.4f}\n\
+Reactor Volume (m**3)   = {2:>13.4f}\n\
+Reactor Vdot (m**3/s)   = {3:>13.4f}'.format(temperature,pressure,volume,vdot))
     print('Gas Phase Mole Fractions:')
     outlist = []
     for speciesName, x in zip(speciesNames, molefracs):
