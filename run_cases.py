@@ -20,6 +20,31 @@ except ImportError:
 import printer
 import utils
 
+class VolumeProfile(object):
+    def __init__(self,keywords):
+        self.time = np.array(keywords['vproTime'])
+        self.volume = np.array(keywords['vproVol'])
+        self.velocity = np.diff(self.volume)/np.diff(self.time)
+        self.velocity = np.append(self.velocity,0)
+    def __call__(self,t):
+        if t == 0:
+            return 0
+        if t < self.time[1]:
+            tim0 = self.time[0]
+            tim1 = self.time[1]
+            vel0 = self.velocity[0]
+            vel1 = self.velocity[1]
+        elif t >= self.time[1] and t <= self.time[-1]:
+            tim0 = self.time[self.time < t][-1]
+            tim1 = self.time[np.where(self.time == tim0)[0][0]+1]
+            vel0 = self.velocity[self.time < t][-1]
+            vel1 = self.velocity[np.where(self.time == tim0)[0][0]+1]
+        elif t > self.time[-1]:
+            return 0
+        
+        interp = vel0 + (vel1-vel0)*(t-tim0)/(tim1-tim0)
+        return interp
+
 def run_case(mechFilename,saveFilename,keywords):
     gas = ct.Solution(mechFilename)
 
@@ -36,43 +61,22 @@ def run_case(mechFilename,saveFilename,keywords):
     
     gas.TPX = initialTemp, initialPres, reactants
     
+    env = ct.Reservoir(ct.Solution('air.xml'))
+    
     if keywords['problemType'] == 1:
         reac = ct.IdealGasReactor(gas)
         #Number of solution variables is number of species + mass, volume, temperature
         n_vars = reac.kinetics.n_species + 3
+        wall = ct.Wall(reac,env,A=1.0,velocity=0)
     elif keywords['problemType'] == 2:
         reac = ct.IdealGasConstPressureReactor(gas)
         #Number of solution variables is number of species + mass, temperature
         n_vars = reac.kinetics.n_species + 2
+        wall = ct.Wall(reac,env,A=1.0,velocity=0)
     elif keywords['problemType'] == 3:
         reac = ct.IdealGasReactor(gas)
         #Number of solution variables is number of species + mass, volume, temperature
         n_vars = reac.kinetics.n_species + 3
-        env = ct.Reservoir(ct.Solution('air.xml'))
-        class VolumeProfile(object):
-            def __init__(self,keywords):
-                self.time = np.array(keywords['vproTime'])
-                self.volume = np.array(keywords['vproVol'])
-                self.velocity = np.diff(self.volume)/np.diff(self.time)
-            def __call__(self,t):
-                if t == 0:
-                    return 0
-                if t < self.time[1]:
-                    tim0 = self.time[0]
-                    tim1 = self.time[1]
-                    vel0 = self.velocity[0]
-                    vel1 = self.velocity[1]
-                elif t > self.time[1] and t <= self.time[-1]:
-                    tim0 = self.time[self.time < t][-1]
-                    tim1 = self.time[np.where(self.time == tim0)[0][0]+1]
-                    vel0 = self.velocity[self.time < t][-1]
-                    vel1 = self.velocity[np.where(self.time == tim0)[0][0]+1]
-                elif t > self.time[-1]:
-                    return 0
-                
-                interp = vel0 + (vel1-vel0)*(t-tim0)/(tim1-tim0)
-                return interp
-                
         wall = ct.Wall(reac,env,A=1.0,velocity=VolumeProfile(keywords))
         
     netw = ct.ReactorNet([reac])
@@ -188,7 +192,7 @@ Total Gas Phase Reactions   = {1}'.format(reac.kinetics.n_species,reac.kinetics.
                 print('Ignition found by exceeding temperature limit:\n\
 Temperature limit = {0:.4f}\n\
 Temperature       = {1:.4f}'.format(tempLimit,reac.T))
-                printer.reactor_state_printer(netw.time,(reac.thermo.TPX,reac.thermo.species_names),end=True)
+                printer.reactor_state_printer(netw.time,(reac.thermo.TPX,reac.volume,wall.vdot(netw.time),reac.thermo.species_names),end=True)
                 break
     finally:
         with tables.open_file(saveFilename, mode = 'w', title = 'CanSen Save File') as saveFile:
