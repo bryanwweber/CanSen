@@ -154,10 +154,10 @@ def cli_parser(argv):
     if '-h' in options or '--help' in options:
         print(help)
         sys.exit(0)
-        
+
     if '-i' in options:
         inputFilename = options['-i']
-    else:
+    elif '-i' not in options and '--convert' not in options:
         print('Error: The input file must be specified')
         sys.exit(1)
         
@@ -165,7 +165,7 @@ def cli_parser(argv):
         outputFilename = options['-o']
     else:
         outputFilename = 'output.out'
-        
+
     if '-c' in options:
         mechFilename = options['-c']
     else:
@@ -181,7 +181,8 @@ def cli_parser(argv):
     else:
         thermoFilename = None
      
-    convert = '--convert' in options
+    if '--convert' in options:
+        return None,outputFilename,mechFilename,saveFilename,thermoFilename,True,
     
     return inputFilename,outputFilename,mechFilename,saveFilename,thermoFilename,convert,
 
