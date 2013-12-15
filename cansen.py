@@ -18,7 +18,7 @@ Python.\nVersion: {!s}\n".format(version))
     
     if mechFilename.endswith('.inp'):
         from cantera import ck2cti
-        arg = list('--input='+mechFilename)
+        arg = ['--input='+mechFilename]
         if thermoFilename is not None:
             if os.path.isfile(thermoFilename):
                 arg.append('--thermo='+thermoFilename)
@@ -26,7 +26,6 @@ Python.\nVersion: {!s}\n".format(version))
                 print('Error: Specify proper thermo file')
         ck2cti.main(arg)
         mechFilename = mechFilename[:-4]+'.cti'
-        print(mechFilename)
     
     if convert:
         sys.exit(0)

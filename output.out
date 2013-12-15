@@ -1,6 +1,7 @@
 This is CanSen, the SENKIN equivalent for Cantera, written in Python.
 Version: 0.0.1
 
-ck2cti.py: Error parsing arguments:
-Unexpected command line option: '- - i n p u t = m e c h . i n p'
-Run "ck2cti.py --help" to see usage help.
+['--input=mech.inp']
+Wrote CTI mechanism file to 'mech.cti'.
+Mechanism contains 13 species and 27 reactions.
+mech.cti
