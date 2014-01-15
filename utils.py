@@ -8,8 +8,6 @@ def read_input_file(inputFilename):
     fuel = {}
     completeProducts = []
     additionalSpecies = {}
-    vproTime = []
-    vproVol = []
     with open(inputFilename) as inputFile:
         print(divider)
         print('Keyword Input:\n')
@@ -38,8 +36,8 @@ def read_input_file(inputFilename):
                     vproVol.append(float(line.split()[2]))
                 else:
                     keywords['problemType'] = 3
-                    vproTime.append(float(line.split()[1]))
-                    vproVol.append(float(line.split()[2]))
+                    vproTime = [float(line.split()[1])]
+                    vproVol = [float(line.split()[2])]
             elif line.upper().startswith('CONT'):
                 if 'problemType' in keywords:
                     print('Error: More than one problem type keyword was specified.')
@@ -52,6 +50,29 @@ def read_input_file(inputFilename):
                     sys.exit(1)
                 else:
                     keywords['problemType'] = 5
+            elif line.upper().startswith('VTIM'):
+                if 'problemType' in keywords:
+                    print('Error: More than one problem type keyword was specified.')
+                    sys.exit(1)
+                else:
+                    keywords['problemType'] = 6
+            elif line.upper().startswith('TTIM'):
+                if 'problemType' in keywords:
+                    print('Error: More than one problem type keyword was specified.')
+                    sys.exit(1)
+                else:
+                    keywords['problemType'] = 7
+            elif line.upper().startswith('TPRO'):
+                if 'problemType' in keywords and keywords.get('problemType') != 8:
+                    print('Error: More than one problem type keyword was specified.')
+                    sys.exit(1)
+                elif 'problemType' in keywords and keywords.get('problemType') == 8:
+                    TproTime.append(float(line.split()[1]))
+                    TproTemp.append(float(line.split()[2]))
+                else:
+                    keywords['problemType'] = 8
+                    TproTime = [float(line.split()[1]]
+                    TproTemp = [float(line.split()[1]]
             elif line.upper().startswith('TEMP'):
                 keywords['temperature'] = float(line.split()[1])
             elif line.upper().startswith('REAC'):

@@ -44,6 +44,29 @@ class VolumeProfile(object):
         
         interp = vel0 + (vel1-vel0)*(t-tim0)/(tim1-tim0)
         return interp
+        
+class TemperatureProfile(object):
+    def __init__(self,keywords):
+        self.time = np.array(keywords['TproTime'])
+        self.temperature = np.array(keywords['TproTemp'])
+    def __call__(self,t):
+        if t == 0:
+            return 0
+        if t < self.time[1]:
+            tim0 = self.time[0]
+            tim1 = self.time[1]
+            temp0 = self.temperature[0]
+            temp1 = self.temperature[1]
+        elif t >= self.time[1] and t <= self.time[-1]:
+            tim0 = self.time[self.time < t][-1]
+            tim1 = self.time[np.where(self.time == tim0)[0][0]+1]
+            temp0 = self.temperature[self.time < t][-1]
+            temp1 = self.temperature[np.where(self.time == tim0)[0][0]+1]
+        elif t > self.time[-1]:
+            return self.temperature[-1]
+        
+        interp = temp0 + (temp0-temp0)*(t-tim0)/(tim1-tim0)
+        return interp
 
 def run_case(mechFilename,saveFilename,keywords):
     gas = ct.Solution(mechFilename)
@@ -63,6 +86,7 @@ def run_case(mechFilename,saveFilename,keywords):
     
     env = ct.Reservoir(ct.Solution('air.xml'))
     
+    tempFunc = None
     if keywords['problemType'] == 1:
         reac = ct.IdealGasReactor(gas)
         #Number of solution variables is number of species + mass, volume, temperature
@@ -88,6 +112,25 @@ def run_case(mechFilename,saveFilename,keywords):
         #Number of solution variables is number of species + mass, volume, temperature
         n_vars = reac.kinetics.n_species + 3
         wall = ct.Wall(reac,env,A=1.0,velocity=0)
+    elif keywords['problemType'] == 6:
+        from user_routines import VolumeFunctionTime
+        reac = ct.IdealGasReactor(gas)
+        #Number of solution variables is number of species + mass, volume, temperature
+        n_vars = reac.kinetics.n_species + 3
+        wall = ct.Wall(reac,env,A=1.0,velocity=VolumeFunctionTime())
+    elif keywords['problemType'] == 7:
+        from user_routines import TemperatureFunctionTime
+        reac = ct.IdealGasConstPressureReactor(gas,energy='off')
+        #Number of solution variables is number of species + mass, temperature
+        n_vars = reac.kinetics.n_species + 2
+        wall = ct.Wall(reac,env,A=1.0,velocity=0)
+        tempFunc = ct.Func1(TemperatureFunctionTime())
+    elif keyworkds['problemType'] == 8:
+        reac = ct.IdealGasConstPressureReactor(gas,energy='off')
+        #Number of solution variables is number of species + mass, temperature
+        n_vars = reac.kinetics.n_species + 2
+        wall = ct.Wall(reac,env,A=1.0,velocity=0)
+        tempFunc = ct.Func1(TemperatureProfile(keywords))
         
     netw = ct.ReactorNet([reac])
             
@@ -180,6 +223,10 @@ Total Gas Phase Reactions   = {1}'.format(reac.kinetics.n_species,reac.kinetics.
             # outArray = np.hstack((outArray,np.zeros((1,n_vars*netw.n_sensitivity_params))))
             
         while netw.time < tend:
+        
+            if tempFunc is not None:
+                gas.TP = tempFunc(netw.time), None
+                
             netw.step(tend)
             curTime = np.hstack((netw.time, reac.thermo.T, reac.thermo.P, reac.volume, wall.vdot(netw.time), reac.thermo.X))
             if saveTimeStep is not None:
