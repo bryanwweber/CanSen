@@ -83,6 +83,11 @@ def run_case(mechFilename,saveFilename,keywords):
         #Number of solution variables is number of species + mass, temperature
         n_vars = reac.kinetics.n_species + 2
         wall = ct.Wall(reac,env,A=1.0,velocity=0)
+    elif keywords['problemType'] == 5:
+        reac = ct.IdealGasReactor(gas,energy='off')
+        #Number of solution variables is number of species + mass, volume, temperature
+        n_vars = reac.kinetics.n_species + 3
+        wall = ct.Wall(reac,env,A=1.0,velocity=0)
         
     netw = ct.ReactorNet([reac])
             

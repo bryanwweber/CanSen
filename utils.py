@@ -46,6 +46,12 @@ def read_input_file(inputFilename):
                     sys.exit(1)
                 else:
                     keywords['problemType'] = 4
+            elif line.upper().startswith('COTV'):
+                if 'problemType' in keywords:
+                    print('Error: More than one problem type keyword was specified.')
+                    sys.exit(1)
+                else:
+                    keywords['problemType'] = 5
             elif line.upper().startswith('TEMP'):
                 keywords['temperature'] = float(line.split()[1])
             elif line.upper().startswith('REAC'):
