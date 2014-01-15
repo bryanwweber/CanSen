@@ -133,67 +133,87 @@ Total Gas Phase Reactions   = {1}'.format(reac.kinetics.n_species,reac.kinetics.
     if saveTimeStep is not None:
         saveTime = saveTimeStep
         
-    #tableDef = {'time':tables.Float64Col(),
-    #            'temperature':tables.Float64Col(),
-    #            'pressure':tables.Float64Col(),
-    #            'massfractions':tables.Float64Col(shape=(reac.thermo.n_species)),
-    #           }
-    
-    try:
-    #with tables.open_file(saveFilename, mode = 'w', title = 'CanSen Save File') as saveFile:
-        #table = saveFile.create_table(saveFile.root, 'reactor', tableDef, 'Reactor State')
-        #
-        #timestep = table.row
-        #timestep['time'] = netw.time
-        #timestep['temperature'],timestep['pressure'],timestep['massfractions'] = reac.thermo.TPY
-        #timestep.append()
-        #table.flush()
+    tableDef = {'time':tables.Float64Col(pos=0),
+               'temperature':tables.Float64Col(pos=1),
+               'pressure':tables.Float64Col(pos=2),
+               'volume':tables.Float64Col(pos=3),
+               'massfractions':tables.Float64Col(shape=(reac.thermo.n_species),pos=4),
+               }
+    if sensitivity:
+        tableDef['sensitivity'] = tables.Float64Col(shape=(n_vars,netw.n_sensitivity_params),pos=5)
         
-        printer.reactor_state_printer(netw.time,(reac.thermo.TPX,reac.volume,wall.vdot(netw.time),reac.thermo.species_names))
-
-        outArray = np.array([[netw.time,reac.T,reac.thermo.P,reac.volume,wall.vdot(netw.time)]])
-        outArray = np.hstack((outArray,reac.thermo.Y.reshape(1,reac.thermo.n_species)))
+    species_names = reac.thermo.species_names
+    
+    # try:
+    #Use the table format of hdf instead of the array format. This way, each variable can be saved 
+    #in its own column and referenced individually when read. Solution to the interpolation problem 
+    #was made by saving each time step into a numpy array. The arrays are not vertically appended
+    #so we should eliminate the hassle associated with that.
+    with tables.open_file(saveFilename, mode = 'w', title = 'CanSen Save File') as saveFile:
+        table = saveFile.create_table(saveFile.root, 'reactor', tableDef, 'Reactor State')
+        
+        timestep = table.row
+        timestep['time'] = netw.time
+        timestep['temperature'],timestep['pressure'],timestep['massfractions'] = reac.thermo.TPY
+        timestep['volume'] = reac.volume
         if sensitivity:
-            outArray = np.hstack((outArray,np.zeros((1,n_vars*netw.n_sensitivity_params))))
+            timestep['sensitivity'] = np.zeros((n_vars,netw.n_sensitivity_params))
+        timestep.append()
+        table.flush()
+        
+        prevTime = np.hstack((netw.time, reac.thermo.T, reac.thermo.P, reac.volume, wall.vdot(netw.time), reac.thermo.X))
+        printer.reactor_state_printer(prevTime,species_names)
+        
+        # outArray = np.array([[netw.time,reac.T,reac.thermo.P,reac.volume,wall.vdot(netw.time)]])
+        # outArray = np.hstack((outArray,reac.thermo.Y.reshape(1,reac.thermo.n_species)))
+        # if sensitivity:
+            # outArray = np.hstack((outArray,np.zeros((1,n_vars*netw.n_sensitivity_params))))
             
         while netw.time < tend:
             netw.step(tend)
-            
+            prevTime = curTime
+            curTime = np.hstack((netw.time, reac.thermo.T, reac.thermo.P, reac.volume, wall.vdot(netw.time), reac.thermo.X))
             if saveTimeStep is not None:
-                if netw.time >= saveTime:
-                    temp = np.array([[netw.time,reac.T,reac.thermo.P,reac.volume,wall.vdot(netw.time)]])
-                    temp = np.hstack((temp,reac.thermo.Y.reshape(1,reac.thermo.n_species)))
-                    if sensitivity:
-                        temp = np.hstack((temp,netw.sensitivities().reshape(1,n_vars*netw.n_sensitivity_params)))
+                pass
+                # if netw.time >= saveTime:
+                    # temp = np.array([[netw.time,reac.T,reac.thermo.P,reac.volume,wall.vdot(netw.time)]])
+                    # temp = np.hstack((temp,reac.thermo.Y.reshape(1,reac.thermo.n_species)))
+                    # if sensitivity:
+                        # temp = np.hstack((temp,netw.sensitivities().reshape(1,n_vars*netw.n_sensitivity_params)))
                         
-                    outArray = np.vstack((outArray,temp))
-                    saveTime += saveTimeStep
+                    # outArray = np.vstack((outArray,temp))
+                    # saveTime += saveTimeStep
+                # else:
+                    # pass
             else:
-                temp = np.array([[netw.time,reac.T,reac.thermo.P,reac.volume,wall.vdot(netw.time)]])
-                temp = np.hstack((temp,reac.thermo.Y.reshape(1,reac.thermo.n_species)))
-                if sensitivity:
-                    temp = np.hstack((temp,netw.sensitivities().reshape(1,n_vars*netw.n_sensitivity_params)))
+                # temp = np.array([[netw.time,reac.T,reac.thermo.P,reac.volume,wall.vdot(netw.time)]])
+                # temp = np.hstack((temp,reac.thermo.Y.reshape(1,reac.thermo.n_species)))
+                # if sensitivity:
+                    # temp = np.hstack((temp,netw.sensitivities().reshape(1,n_vars*netw.n_sensitivity_params)))
                     
-                outArray = np.vstack((outArray,temp))
-                #timestep['time'] = netw.time
-                #timestep['temperature'],timestep['pressure'],timestep['massfractions'] = reac.thermo.TPY
-                #timestep.append()
-                #table.flush()
+                # outArray = np.vstack((outArray,temp))
+                timestep['time'] = netw.time
+                timestep['temperature'],timestep['pressure'],timestep['massfractions'] = reac.thermo.TPY
+                timestep['volume'] = reac.volume
+                if sensitivity:
+                    timestep['sensitivity'] = netw.sensitivities()
+                timestep.append()
+                table.flush()
                 
             if netw.time > printTime:
-                interpState = utils.reactor_interpolate(printTime,outArray[-1,:reac.kinetics.n_species+5],outArray[-2,:reac.kinetics.n_species+5])
-                printer.reactor_state_printer(printTime,((interpState[1],interpState[2],interpState[5:reac.kinetics.n_species+5]),interpState[3],interpState[4],reac.thermo.species_names))
+                interpState = utils.reactor_interpolate(printTime,prevTime,curTime)
+                printer.reactor_state_printer(interpState,species_names)
                 printTime += printTimeStep
             elif netw.time == printTime:
-                printer.reactor_state_printer(netw.time,(reac.thermo.TPX,reac.volume,wall.vdot(netw.time),reac.thermo.species_names))
+                printer.reactor_state_printer(curTime,species_names)
                 printTime += printTimeStep
                 
             if reac.T >= tempLimit:
                 print('Ignition found by exceeding temperature limit:\n\
 Temperature limit = {0:.4f}\n\
 Temperature       = {1:.4f}'.format(tempLimit,reac.T))
-                printer.reactor_state_printer(netw.time,(reac.thermo.TPX,reac.volume,wall.vdot(netw.time),reac.thermo.species_names),end=True)
+                printer.reactor_state_printer(curTime,species_names,end=True)
                 break
-    finally:
-        with tables.open_file(saveFilename, mode = 'w', title = 'CanSen Save File') as saveFile:
-            saveFile.create_array(saveFile.root,'reactor',outArray,'Reactor State')
+    # finally:
+        # with tables.open_file(saveFilename, mode = 'w', title = 'CanSen Save File') as saveFile:
+            # saveFile.create_array(saveFile.root,'reactor',outArray,'Reactor State')

@@ -24,13 +24,13 @@ class Tee(object):
      def __del__(self):
          self.close()
          
-def reactor_state_printer(time,reactor,numPrintCols = 3,end=False,):
-    temperature = reactor[0][0]
-    pressure = reactor[0][1]
-    molefracs = reactor[0][2]
-    volume = reactor[1]
-    vdot = reactor[2]
-    speciesNames = reactor[3]
+def reactor_state_printer(reactor,speciesNames,numPrintCols = 3,end=False,):
+    time = reactor[0]
+    temperature = reactor[1]
+    pressure = reactor[2]
+    volume = reactor[3]
+    vdot = reactor[4]
+    molefracs = reactor[5:]
     print(divider)
     print('Solution time = {:E}'.format(time))
     print('Reactor Temperature (K) = {0:>13.4f}\n\
