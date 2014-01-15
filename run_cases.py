@@ -51,7 +51,7 @@ class TemperatureProfile(object):
         self.temperature = np.array(keywords['TproTemp'])
     def __call__(self,t):
         if t == 0:
-            return 0
+            return self.temperature[0]
         if t < self.time[1]:
             tim0 = self.time[0]
             tim1 = self.time[1]
@@ -65,7 +65,7 @@ class TemperatureProfile(object):
         elif t > self.time[-1]:
             return self.temperature[-1]
         
-        interp = temp0 + (temp0-temp0)*(t-tim0)/(tim1-tim0)
+        interp = temp0 + (temp1-temp0)*(t-tim0)/(tim1-tim0)
         return interp
 
 def run_case(mechFilename,saveFilename,keywords):
@@ -125,7 +125,7 @@ def run_case(mechFilename,saveFilename,keywords):
         n_vars = reac.kinetics.n_species + 2
         wall = ct.Wall(reac,env,A=1.0,velocity=0)
         tempFunc = ct.Func1(TemperatureFunctionTime())
-    elif keyworkds['problemType'] == 8:
+    elif keywords['problemType'] == 8:
         reac = ct.IdealGasConstPressureReactor(gas,energy='off')
         #Number of solution variables is number of species + mass, temperature
         n_vars = reac.kinetics.n_species + 2

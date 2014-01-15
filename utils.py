@@ -71,8 +71,8 @@ def read_input_file(inputFilename):
                     TproTemp.append(float(line.split()[2]))
                 else:
                     keywords['problemType'] = 8
-                    TproTime = [float(line.split()[1]]
-                    TproTemp = [float(line.split()[1]]
+                    TproTime = [float(line.split()[1])]
+                    TproTemp = [float(line.split()[2])]
             elif line.upper().startswith('TEMP'):
                 keywords['temperature'] = float(line.split()[1])
             elif line.upper().startswith('REAC'):
@@ -142,6 +142,9 @@ def read_input_file(inputFilename):
     elif keywords.get('problemType') == 3:
         keywords['vproTime'] = vproTime
         keywords['vproVol'] = vproVol
+    elif keywords.get('problemType') == 8:
+        keywords['TproTime'] = TproTime
+        keywords['TproTemp'] = TproTemp
     
     if reactants and (oxidizer or fuel or completeProducts or additionalSpecies or ('eqRatio' in keywords)):
         print('Error: REAC and EQUI cannot both be specified.')
