@@ -78,6 +78,11 @@ def run_case(mechFilename,saveFilename,keywords):
         #Number of solution variables is number of species + mass, volume, temperature
         n_vars = reac.kinetics.n_species + 3
         wall = ct.Wall(reac,env,A=1.0,velocity=VolumeProfile(keywords))
+    elif keywords['problemType'] == 4:
+        reac = ct.IdealGasReactor(gas,energy='off')
+        #Number of solution variables is number of species + mass, volume, temperature
+        n_vars = reac.kinetics.n_species + 3
+        wall = ct.Wall(reac,env,A=1.0,velocity=0)
         
     netw = ct.ReactorNet([reac])
             
@@ -171,7 +176,6 @@ Total Gas Phase Reactions   = {1}'.format(reac.kinetics.n_species,reac.kinetics.
             
         while netw.time < tend:
             netw.step(tend)
-            prevTime = curTime
             curTime = np.hstack((netw.time, reac.thermo.T, reac.thermo.P, reac.volume, wall.vdot(netw.time), reac.thermo.X))
             if saveTimeStep is not None:
                 pass
@@ -214,6 +218,7 @@ Temperature limit = {0:.4f}\n\
 Temperature       = {1:.4f}'.format(tempLimit,reac.T))
                 printer.reactor_state_printer(curTime,species_names,end=True)
                 break
+            prevTime = curTime
     # finally:
         # with tables.open_file(saveFilename, mode = 'w', title = 'CanSen Save File') as saveFile:
             # saveFile.create_array(saveFile.root,'reactor',outArray,'Reactor State')
