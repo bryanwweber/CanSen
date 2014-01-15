@@ -16,7 +16,7 @@ def read_input_file(inputFilename):
         for line in inputFile:
             print(' '*10,line,end='')
             if line.startswith('!') or line.startswith('.') or line.startswith('/'):
-                pass
+                continue
             elif line.upper().startswith('CONV'):
                 if 'problemType' in keywords:
                      print('Error: More than one problem type keyword was specified.')
