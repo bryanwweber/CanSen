@@ -1,7 +1,0 @@
-This is CanSen, the SENKIN equivalent for Cantera, written in Python.
-Version: 0.0.1
-
-['--input=mech.inp']
-Wrote CTI mechanism file to 'mech.cti'.
-Mechanism contains 13 species and 27 reactions.
-mech.cti

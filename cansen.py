@@ -13,7 +13,7 @@ def main(argv):
     out = printer.Tee(outputFilename, 'w')
     
     version = '0.0.1'
-    print("This is CanSen, the SENKIN equivalent for Cantera, written in \
+    print("This is CanSen, the SENKIN-like wrapper for Cantera, written in \
 Python.\nVersion: {!s}\n".format(version))
     
     if mechFilename.endswith('.inp'):
