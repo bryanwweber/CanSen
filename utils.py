@@ -92,7 +92,7 @@ def read_input_file(inputFilename):
         print(divider,'\n')
         
     if 'endTime' not in keywords:
-        print('Error: End time must be specified with keyword TEND')
+        print('Error: End time must be specified with keyword TIME')
         sys.exit(1)
         
     if 'temperature' not in keywords:
@@ -184,7 +184,7 @@ def cli_parser(argv):
     if '--convert' in options:
         return None,outputFilename,mechFilename,saveFilename,thermoFilename,True,
     
-    return inputFilename,outputFilename,mechFilename,saveFilename,thermoFilename,convert,
+    return inputFilename,outputFilename,mechFilename,saveFilename,thermoFilename,False,
 
 def reactor_interpolate(interpTime,State2,State1,):
     interpState = State1 + (State2 - State1)*(interpTime - State1[0])/(State2[0] - State1[0])
