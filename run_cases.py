@@ -244,9 +244,10 @@ Total Gas Phase Reactions   = {1}'.format(reac.kinetics.n_species,reac.kinetics.
                 printTime += printTimeStep
                 
             if reac.T >= tempLimit:
-                print('Ignition found by exceeding temperature limit:\n\
+                print("""
+Ignition found by exceeding temperature limit:\n\
 Temperature limit = {0:.4f}\n\
-Temperature       = {1:.4f}'.format(tempLimit,reac.T))
+Temperature       = {1:.4f}""".format(tempLimit,reac.T))
                 printer.reactor_state_printer(curTime,species_names,end=True)
                 break
             prevTime = curTime
