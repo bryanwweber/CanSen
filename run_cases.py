@@ -197,7 +197,6 @@ Total Gas Phase Reactions   = {1}'.format(reac.kinetics.n_species,reac.kinetics.
         
     species_names = reac.thermo.species_names
     
-    # try:
     #Use the table format of hdf instead of the array format. This way, each variable can be saved 
     #in its own column and referenced individually when read. Solution to the interpolation problem 
     #was made by saving each time step into a numpy array. The arrays are not vertically appended
@@ -217,11 +216,6 @@ Total Gas Phase Reactions   = {1}'.format(reac.kinetics.n_species,reac.kinetics.
         prevTime = np.hstack((netw.time, reac.thermo.T, reac.thermo.P, reac.volume, wall.vdot(netw.time), reac.thermo.X))
         printer.reactor_state_printer(prevTime,species_names)
         
-        # outArray = np.array([[netw.time,reac.T,reac.thermo.P,reac.volume,wall.vdot(netw.time)]])
-        # outArray = np.hstack((outArray,reac.thermo.Y.reshape(1,reac.thermo.n_species)))
-        # if sensitivity:
-            # outArray = np.hstack((outArray,np.zeros((1,n_vars*netw.n_sensitivity_params))))
-            
         while netw.time < tend:
         
             if tempFunc is not None:
@@ -231,23 +225,8 @@ Total Gas Phase Reactions   = {1}'.format(reac.kinetics.n_species,reac.kinetics.
             curTime = np.hstack((netw.time, reac.thermo.T, reac.thermo.P, reac.volume, wall.vdot(netw.time), reac.thermo.X))
             if saveTimeStep is not None:
                 pass
-                # if netw.time >= saveTime:
-                    # temp = np.array([[netw.time,reac.T,reac.thermo.P,reac.volume,wall.vdot(netw.time)]])
-                    # temp = np.hstack((temp,reac.thermo.Y.reshape(1,reac.thermo.n_species)))
-                    # if sensitivity:
-                        # temp = np.hstack((temp,netw.sensitivities().reshape(1,n_vars*netw.n_sensitivity_params)))
-                        
-                    # outArray = np.vstack((outArray,temp))
-                    # saveTime += saveTimeStep
-                # else:
-                    # pass
+                
             else:
-                # temp = np.array([[netw.time,reac.T,reac.thermo.P,reac.volume,wall.vdot(netw.time)]])
-                # temp = np.hstack((temp,reac.thermo.Y.reshape(1,reac.thermo.n_species)))
-                # if sensitivity:
-                    # temp = np.hstack((temp,netw.sensitivities().reshape(1,n_vars*netw.n_sensitivity_params)))
-                    
-                # outArray = np.vstack((outArray,temp))
                 timestep['time'] = netw.time
                 timestep['temperature'],timestep['pressure'],timestep['massfractions'] = reac.thermo.TPY
                 timestep['volume'] = reac.volume
@@ -271,6 +250,4 @@ Temperature       = {1:.4f}'.format(tempLimit,reac.T))
                 printer.reactor_state_printer(curTime,species_names,end=True)
                 break
             prevTime = curTime
-    # finally:
-        # with tables.open_file(saveFilename, mode = 'w', title = 'CanSen Save File') as saveFile:
-            # saveFile.create_array(saveFile.root,'reactor',outArray,'Reactor State')
+            
