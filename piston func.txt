@@ -1,0 +1,47 @@
+    //Constructor for Piston Velocity function
+    //stroke_length = stroke length (m)
+    //connecting_rod_length = connection rod length (m)
+    //omega = angular velocity (rad / s)
+    PistonFunc1::PistonFunc1(double stroke_length, double connecting_rod_length, double omega) :
+        Func1(),
+        R_squared(stroke_length * stroke_length),
+        R(stroke_length),
+        L(connecting_rod_length),
+        L_squared(connecting_rod_length * connecting_rod_length),
+        omega(omega)
+    {
+    }
+
+
+    /// Evaluate the function.
+    doublereal PistonFunc1::eval(doublereal t) const
+    {
+        double theta = Pi - omega * t;
+        double sin1 = sin(theta);
+        double sin2 = sin1 * sin1;
+        double sincos1 = sin1 * cos(theta);
+        //technically this is negative, but omega is rotating in -ve dir
+        return omega * (R * sin1 + (R_squared * sincos1) / sqrt(L_squared - R_squared * sin2));
+    }
+    
+    
+    
+    ///installing and building the wall
+    Wall wall;
+    //A = 1/4 pi d^2
+    wall.setArea(data->getBore() * data->getBore() * Pi * 0.25);
+        
+    //AT TIME t = 0, theta = 180 deg
+    //AT END,        theta = -180 deg
+        
+    //Vi = 2 * (pi / 4 * bore^2 * stroke)  * CR / (CR - 1)
+    double volume_init = 2.0 * wall.area() * data->getStrokeLength() * (data->getCompressionRatio() / (data->getCompressionRatio() - 1.0));
+        
+    //setup velocity fn
+    //w = (2 * pi / 60) RPM
+    double w = (2.0 * Pi / 60.0) * data->getOmega();
+    PistonFunc1 velocity (data->getStrokeLength(), data->getConnectingRodLength(), w);
+    wall.setVelocity(&velocity);
+    
+    //setup wall between reservoir on left and reactor on right
+    wall.install(env, myReac);
