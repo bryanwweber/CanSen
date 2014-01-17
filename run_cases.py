@@ -131,13 +131,24 @@ def run_case(mechFilename,saveFilename,keywords):
         n_vars = reac.kinetics.n_species + 2
         wall = ct.Wall(reac,env,A=1.0,velocity=0)
         tempFunc = ct.Func1(TemperatureProfile(keywords))
+    
+    if 'reactorVolume' in keywords:
+        reac.volume = keywords['reactorVolume']
         
     netw = ct.ReactorNet([reac])
             
-    if keywords.get('sensitivity') is not None:
+    if 'sensitivity' in keywords:
         sensitivity = True
         for i in range(reac.kinetics.n_reactions):
             reac.add_sensitivity_reaction(i)
+        if 'sensAbsTol' in keywords:
+            netw.atol_sensitivity = keywords['sensAbsTol']
+        else:
+            netw.atol_sensitivity = 1.0E-06
+        if 'sensRelTol' in keywords:
+            netw.rtol_sensitivity = keywords['sensRelTol']
+        else:
+            netw.rtol_sensitivity = 1.0E-04
     else:
         sensitivity = False
     
@@ -151,9 +162,13 @@ Total Gas Phase Reactions   = {1}'.format(reac.kinetics.n_species,reac.kinetics.
     
     if 'abstol' in keywords:
         netw.atol = keywords['abstol']
+    else:
+        netw.atol = 1.0E-20
         
     if 'reltol' in keywords:
         netw.rtol = keywords['reltol']
+    else:
+        netw.rtol = 1.0E-08
         
     tend = keywords['endTime']
     

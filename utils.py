@@ -8,6 +8,17 @@ def read_input_file(inputFilename):
     fuel = {}
     completeProducts = []
     additionalSpecies = {}
+    problemType = False
+    unsupported_keys = ['ADAP',  'AEXT',   'AFRA',     'AGGA',  'AGGB',  'AGGD',   'AGGE',   'AGGFD', 'AGGMN', 
+                        'AINT',  'AREA',   'AREAQ',    'AROP',  'ASEN',  'ASTEPS', 'AVALUE', 'AVAR',  'BETA', 
+                        'BLKEQ', 'BULK',   'CLSC',     'CLSM',  'CNTN',  'CNTT',   'COLR',   'DIST',  'ENRG', 'EPSG', 
+                        'EPSR',  'EPSS',   'EPST',     'ETCH',  'GFAC',  'GMHTC',  'HTC',    'HTRN',  'IPSR', 'IRET', 
+                        'ISTP',  'KLIM',   'MAXIT',    'MCUT',  'MMASS', 'NADAP',  'NEWRUN', 'NMOM',  'NNEG', 'NOCG', 
+                        'NSOL',  'PNDE',   'PPRO',     'PRNT',  'PROE',  'PVFE',   'QFUN',   'QLOS',  'QPRO', 'QRGEQ', 
+                        'QRSEQ', 'RELAXC', 'ROP',      'RSTR',  'SCLM',  'SCLS',   'SCOR',   'SENG',  'SENT', 'SFAC', 
+                        'SIZE',  'SOLUTION_TECHNIQUE', 'SSTT',  'SURF',  'TAMB',   'TGIV',   'TIFP',  'TRAN', 'TRES', 
+                        'TRST',  'TSRF',   'TSTR',     'UIGN',  'USET',  'WENG',   'XMLI',
+                        ]
     with open(inputFilename) as inputFile:
         print(divider)
         print('Keyword Input:\n')
@@ -16,63 +27,70 @@ def read_input_file(inputFilename):
             if line.startswith('!') or line.startswith('.') or line.startswith('/'):
                 continue
             elif line.upper().startswith('CONV'):
-                if 'problemType' in keywords:
+                if problemType:
                      print('Error: More than one problem type keyword was specified.')
                      sys.exit(1)
                 else:
                     keywords['problemType'] = 1
+                    problemType = True
             elif line.upper().startswith('CONP'):
-                if 'problemType' in keywords:
+                if problemType:
                     print('Error: More than one problem type keyword was specified.')
                     sys.exit(1)
                 else:
                     keywords['problemType'] = 2
+                    problemType = True
             elif line.upper().startswith('VPRO'):
-                if 'problemType' in keywords and keywords.get('problemType') != 3:
+                if problemType and keywords.get('problemType') != 3:
                     print('Error: More than one problem type keyword was specified.')
                     sys.exit(1)
-                elif 'problemType' in keywords and keywords.get('problemType') == 3:
+                elif problemType and keywords.get('problemType') == 3:
                     vproTime.append(float(line.split()[1]))
                     vproVol.append(float(line.split()[2]))
                 else:
                     keywords['problemType'] = 3
                     vproTime = [float(line.split()[1])]
                     vproVol = [float(line.split()[2])]
+                    problemType = True
             elif line.upper().startswith('CONT'):
-                if 'problemType' in keywords:
+                if problemType:
                     print('Error: More than one problem type keyword was specified.')
                     sys.exit(1)
                 else:
                     keywords['problemType'] = 4
+                    problemType = True
             elif line.upper().startswith('COTV'):
-                if 'problemType' in keywords:
+                if problemType:
                     print('Error: More than one problem type keyword was specified.')
                     sys.exit(1)
                 else:
                     keywords['problemType'] = 5
             elif line.upper().startswith('VTIM'):
-                if 'problemType' in keywords:
+                if problemType:
                     print('Error: More than one problem type keyword was specified.')
                     sys.exit(1)
                 else:
                     keywords['problemType'] = 6
+                    problemType = True
             elif line.upper().startswith('TTIM'):
-                if 'problemType' in keywords:
+                if problemType:
                     print('Error: More than one problem type keyword was specified.')
                     sys.exit(1)
                 else:
                     keywords['problemType'] = 7
+                    problemType = True
             elif line.upper().startswith('TPRO'):
-                if 'problemType' in keywords and keywords.get('problemType') != 8:
+                if problemType and keywords.get('problemType') != 8:
                     print('Error: More than one problem type keyword was specified.')
                     sys.exit(1)
-                elif 'problemType' in keywords and keywords.get('problemType') == 8:
+                elif problemType and keywords.get('problemType') == 8:
                     TproTime.append(float(line.split()[1]))
                     TproTemp.append(float(line.split()[2]))
                 else:
                     keywords['problemType'] = 8
                     TproTime = [float(line.split()[1])]
                     TproTemp = [float(line.split()[2])]
+                    problemType = True
             elif line.upper().startswith('TEMP'):
                 keywords['temperature'] = float(line.split()[1])
             elif line.upper().startswith('REAC'):
@@ -116,6 +134,16 @@ def read_input_file(inputFilename):
                 additionalSpecies[species] = molefrac
             elif line.upper().startswith('SENS'):
                 keywords['sensitivity'] = True
+            elif line.upper().startswith('VOL'):
+                keywords['reactorVolume'] = float(line.split()[1])/1.0E6
+            elif line.upper().startswith('RTLS'):
+                keywords['sensRelTol'] = float(line.split()[1])
+            elif line.upper().startswith('ATLS'):
+                keywords['sensAbsTol'] = float(line.split()[1])
+            elif line.upper()[0:3] in unsupported_keys:
+                print('Keyword', line.upper()[0:3], 'is not supported yet',
+                      'and has been ignored')
+                continue
             elif line.upper() == 'END':
                 print('\n')
                 break
