@@ -86,6 +86,8 @@ def run_case(mechFilename,saveFilename,keywords):
     
     env = ct.Reservoir(ct.Solution('air.xml'))
     
+    #Could refactor here to put the problem setup in another function and return the
+    #reactor, n_vars, wall, and tempFunc.
     tempFunc = None
     if keywords['problemType'] == 1:
         reac = ct.IdealGasReactor(gas)
@@ -238,9 +240,23 @@ Total Gas Phase Reactions   = {1}'.format(reac.kinetics.n_species,reac.kinetics.
                 
             netw.step(tend)
             curTime = np.hstack((netw.time, reac.thermo.T, reac.thermo.P, reac.volume, wall.vdot(netw.time), reac.thermo.X))
+            
+            if netw.time > tend:
+                interpState = utils.reactor_interpolate(tend,prevTime,curTime)
+                printer.reactor_state_printer(interpState,species_names,end=True)
+                timestep['time'] = tend
+                timestep['temperature'] = interpState[1]
+                timestep['pressure'] = interpState[2]
+                timestep['massfractions'] = interpState[5:] * reac.thermo.molecular_weights/reac.thermo.mean_molecular_weight
+                timestep['volume'] = interpState[3]
+                if sensitivity:
+                    #Add sensitivity interpolation here by reading from file on disk. Only have to do it once, so shouldn't be
+                    #too expensive
+                    pass
+                break
+                
             if saveTimeStep is not None:
                 pass
-                
             else:
                 timestep['time'] = netw.time
                 timestep['temperature'],timestep['pressure'],timestep['massfractions'] = reac.thermo.TPY
@@ -259,11 +275,7 @@ Total Gas Phase Reactions   = {1}'.format(reac.kinetics.n_species,reac.kinetics.
                 printTime += printTimeStep
                 
             if reac.T >= tempLimit:
-                print("""
-Ignition found by exceeding temperature limit:\n\
-Temperature limit = {0:.4f}\n\
-Temperature       = {1:.4f}""".format(tempLimit,reac.T))
-                printer.reactor_state_printer(curTime,species_names,end=True)
-                break
+                ignitionTime = netw.time
+            
             prevTime = curTime
             

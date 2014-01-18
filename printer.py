@@ -32,7 +32,10 @@ def reactor_state_printer(reactor,speciesNames,numPrintCols = 3,end=False,):
     vdot = reactor[4]
     molefracs = reactor[5:]
     print(divider)
-    print('Solution time = {:E}'.format(time))
+    if not end:
+        print('Solution time = {:E}'.format(time))
+    else:
+        print('End time reached = {:E}'.format(time))
     print('Reactor Temperature (K) = {0:>13.4f}\n\
 Reactor Pressure (Pa)   = {1:>13.4f}\n\
 Reactor Volume (m**3)   = {2:>13.4f}\n\
