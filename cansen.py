@@ -30,9 +30,9 @@ Python.\nVersion: {!s}\n".format(version))
     if convert:
         sys.exit(0)
         
-    ret, = utils.read_input_file(inputFilename)
-    reac,netw,wall,n_vars,sensitivity,tempFunc = setup_case(mechFilename,ret)
-    run_case(reac,netw,wall,n_vars,sensitivity,tempFunc,saveFilename,ret)
+    keywords, = utils.read_input_file(inputFilename)
+    reac,netw,wall,n_vars,sensitivity,tempFunc = setup_case(mechFilename,keywords)
+    run_case(reac,netw,wall,n_vars,sensitivity,tempFunc,saveFilename,keywords)
     out.close()
     
 if __name__ == "__main__":
