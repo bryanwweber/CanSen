@@ -68,7 +68,7 @@ class TemperatureProfile(object):
         interp = temp0 + (temp1-temp0)*(t-tim0)/(tim1-tim0)
         return interp
 
-def run_case(mechFilename,saveFilename,keywords):
+def setup_case(mechFilename,keywords):
     gas = ct.Solution(mechFilename)
 
     initialTemp = keywords['temperature']
@@ -154,14 +154,6 @@ def run_case(mechFilename,saveFilename,keywords):
     else:
         sensitivity = False
     
-    print(printer.divider)
-    print('Kinetic Mechanism Details:\n')
-    print('Total Gas Phase Species     = {0}\n\
-Total Gas Phase Reactions   = {1}'.format(reac.kinetics.n_species,reac.kinetics.n_reactions))
-    if sensitivity:
-        print('Total Sensitivity Reactions = {}'.format(netw.n_sensitivity_params))
-    print(printer.divider,'\n')
-    
     if 'abstol' in keywords:
         netw.atol = keywords['abstol']
     else:
@@ -171,7 +163,12 @@ Total Gas Phase Reactions   = {1}'.format(reac.kinetics.n_species,reac.kinetics.
         netw.rtol = keywords['reltol']
     else:
         netw.rtol = 1.0E-08
-        
+    
+    return reac,netw,wall,n_vars,sensitivity,tempFunc
+
+
+def run_case(reac,netw,wall,n_vars,sensitivity,tempFunc,saveFilename,keywords):
+    
     tend = keywords['endTime']
     
     if 'tempLimit' in keywords:
@@ -231,6 +228,16 @@ Total Gas Phase Reactions   = {1}'.format(reac.kinetics.n_species,reac.kinetics.
         table.flush()
         
         prevTime = np.hstack((netw.time, reac.thermo.T, reac.thermo.P, reac.volume, wall.vdot(netw.time), reac.thermo.X))
+        
+        print(printer.divider)
+        print('Kinetic Mechanism Details:\n')
+        print('Total Gas Phase Species     = {0}\n'.format(reac.kinetics.n_species),
+              'Total Gas Phase Reactions   = {0}'.format(reac.kinetics.n_reactions),
+              sep='')
+        if sensitivity:
+            print('Total Sensitivity Reactions = {}'.format(netw.n_sensitivity_params))
+        print(printer.divider,'\n')
+        
         printer.reactor_state_printer(prevTime,species_names)
         
         while netw.time < tend:

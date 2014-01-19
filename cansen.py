@@ -4,7 +4,7 @@ import os
 
 import utils
 import printer
-from run_cases import run_case
+from run_cases import run_case, setup_case
 
 def main(argv):
     (inputFilename,outputFilename,mechFilename,
@@ -31,7 +31,8 @@ Python.\nVersion: {!s}\n".format(version))
         sys.exit(0)
         
     ret, = utils.read_input_file(inputFilename)
-    run_case(mechFilename,saveFilename,ret)
+    reac,netw,wall,n_vars,sensitivity,tempFunc = setup_case(mechFilename,ret)
+    run_case(reac,netw,wall,n_vars,sensitivity,tempFunc,saveFilename,ret)
     out.close()
     
 if __name__ == "__main__":
