@@ -4,7 +4,7 @@ import os
 
 import utils
 import printer
-from run_cases import run_case, setup_case
+from run_cases import SimulationCase
 
 def main(argv):
     (inputFilename,outputFilename,mechFilename,
@@ -15,21 +15,7 @@ def main(argv):
     version = '0.0.1'
     print("This is CanSen, the SENKIN-like wrapper for Cantera, written in \
 Python.\nVersion: {!s}\n".format(version))
-    
-    if mechFilename.endswith('.inp'):
-        from cantera import ck2cti
-        arg = ['--input='+mechFilename]
-        if thermoFilename is not None:
-            if os.path.isfile(thermoFilename):
-                arg.append('--thermo='+thermoFilename)
-            else:
-                print('Error: Specify proper thermo file')
-        ck2cti.main(arg)
-        mechFilename = mechFilename[:-4]+'.cti'
-    
-    if convert:
-        sys.exit(0)
-        
+
     keywords, = utils.read_input_file(inputFilename)
     reac,netw,wall,n_vars,sensitivity,tempFunc = setup_case(mechFilename,keywords)
     run_case(reac,netw,wall,n_vars,sensitivity,tempFunc,saveFilename,keywords)

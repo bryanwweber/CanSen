@@ -1,6 +1,24 @@
 import sys
 
-def read_input_file(inputFilename):
+def convert_mech(mech_filename, thermo_filename, convert):
+    from cantera import ck2cti
+    arg = ['--input='+mech_filename]
+    if thermo_filename is not None:
+        if os.path.isfile(thermo_filename):
+            arg.append('--thermo='+thermo_filename)
+        else:
+            print('Error: Specify proper thermo file')
+            sys.exit(1)
+    ck2cti.main(arg)
+    if convert:
+        print('Mechanism conversion successful. Exiting.')
+        sys.exit(0)
+    else:
+        mech_filename = mech_filename[:-4]+'.cti'
+        print('Mechanism conversion successful, written to {}'.format(mech_filename))
+        return mech_filename
+
+def read_input_file(input_filename):
     from printer import divider
     keywords = {}
     reactants = []
@@ -19,7 +37,7 @@ def read_input_file(inputFilename):
                         'SIZE',  'SOLUTION_TECHNIQUE', 'SSTT',  'SURF',  'TAMB',   'TGIV',   'TIFP',  'TRAN', 'TRES', 
                         'TRST',  'TSRF',   'TSTR',     'UIGN',  'USET',  'WENG',   'XMLI',
                         ]
-    with open(inputFilename) as inputFile:
+    with open(input_filename) as inputFile:
         print(divider)
         print('Keyword Input:\n')
         for line in inputFile:
@@ -220,35 +238,35 @@ def cli_parser(argv):
         sys.exit(0)
 
     if '-i' in options:
-        inputFilename = options['-i']
+        input_filename = options['-i']
     elif '-i' not in options and '--convert' not in options:
         print('Error: The input file must be specified')
         sys.exit(1)
         
     if '-o' in options:
-        outputFilename = options['-o']
+        output_filename = options['-o']
     else:
-        outputFilename = 'output.out'
+        output_filename = 'output.out'
 
     if '-c' in options:
-        mechFilename = options['-c']
+        mech_filename = options['-c']
     else:
-        mechFilename = 'chem.xml'
+        mech_filename = 'chem.xml'
     
     if '-x' in options:
-        saveFilename = options['-x']
+        save_filename = options['-x']
     else:
-        saveFilename = 'save.hdf'
+        save_filename = 'save.hdf'
     
     if '-d' in options:
-        thermoFilename = options['-d']
+        thermo_filename = options['-d']
     else:
-        thermoFilename = None
+        thermo_filename = None
      
     if '--convert' in options:
-        return None,outputFilename,mechFilename,saveFilename,thermoFilename,True,
+        return None,output_filename,mech_filename,save_filename,thermo_filename,True,
     
-    return inputFilename,outputFilename,mechFilename,saveFilename,thermoFilename,False,
+    return input_filename,output_filename,mech_filename,save_filename,thermo_filename,False,
 
 def reactor_interpolate(interpTime,State2,State1,):
     interpState = State1 + (State2 - State1)*(interpTime - State1[0])/(State2[0] - State1[0])
