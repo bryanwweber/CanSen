@@ -194,7 +194,7 @@ def read_input_file(inputFilename):
     if 'tempThresh' not in keywords:
         keywords['tempThresh'] = 400
             
-    return keywords,
+    return keywords
 
 def cli_parser(argv):
     import getopt
@@ -341,4 +341,4 @@ def equivalence_ratio(gas,eqRatio,fuel,oxidizer,completeProducts,additionalSpeci
     #Take off the first character, which is a comma
     reactants = reactants[1:]
         
-    return reactants,
+    return reactants
