@@ -24,7 +24,7 @@ class Tee(object):
      def __del__(self):
          self.close()
          
-def reactor_state_printer(reactor,speciesNames,numPrintCols = 3,end=False,):
+def reactor_state_printer(reactor,species_names,num_print_cols = 3,end=False,):
     time = reactor[0]
     temperature = reactor[1]
     pressure = reactor[2]
@@ -43,9 +43,9 @@ def reactor_state_printer(reactor,speciesNames,numPrintCols = 3,end=False,):
           sep='')
     print('Gas Phase Mole Fractions:')
     outlist = []
-    for speciesName, x in zip(speciesNames, molefracs):
-            outlist.append('%(spec)15s = %(molefrac)10E' % {'spec':speciesName, 'molefrac':x})
-    grouped = zip_longest(*[iter(outlist)]*numPrintCols, fillvalue = '')
+    for species_name, x in zip(species_names, molefracs):
+            outlist.append('%(spec)15s = %(molefrac)10E' % {'spec':species_name, 'molefrac':x})
+    grouped = zip_longest(*[iter(outlist)]*num_print_cols, fillvalue = '')
     for items in grouped:
         for item in items:
             print(item, end='')
