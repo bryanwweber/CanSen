@@ -130,59 +130,60 @@ class SimulationCase(object):
             self.netw.rtol = self.keywords['reltol']
         else:
             self.netw.rtol = 1.0E-08
+            
+        
+        if 'tempLimit' in keywords:
+            self.temp_limit = keywords['tempLimit']
+        else:
+            #tempThresh is set in the parser even if it is not present in the input file
+            self.temp_limit = keywords['tempThresh'] + keywords['temperature']
+        
+        self.tend = keywords['endTime']
+        
+        print_time_int = keywords.get('prntTimeInt')
+        save_time_int = keywords.get('saveTimeInt')
+        max_time_int = keywords.get('maxTimeStep')
+        
+        time_ints = [value for value in [print_time_int,save_time_int,max_time_int] if value is not None]
+        
+        if timeInts:
+            self.netw.set_max_time_step(min(time_ints))
+        else:
+            self.netw.set_max_time_step(tend/100)
+        
+        if print_time_int is not None:
+            self.print_time_step = print_time_int
+        else:
+            self.print_time_step = tend/100
+            
+        self.print_time = print_time_step
+            
+        self.save_time_step = save_time_int
+                
+        if self.save_time_step is not None:
+            self.save_time = self.save_time_step
+            
+        self.species_names = self.reac.thermo.species_names
         
         #return reac,netw,wall,n_vars,sensitivity,tempFunc
 
     def run_case(self):
         
-        tend = keywords['endTime']
-        
-        if 'tempLimit' in keywords:
-            tempLimit = keywords['tempLimit']
-        else:
-            #tempThresh is set in the parser even if it is not present in the input file
-            tempLimit = keywords['tempThresh'] + keywords['temperature']
-        
-        printTimeInt = keywords.get('prntTimeInt')
-        saveTimeInt = keywords.get('saveTimeInt')
-        maxTimeInt = keywords.get('maxTimeStep')
-        
-        timeInts = [value for value in [printTimeInt,saveTimeInt,maxTimeInt] if value is not None]
-        
-        if timeInts:
-            self.netw.set_max_time_step(min(timeInts))
-        else:
-            self.netw.set_max_time_step(tend/100)
-        
-        if printTimeInt is not None:
-            printTimeStep = printTimeInt
-        else:
-            printTimeStep = tend/100
-            
-        saveTimeStep = saveTimeInt
-
-        printTime = printTimeStep
-        
-        if saveTimeStep is not None:
-            saveTime = saveTimeStep
-            
-        tableDef = {'time':tables.Float64Col(pos=0),
+        table_def = {'time':tables.Float64Col(pos=0),
                    'temperature':tables.Float64Col(pos=1),
                    'pressure':tables.Float64Col(pos=2),
                    'volume':tables.Float64Col(pos=3),
                    'massfractions':tables.Float64Col(shape=(self.reac.thermo.n_species),pos=4),
                    }
         if self.sensitivity:
-            tableDef['sensitivity'] = tables.Float64Col(shape=(self.n_vars,self.netw.n_sensitivity_params),pos=5)
+            table_def['sensitivity'] = tables.Float64Col(shape=(self.n_vars,self.netw.n_sensitivity_params),pos=5)
             
-        species_names = self.reac.thermo.species_names
-        
         #Use the table format of hdf instead of the array format. This way, each variable can be saved 
         #in its own column and referenced individually when read. Solution to the interpolation problem 
         #was made by saving each time step into a numpy array. The arrays are not vertically appended
         #so we should eliminate the hassle associated with that.
-        with tables.open_file(saveFilename, mode = 'w', title = 'CanSen Save File') as saveFile:
-            table = saveFile.create_table(saveFile.root, 'reactor', tableDef, 'Reactor State')
+        with tables.open_file(saveFilename, mode = 'w', title = 'CanSen Save File') as save_file:
+            table = save_file.create_table(save_file.root, 'reactor', table_def, 'Reactor State')
             
             timestep = table.row
             timestep['time'] = self.netw.time
@@ -204,7 +205,7 @@ class SimulationCase(object):
                 print('Total Sensitivity Reactions = {}'.format(self.netw.n_sensitivity_params))
             print(printer.divider,'\n')
             
-            printer.reactor_state_printer(prevTime,species_names)
+            printer.reactor_state_printer(prevTime,self.species_names)
             
             while self.netw.time < tend:
             
@@ -216,7 +217,7 @@ class SimulationCase(object):
                 
                 if self.netw.time > tend:
                     interpState = utils.reactor_interpolate(tend,prevTime,curTime)
-                    printer.reactor_state_printer(interpState,species_names,end=True)
+                    printer.reactor_state_printer(interpState,self.species_names,end=True)
                     timestep['time'] = tend
                     timestep['temperature'] = interpState[1]
                     timestep['pressure'] = interpState[2]
@@ -241,10 +242,10 @@ class SimulationCase(object):
                     
                 if self.netw.time > printTime:
                     interpState = utils.reactor_interpolate(printTime,prevTime,curTime)
-                    printer.reactor_state_printer(interpState,species_names)
+                    printer.reactor_state_printer(interpState,self.species_names)
                     printTime += printTimeStep
                 elif self.netw.time == printTime:
-                    printer.reactor_state_printer(curTime,species_names)
+                    printer.reactor_state_printer(curTime,self.species_names)
                     printTime += printTimeStep
                     
                 if self.reac.T >= tempLimit:
