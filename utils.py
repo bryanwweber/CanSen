@@ -4,11 +4,8 @@ def convert_mech(mech_filename, thermo_filename, convert):
     from cantera import ck2cti
     arg = ['--input='+mech_filename]
     if thermo_filename is not None:
-        if os.path.isfile(thermo_filename):
-            arg.append('--thermo='+thermo_filename)
-        else:
-            print('Error: Specify proper thermo file')
-            sys.exit(1)
+        arg.append('--thermo='+thermo_filename)
+        
     ck2cti.main(arg)
     if convert:
         print('Mechanism conversion successful. Exiting.')
@@ -240,10 +237,17 @@ def cli_parser(argv):
     
     filenames = {}
     if '-i' in options:
-        filenames['input_filename'] = options['-i']
+        input_filename = options['-i']
+        if os.path.isfile(input_filename):
+            filenames['input_filename'] = input_filename
+        else:
+            print('Error: The input file specified does not exist')
+            sys.exit(1)
     elif '-i' not in options and '--convert' not in options:
         print('Error: The input file must be specified')
         sys.exit(1)
+    else:
+        filenames['input_filename'] = None
         
     if '-o' in options:
         filenames['output_filename'] = options['-o']
@@ -255,13 +259,22 @@ def cli_parser(argv):
     else:
         filenames['mech_filename'] = 'chem.xml'
     
+    if not os.path.isfile(filenames['mech_filename']):
+        print('Error: The mechanism file must exist')
+        sys.exit(1)
+    
     if '-x' in options:
         filenames['save_filename'] = options['-x']
     else:
         filenames['save_filename'] = 'save.hdf'
     
     if '-d' in options:
-        filenames['thermo_filename'] = options['-d']
+        thermo_filename = options['-d']
+        if os.path.isfile(thermo_filename):
+            filenames['thermo_filename'] = thermo_filename
+        else:
+            print('Error: The thermo database file must exist')
+            sys.exit(1)
     else:
         filenames['thermo_filename'] = None
     
