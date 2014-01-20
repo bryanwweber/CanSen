@@ -425,8 +425,8 @@ def equivalence_ratio(gas, eq_ratio, fuel, oxidizer, complete_products,
         num_H_cprod += gas.n_atoms(species,'H')
         num_C_cprod += gas.n_atoms(species,'C')
     
-    if (num_H_cprod > 0 and num_H_req == 0) or 
-            (num_H_cprod == 0 and num_H_req > 0):
+    if ((num_H_cprod > 0 and num_H_req == 0) or 
+            (num_H_cprod == 0 and num_H_req > 0)):
         if num_H_req == 0:
             print('Error: All elements specified in the Complete Products '
                   'must be in the Fuel or Oxidizer')
