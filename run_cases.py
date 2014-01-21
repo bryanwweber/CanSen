@@ -341,7 +341,16 @@ class SimulationCase(object):
                 # time step to the binary file.
                 if self.save_time_step is not None:
                     # Add what to do here if the save_time_step is set.
-                    pass
+                    if self.netw.time > self.save_time:
+                        timestep['time'] = self.netw.time
+                        (timestep['temperature'], timestep['pressure'], 
+                            timestep['massfractions']) = self.reac.thermo.TPY
+                        timestep['volume'] = self.reac.volume
+                        if self.sensitivity:
+                            timestep['sensitivity'] = self.netw.sensitivities()
+                        timestep.append()
+                        table.flush()
+                        self.save_time += self.save_time_step
                 else:
                     timestep['time'] = self.netw.time
                     (timestep['temperature'], timestep['pressure'], 
