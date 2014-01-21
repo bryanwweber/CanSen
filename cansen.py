@@ -52,7 +52,7 @@ def cansen(argv):
         Print this help message and quit.
     """
     # Version number
-    __version__ = '0.0.1'
+    __version__ = '1.0.0'
     
     ret = utils.cli_parser(argv)
     if ret == -3:
