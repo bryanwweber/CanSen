@@ -228,3 +228,6 @@ pip-log.txt
 
 #Output files
 *.out
+
+#Documentation files
+_*
