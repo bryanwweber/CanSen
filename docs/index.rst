@@ -17,6 +17,9 @@ enables the use of SENKIN-formatted input files with Cantera.
 CanSen is written in Python 3. Future versions will try to incorporate
 support for all of the versions of Python that Cantera supports. 
 
+CanSen is hosted at `GitHub <CanSen_>`_, if you are interested in the 
+source code and development. Please report any bugs there.
+
 Contents:
 
 .. toctree::
