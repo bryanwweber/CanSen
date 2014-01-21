@@ -230,4 +230,4 @@ pip-log.txt
 *.out
 
 #Documentation files
-_*
+docs/_*
