@@ -356,7 +356,7 @@ class SimulationCase(object):
                     timestep['time'] = self.netw.time
                     (timestep['temperature'], timestep['pressure'], 
                         timestep['massfractions']) = self.reac.thermo.TPY
-                    timestep['volume']) = self.reac.volume
+                    timestep['volume'] = self.reac.volume
                     if self.sensitivity:
                         timestep['sensitivity'] = self.netw.sensitivities()
                     timestep.append()
