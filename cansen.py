@@ -10,7 +10,16 @@ from printer import Tee
 from run_cases import SimulationCase
 
 def main(filenames, convert, version):
-    """The main driver function of CanSen."""
+    """The main driver function of CanSen.
+    
+    :param filenames:
+        Dictionary of filenames related to the simulation.
+    :param convert:
+        Boolean indicating that the user wishes only to convert the 
+        input mechanism and quit.
+    :param version:
+        Version string of CanSen.
+    """
 
     # Open the text output file from the printer module
     output_filename = filenames['output_filename']
@@ -19,9 +28,20 @@ def main(filenames, convert, version):
     # Print version information to screen at the start of the problem
     print("This is CanSen, the SENKIN-like wrapper for Cantera, written in "
           "Python.\nVersion: {!s}\n".format(version))
-
+    
+    # Convert the mechanism if it is in CHEMKIN format. If ``convert`` 
+    # is True, exit the simulation.
+    mech_filename = filenames['mech_filename']
+    thermo_filename = filenames['thermo_filename']
+    if mech_filename.endswith('.inp'):
+        mech_filename = utils.convert_mech(mech_filename, thermo_filename)
+    
+    if convert:
+        print('User requested conversion only. Goodbye.')
+        sys.exit(0)
+            
     # Run the simulation
-    sim = SimulationCase(filenames,convert)
+    sim = SimulationCase(filenames)
     sim.run_simulation()
     
     # Clean up

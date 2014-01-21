@@ -29,31 +29,21 @@ class SimulationCase(object):
     """
     Class that sets up and runs a simulation case. 
     """
-    def __init__(self, filenames, convert):
+    def __init__(self, filenames):
         """Initialize the simulation case.
-        
-        If the mechanism file is in CHEMIN format (as determined by the 
-        file extension), it is converted to Cantera CTI format. Then,
-        the SENKIN-format input file is read into the ``keywords`` 
+
+        Read the SENKIN-format input file is read into the ``keywords`` 
         dictionary.
         
         :param filenames:
             Dictionary containing the relevant file names for this
             case.
-        :param convert:
-            Boolean; if ``True`` and the mechanism requires conversion, 
-            the case quits after to CTI format.
         """
         self.input_filename = filenames['input_filename']
         self.mech_filename = filenames['mech_filename']
         self.save_filename = filenames['save_filename']
         self.thermo_filename = filenames['thermo_filename']
         
-        if self.mech_filename.endswith('.inp'):
-            self.mech_filename = utils.convert_mech(self.mech_filename, 
-                                                    self.thermo_filename, 
-                                                    convert)
-            
         self.keywords = utils.read_input_file(self.input_filename)
         
     def setup_case(self):

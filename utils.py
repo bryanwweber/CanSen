@@ -10,7 +10,7 @@ except ImportError:
     
 from printer import divider
 
-def convert_mech(mech_filename, thermo_filename, convert):
+def convert_mech(mech_filename, thermo_filename):
     """Convert a mechanism and return a string with the filename.
     
     Convert a CHEMKIN format mechanism to the Cantera CTI format using
@@ -22,9 +22,6 @@ def convert_mech(mech_filename, thermo_filename, convert):
     :param thermo_filename:
         Filename of the thermodynamic database. Optional if the 
         thermodynamic database is present in the mechanism input. 
-    :param convert:
-        Boolean indicating that the user wishes only to convert the 
-        input mechanism and quit.
     """
     arg = ['--input='+mech_filename]
     if thermo_filename is not None:
@@ -32,13 +29,9 @@ def convert_mech(mech_filename, thermo_filename, convert):
     
     # Convert the mechanism
     ck2cti.main(arg)
-    if convert:
-        print('Mechanism conversion successful. Exiting.')
-        sys.exit(0)
-    else:
-        mech_filename = mech_filename[:-4]+'.cti'
-        print('Mechanism conversion successful, written to {}'.format(mech_filename))
-        return mech_filename
+    mech_filename = mech_filename[:-4]+'.cti'
+    print('Mechanism conversion successful, written to {}'.format(mech_filename))
+    return mech_filename
 
 def read_input_file(input_filename):
     """Read a formatted input file and return a dictionary of keywords.

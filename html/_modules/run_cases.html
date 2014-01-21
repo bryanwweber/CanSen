@@ -79,31 +79,21 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class that sets up and runs a simulation case. </span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filenames</span><span class="p">,</span> <span class="n">convert</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filenames</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialize the simulation case.</span>
-<span class="sd">        </span>
-<span class="sd">        If the mechanism file is in CHEMIN format (as determined by the </span>
-<span class="sd">        file extension), it is converted to Cantera CTI format. Then,</span>
-<span class="sd">        the SENKIN-format input file is read into the ``keywords`` </span>
+
+<span class="sd">        Read the SENKIN-format input file is read into the ``keywords`` </span>
 <span class="sd">        dictionary.</span>
 <span class="sd">        </span>
 <span class="sd">        :param filenames:</span>
 <span class="sd">            Dictionary containing the relevant file names for this</span>
 <span class="sd">            case.</span>
-<span class="sd">        :param convert:</span>
-<span class="sd">            Boolean; if ``True`` and the mechanism requires conversion, </span>
-<span class="sd">            the case quits after to CTI format.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">input_filename</span> <span class="o">=</span> <span class="n">filenames</span><span class="p">[</span><span class="s">&#39;input_filename&#39;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mech_filename</span> <span class="o">=</span> <span class="n">filenames</span><span class="p">[</span><span class="s">&#39;mech_filename&#39;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">save_filename</span> <span class="o">=</span> <span class="n">filenames</span><span class="p">[</span><span class="s">&#39;save_filename&#39;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">thermo_filename</span> <span class="o">=</span> <span class="n">filenames</span><span class="p">[</span><span class="s">&#39;thermo_filename&#39;</span><span class="p">]</span>
         
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mech_filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s">&#39;.inp&#39;</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">mech_filename</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">convert_mech</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mech_filename</span><span class="p">,</span> 
-                                                    <span class="bp">self</span><span class="o">.</span><span class="n">thermo_filename</span><span class="p">,</span> 
-                                                    <span class="n">convert</span><span class="p">)</span>
-            
         <span class="bp">self</span><span class="o">.</span><span class="n">keywords</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">read_input_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_filename</span><span class="p">)</span>
         
 <div class="viewcode-block" id="SimulationCase.setup_case"><a class="viewcode-back" href="../codedocs.html#run_cases.SimulationCase.setup_case">[docs]</a>    <span class="k">def</span> <span class="nf">setup_case</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

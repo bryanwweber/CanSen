@@ -60,7 +60,16 @@
 <span class="kn">from</span> <span class="nn">run_cases</span> <span class="kn">import</span> <span class="n">SimulationCase</span>
 
 <div class="viewcode-block" id="main"><a class="viewcode-back" href="../codedocs.html#cansen.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">filenames</span><span class="p">,</span> <span class="n">convert</span><span class="p">,</span> <span class="n">version</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;The main driver function of CanSen.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;The main driver function of CanSen.</span>
+<span class="sd">    </span>
+<span class="sd">    :param filenames:</span>
+<span class="sd">        Dictionary of filenames related to the simulation.</span>
+<span class="sd">    :param convert:</span>
+<span class="sd">        Boolean indicating that the user wishes only to convert the </span>
+<span class="sd">        input mechanism and quit.</span>
+<span class="sd">    :param version:</span>
+<span class="sd">        Version string of CanSen.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c"># Open the text output file from the printer module</span>
     <span class="n">output_filename</span> <span class="o">=</span> <span class="n">filenames</span><span class="p">[</span><span class="s">&#39;output_filename&#39;</span><span class="p">]</span>
@@ -69,9 +78,20 @@
     <span class="c"># Print version information to screen at the start of the problem</span>
     <span class="k">print</span><span class="p">(</span><span class="s">&quot;This is CanSen, the SENKIN-like wrapper for Cantera, written in &quot;</span>
           <span class="s">&quot;Python.</span><span class="se">\n</span><span class="s">Version: {!s}</span><span class="se">\n</span><span class="s">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">version</span><span class="p">))</span>
-
+    
+    <span class="c"># Convert the mechanism if it is in CHEMKIN format. If ``convert`` </span>
+    <span class="c"># is True, exit the simulation.</span>
+    <span class="n">mech_filename</span> <span class="o">=</span> <span class="n">filenames</span><span class="p">[</span><span class="s">&#39;mech_filename&#39;</span><span class="p">]</span>
+    <span class="n">thermo_filename</span> <span class="o">=</span> <span class="n">filenames</span><span class="p">[</span><span class="s">&#39;thermo_filename&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">mech_filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s">&#39;.inp&#39;</span><span class="p">):</span>
+        <span class="n">mech_filename</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">convert_mech</span><span class="p">(</span><span class="n">mech_filename</span><span class="p">,</span> <span class="n">thermo_filename</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">convert</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;User requested conversion only. Goodbye.&#39;</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            
     <span class="c"># Run the simulation</span>
-    <span class="n">sim</span> <span class="o">=</span> <span class="n">SimulationCase</span><span class="p">(</span><span class="n">filenames</span><span class="p">,</span><span class="n">convert</span><span class="p">)</span>
+    <span class="n">sim</span> <span class="o">=</span> <span class="n">SimulationCase</span><span class="p">(</span><span class="n">filenames</span><span class="p">)</span>
     <span class="n">sim</span><span class="o">.</span><span class="n">run_simulation</span><span class="p">()</span>
     
     <span class="c"># Clean up</span>

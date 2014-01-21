@@ -60,7 +60,7 @@
     
 <span class="kn">from</span> <span class="nn">printer</span> <span class="kn">import</span> <span class="n">divider</span>
 
-<div class="viewcode-block" id="convert_mech"><a class="viewcode-back" href="../codedocs.html#utils.convert_mech">[docs]</a><span class="k">def</span> <span class="nf">convert_mech</span><span class="p">(</span><span class="n">mech_filename</span><span class="p">,</span> <span class="n">thermo_filename</span><span class="p">,</span> <span class="n">convert</span><span class="p">):</span>
+<div class="viewcode-block" id="convert_mech"><a class="viewcode-back" href="../codedocs.html#utils.convert_mech">[docs]</a><span class="k">def</span> <span class="nf">convert_mech</span><span class="p">(</span><span class="n">mech_filename</span><span class="p">,</span> <span class="n">thermo_filename</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Convert a mechanism and return a string with the filename.</span>
 <span class="sd">    </span>
 <span class="sd">    Convert a CHEMKIN format mechanism to the Cantera CTI format using</span>
@@ -72,9 +72,6 @@
 <span class="sd">    :param thermo_filename:</span>
 <span class="sd">        Filename of the thermodynamic database. Optional if the </span>
 <span class="sd">        thermodynamic database is present in the mechanism input. </span>
-<span class="sd">    :param convert:</span>
-<span class="sd">        Boolean indicating that the user wishes only to convert the </span>
-<span class="sd">        input mechanism and quit.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">arg</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;--input=&#39;</span><span class="o">+</span><span class="n">mech_filename</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">thermo_filename</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
@@ -82,13 +79,9 @@
     
     <span class="c"># Convert the mechanism</span>
     <span class="n">ck2cti</span><span class="o">.</span><span class="n">main</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">convert</span><span class="p">:</span>
-        <span class="k">print</span><span class="p">(</span><span class="s">&#39;Mechanism conversion successful. Exiting.&#39;</span><span class="p">)</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">mech_filename</span> <span class="o">=</span> <span class="n">mech_filename</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="o">+</span><span class="s">&#39;.cti&#39;</span>
-        <span class="k">print</span><span class="p">(</span><span class="s">&#39;Mechanism conversion successful, written to {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mech_filename</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">mech_filename</span>
+    <span class="n">mech_filename</span> <span class="o">=</span> <span class="n">mech_filename</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="o">+</span><span class="s">&#39;.cti&#39;</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&#39;Mechanism conversion successful, written to {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mech_filename</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">mech_filename</span>
 </div>
 <div class="viewcode-block" id="read_input_file"><a class="viewcode-back" href="../codedocs.html#utils.read_input_file">[docs]</a><span class="k">def</span> <span class="nf">read_input_file</span><span class="p">(</span><span class="n">input_filename</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Read a formatted input file and return a dictionary of keywords.</span>

@@ -88,6 +88,20 @@ file. Otherwise, required.</dd>
 <dt id="cansen.main">
 <tt class="descclassname">cansen.</tt><tt class="descname">main</tt><big>(</big><em>filenames</em>, <em>convert</em>, <em>version</em><big>)</big><a class="reference internal" href="_modules/cansen.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cansen.main" title="Permalink to this definition">¶</a></dt>
 <dd><p>The main driver function of CanSen.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>filenames</strong> &#8211; Dictionary of filenames related to the simulation.</li>
+<li><strong>convert</strong> &#8211; Boolean indicating that the user wishes only to convert the 
+input mechanism and quit.</li>
+<li><strong>version</strong> &#8211; Version string of CanSen.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
@@ -170,7 +184,7 @@ by the <tt class="docutils literal"><span class="pre">Func1</span></tt> interfac
 <span id="run-cases-module"></span><h2>run_cases module<a class="headerlink" href="#module-run_cases" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="run_cases.SimulationCase">
-<em class="property">class </em><tt class="descclassname">run_cases.</tt><tt class="descname">SimulationCase</tt><big>(</big><em>filenames</em>, <em>convert</em><big>)</big><a class="reference internal" href="_modules/run_cases.html#SimulationCase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#run_cases.SimulationCase" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">run_cases.</tt><tt class="descname">SimulationCase</tt><big>(</big><em>filenames</em><big>)</big><a class="reference internal" href="_modules/run_cases.html#SimulationCase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#run_cases.SimulationCase" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
 <p>Class that sets up and runs a simulation case.</p>
 <dl class="method">
@@ -237,7 +251,7 @@ of time.</p>
 
 <dl class="function">
 <dt id="utils.convert_mech">
-<tt class="descclassname">utils.</tt><tt class="descname">convert_mech</tt><big>(</big><em>mech_filename</em>, <em>thermo_filename</em>, <em>convert</em><big>)</big><a class="reference internal" href="_modules/utils.html#convert_mech"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.convert_mech" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">utils.</tt><tt class="descname">convert_mech</tt><big>(</big><em>mech_filename</em>, <em>thermo_filename</em><big>)</big><a class="reference internal" href="_modules/utils.html#convert_mech"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.convert_mech" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert a mechanism and return a string with the filename.</p>
 <p>Convert a CHEMKIN format mechanism to the Cantera CTI format using
 the Cantera built-in script <cite>ck2cti</cite>.</p>
@@ -250,8 +264,6 @@ the Cantera built-in script <cite>ck2cti</cite>.</p>
 CTI file will have the same name, but with <cite>.cti</cite> extension.</li>
 <li><strong>thermo_filename</strong> &#8211; Filename of the thermodynamic database. Optional if the 
 thermodynamic database is present in the mechanism input.</li>
-<li><strong>convert</strong> &#8211; Boolean indicating that the user wishes only to convert the 
-input mechanism and quit.</li>
 </ul>
 </td>
 </tr>
