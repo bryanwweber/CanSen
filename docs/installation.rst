@@ -42,7 +42,7 @@ Alternatively, you can use Git to download the developer version.
 **WARNING:** The developer version of CanSen is not guaranteed to be
 working at any given commit. Proceed with caution.::
 
-    git clone git://github.com/bryanwweber/CanSen/CanSen.git
+    git clone git://github.com/bryanwweber/CanSen.git
 
 will download the repository into a folder called ``CanSen``.
 
@@ -82,6 +82,6 @@ Alternatively, you can use Git to download the developer version.
 **WARNING:** The developer version of CanSen is not guaranteed to be
 working at any given commit. Proceed with caution.::
 
-    git clone git://github.com/bryanwweber/CanSen/CanSen.git
+    git clone git://github.com/bryanwweber/CanSen.git
 
 will download the repository into a folder called ``CanSen``.
