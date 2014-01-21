@@ -241,7 +241,7 @@ class SimulationCase(object):
                     table.flush()
                     
                 if self.netw.time > self.print_time:
-                    interp_state = utils.reactor_interpolate(print_time,prev_time,cur_time)
+                    interp_state = utils.reactor_interpolate(self.print_time,prev_time,cur_time)
                     printer.reactor_state_printer(interp_state,self.species_names)
                     self.print_time += self.print_time_step
                 elif self.netw.time == self.print_time:
