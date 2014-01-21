@@ -62,16 +62,19 @@ def read_input_file(input_filename):
     # unsupported_keys is a list of keywords that are not supported 
     # yet.
     unsupported_keys = [
-    'ADAP',  'AEXT',   'AFRA',     'AGGA',  'AGGB',  'AGGD',   'AGGE',   'AGGFD', 'AGGMN', 
-    'AINT',  'AREA',   'AREAQ',    'AROP',  'ASEN',  'ASTEPS', 'AVALUE', 'AVAR',  'BETA', 
-    'BLKEQ', 'BULK',   'CLSC',     'CLSM',  'CNTN',  'CNTT',   'COLR',   'DIST',  'ENRG', 'EPSG', 
-    'EPSR',  'EPSS',   'EPST',     'ETCH',  'GFAC',  'GMHTC',  'HTC',    'HTRN',  'IPSR', 'IRET', 
-    'ISTP',  'KLIM',   'MAXIT',    'MCUT',  'MMASS', 'NADAP',  'NEWRUN', 'NMOM',  'NNEG', 'NOCG', 
-    'NSOL',  'PNDE',   'PPRO',     'PRNT',  'PROE',  'PVFE',   'QFUN',   'QLOS',  'QPRO', 'QRGEQ', 
-    'QRSEQ', 'RELAXC', 'ROP',      'RSTR',  'SCLM',  'SCLS',   'SCOR',   'SENG',  'SENT', 'SFAC', 
-    'SIZE',  'SOLUTION_TECHNIQUE', 'SSTT',  'SURF',  'TAMB',   'TGIV',   'TIFP',  'TRAN', 'TRES', 
-    'TRST',  'TSRF',   'TSTR',     'UIGN',  'USET',  'WENG',   'XMLI',
-    ]
+        'ADAP',   'AEXT',   'AFRA', 'AGGA',  'AGGB',  'AGGD',  'AGGE', 
+        'AGGFD',  'AGGMN',  'AINT', 'AREA',  'AREAQ', 'AROP',  'ASEN', 
+        'ASTEPS', 'AVALUE', 'AVAR', 'BETA',  'BLKEQ', 'BULK',  'CLSC', 
+        'CNTN',   'CNTT',   'COLR', 'DIST',  'ENRG',  'EPSG',  'EPSR', 'CLSM', 
+        'EPSS',   'EPST',   'ETCH', 'GFAC',  'GMHTC', 'HTC',   'HTRN', 'IPSR', 
+        'IRET',   'ISTP',   'KLIM', 'MAXIT', 'MCUT',  'MMASS', 'NADAP', 
+        'NEWRUN', 'NMOM',   'NNEG', 'NOCG',  'NSOL',  'PNDE',  'PPRO', 'PRNT', 
+        'PROE',   'PVFE',   'QFUN', 'QLOS',  'QPRO',  'QRGEQ', 'QRSEQ', 
+        'RELAXC', 'ROP',    'RSTR', 'SCLM',  'SCLS',  'SCOR',  'SENG', 'SENT', 
+        'SFAC',   'SIZE',   'SOLUTION_TECHNIQUE',     'SSTT',  'SURF', 'TAMB', 
+        'TGIV',   'TIFP',   'TRAN', 'TRES',  'TRST',  'TSRF',  'TSTR', 'UIGN', 
+        'USET',   'WENG',   'XMLI'
+        ]
     
     with open(input_filename) as input_file:
         print(divider)
@@ -79,7 +82,8 @@ def read_input_file(input_filename):
         for line in input_file:
             # Echo the input back to the output file.
             print(' '*10,line,end='')
-            if line.startswith('!') or line.startswith('.') or line.startswith('/'):
+            if (line.startswith('!') or line.startswith('.') or 
+                    line.startswith('/')):
                 continue
             elif line.upper().startswith('CONV'):
                 if problem_type:
