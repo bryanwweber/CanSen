@@ -380,7 +380,15 @@
                         <span class="c"># Add sensitivity interpolation here by reading </span>
                         <span class="c"># from file on disk. Only have to do it once, </span>
                         <span class="c"># so it shouldn&#39;t be too expensive.</span>
-                        <span class="k">pass</span>
+                        <span class="n">prev_sens</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">cols</span><span class="o">.</span><span class="n">sensitivity</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                        <span class="n">cur_sens</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">netw</span><span class="o">.</span><span class="n">sensitivities</span><span class="p">()</span>
+                        <span class="n">prev_time</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">cols</span><span class="o">.</span><span class="n">time</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                        <span class="n">cur_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">netw</span><span class="o">.</span><span class="n">time</span>
+                        <span class="n">interp_sens</span> <span class="o">=</span> <span class="n">prev_sens</span> <span class="o">+</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">tend</span> <span class="o">-</span> <span class="n">prev_time</span><span class="p">)</span> <span class="o">*</span>
+                                                   <span class="p">(</span><span class="n">cur_sens</span> <span class="o">-</span> <span class="n">prev_sens</span><span class="p">)</span> <span class="o">/</span>
+                                                   <span class="p">(</span><span class="n">cur_time</span> <span class="o">-</span> <span class="n">prev_time</span><span class="p">))</span>
+                    <span class="c"># We don&#39;t need any of the rest of this step, so </span>
+                    <span class="c"># break</span>
                     <span class="k">break</span>
                 
                 <span class="c"># If the ``save_time_step`` is set, save at the nearest </span>
@@ -391,7 +399,16 @@
                 <span class="c"># time step to the binary file.</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_time_step</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
                     <span class="c"># Add what to do here if the save_time_step is set.</span>
-                    <span class="k">pass</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">netw</span><span class="o">.</span><span class="n">time</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_time</span><span class="p">:</span>
+                        <span class="n">timestep</span><span class="p">[</span><span class="s">&#39;time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">netw</span><span class="o">.</span><span class="n">time</span>
+                        <span class="p">(</span><span class="n">timestep</span><span class="p">[</span><span class="s">&#39;temperature&#39;</span><span class="p">],</span> <span class="n">timestep</span><span class="p">[</span><span class="s">&#39;pressure&#39;</span><span class="p">],</span> 
+                            <span class="n">timestep</span><span class="p">[</span><span class="s">&#39;massfractions&#39;</span><span class="p">])</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reac</span><span class="o">.</span><span class="n">thermo</span><span class="o">.</span><span class="n">TPY</span>
+                        <span class="n">timestep</span><span class="p">[</span><span class="s">&#39;volume&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reac</span><span class="o">.</span><span class="n">volume</span>
+                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensitivity</span><span class="p">:</span>
+                            <span class="n">timestep</span><span class="p">[</span><span class="s">&#39;sensitivity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">netw</span><span class="o">.</span><span class="n">sensitivities</span><span class="p">()</span>
+                        <span class="n">timestep</span><span class="o">.</span><span class="n">append</span><span class="p">()</span>
+                        <span class="n">table</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">save_time</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_time_step</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">timestep</span><span class="p">[</span><span class="s">&#39;time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">netw</span><span class="o">.</span><span class="n">time</span>
                     <span class="p">(</span><span class="n">timestep</span><span class="p">[</span><span class="s">&#39;temperature&#39;</span><span class="p">],</span> <span class="n">timestep</span><span class="p">[</span><span class="s">&#39;pressure&#39;</span><span class="p">],</span> 

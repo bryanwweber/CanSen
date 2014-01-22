@@ -1,6 +1,7 @@
 .. CanSen documentation master file, created by
    sphinx-quickstart on Tue Jan 21 07:29:58 2014.
 
+==================================
 Welcome to CanSen's documentation!
 ==================================
 
@@ -28,6 +29,7 @@ Contents:
    installation
    usage
    keywords
+   postprocessing
    Code Documentation <codedocs>
 
 
