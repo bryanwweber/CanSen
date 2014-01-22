@@ -5,6 +5,14 @@ except ImportError:
     print('Error: PyTables must be installed')
     sys.exit(1)
     
+try:
+    import cantera as ct
+except ImportError:
+    print('Error: Cantera must be installed')
+    sys.exit(1)
+    
+# Use a ``with`` statmement to ensure that the file is closed when the 
+# code completes, even if there is an error.
 with tables.open_file('save.hdf','r') as save_file:
     # To print information about the save file, just type the name of 
     # its variable
@@ -73,4 +81,38 @@ with tables.open_file('save.hdf','r') as save_file:
     # zero-based, to access the mass fractions on the 4th time step, do
     mass_fracs_4 = all_cols[3][4]
     
-    # Individual columns can be stored in variables as well.
+    # Individual Columns can be stored in variables as well. This is 
+    # done by the natural naming scheme.
+    all_mass_fracs = table.cols.massfractions
+    
+    # This stores an instance of the Column class in ``all_mass_fracs``.
+    # It may be more useful to store the data in a particular column in 
+    # a variable. To do that, get a slice of the column by using the
+    # index and the colon operator. For instance, to store all of the
+    # mass fraction data in a variable
+    all_mass_fracs = table.cols.massfractions[:]
+    
+    # Or, to store the fifth through tenth time steps
+    mass_fracs_5_10 = table.cols.massfractions[4:9]
+    
+    # Or, to store every other time step from the sixth through the 
+    # 20th
+    mass_fracs_alt = table.cols.massfractions[5:19:2]
+    
+    # Once the data has been extracted from the save file, we need to 
+    # actually be able to do something with it. Fortunately, Cantera
+    # offers a simple way to do this, simply by initializing a 
+    # Solution to the desired conditions. 
+    gas = ct.Solution('mech.xml')
+    for row in table.iterrows():
+        gas.TPY = row['temperature'], row['pressure'], row['massfractions']
+        print(gas.creation_rates)
+        
+    # This will print the creation rates of each species at each time 
+    # step. Any method or parameter supported by the Solution class 
+    # can be used to retrieve data at any given time step.
+    #
+    # Further information about the PyTables package can be found at 
+    # http://pytables.github.io/usersguide/index.html and information
+    # about Cantera can be found at 
+    # http://cantera.github.io/docs/sphinx/html/index.html
