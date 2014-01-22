@@ -330,7 +330,15 @@ class SimulationCase(object):
                         # Add sensitivity interpolation here by reading 
                         # from file on disk. Only have to do it once, 
                         # so it shouldn't be too expensive.
-                        pass
+                        prev_sens = table.cols.sensitivity[-1]
+                        cur_sens = self.netw.sensitivities()
+                        prev_time = table.cols.time[-1]
+                        cur_time = self.netw.time
+                        interp_sens = prev_sens + ((self.tend - prev_time) *
+                                                   (cur_sens - prev_sens) /
+                                                   (cur_time - prev_time))
+                    # We don't need any of the rest of this step, so 
+                    # break
                     break
                 
                 # If the ``save_time_step`` is set, save at the nearest 
