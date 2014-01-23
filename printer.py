@@ -70,11 +70,11 @@ def reactor_state_printer(reactor, species_names, ignition_time=None, end=False)
     else:
         pass
         
-    print("Reactor Temperature (K) = {:>13.4f}\n".format(temperature),
-          "Reactor Pressure (Pa)   = {:>13.4f}\n".format(pressure),
-          "Reactor Volume (m**3)   = {:>13.4f}\n".format(volume),
-          "Reactor Vdot (m**3/s)   = {:>13.4f}".format(vdot),
-          sep='')
+    print(("Reactor Temperature (K) = {0:>13.4f}\n"
+          "Reactor Pressure (Pa)   = {1:>13.4f}\n"
+          "Reactor Volume (m**3)   = {2:>13.4f}\n"
+          "Reactor Vdot (m**3/s)   = {3:>13.4f}"
+          ).format(temperature, pressure, volume, vdot))
     print('Gas Phase Mole Fractions:')
     
     # Here we calculate the number of columns of species mole fractions 
