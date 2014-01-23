@@ -37,7 +37,7 @@ class Tee(object):
     def __del__(self):
         self.close()
         
-def reactor_state_printer(reactor, species_names, end=False):
+def reactor_state_printer(reactor, species_names, ignition_time=None, end=False):
     """Produce pretty-printed output from the input reactor state.
     
     :param reactor:
@@ -60,6 +60,10 @@ def reactor_state_printer(reactor, species_names, end=False):
         print('Solution time = {:E}'.format(time))
     else:
         print('End time reached = {:E}'.format(time))
+        if ignition_time is not None:
+            print('Ignition time = {:E}'.format(ignition_time))
+        else:
+            print('Ignition was not found.')
     print("Reactor Temperature (K) = {:>13.4f}\n".format(temperature),
           "Reactor Pressure (Pa)   = {:>13.4f}\n".format(pressure),
           "Reactor Volume (m**3)   = {:>13.4f}\n".format(volume),

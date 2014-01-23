@@ -219,6 +219,10 @@ class SimulationCase(object):
         # Store the species names in a slightly shorter variable name
         self.species_names = self.reac.thermo.species_names
         
+        #Initialize the ignition time, in case the end time is reached 
+        # before ignition occurs
+        self.ignition_time = None
+        
     def run_case(self):
         """
         Actually run the case set up by ``setup_case``. Sets binary 
@@ -314,6 +318,7 @@ class SimulationCase(object):
                                                              cur_time)
                     printer.reactor_state_printer(interp_state, 
                                                   self.species_names, 
+                                                  self.ignition_time,
                                                   end=True)
                     timestep['time'] = self.tend
                     timestep['temperature'] = interp_state[1]
