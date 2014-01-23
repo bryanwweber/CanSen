@@ -3,6 +3,11 @@ CANSEN
 
 SENKIN-like wrapper for Cantera
 
+Documentation
+=============
+
+Documentation can be found at <http://bryanwweber.github.io/CanSen/html/index.html>
+
 Milestones
 ==========
 
