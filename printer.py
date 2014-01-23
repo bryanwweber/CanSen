@@ -44,6 +44,8 @@ def reactor_state_printer(reactor, species_names, ignition_time=None, end=False)
         Vector of reactor state information.
     :param species_names:
         List of strings of species names.
+    :param ignition_time:
+        Float representing the ignition time of the reactor. 
     :param end:
         Boolean to tell the printer this is the final print operation.
     """
@@ -57,13 +59,17 @@ def reactor_state_printer(reactor, species_names, ignition_time=None, end=False)
     # Begin printing
     print(divider)
     if not end:
-        print('Solution time = {:E}'.format(time))
+        print('Solution time (s) = {:E}'.format(time))
     else:
-        print('End time reached = {:E}'.format(time))
-        if ignition_time is not None:
-            print('Ignition time = {:E}'.format(ignition_time))
-        else:
-            print('Ignition was not found.')
+        print('End time reached (s) = {:E}'.format(time))
+    
+    if ignition_time is not None:
+        print('Ignition time (s) = {:E}'.format(ignition_time))
+    elif end:
+        print('Ignition was not found.')
+    else:
+        pass
+        
     print("Reactor Temperature (K) = {:>13.4f}\n".format(temperature),
           "Reactor Pressure (Pa)   = {:>13.4f}\n".format(pressure),
           "Reactor Volume (m**3)   = {:>13.4f}\n".format(volume),

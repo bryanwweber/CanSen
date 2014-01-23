@@ -392,6 +392,12 @@ class SimulationCase(object):
                 # future, the ignition time may be interpolated.
                 if self.reac.T >= self.temp_limit:
                     self.ignition_time = self.netw.time
+                    if self.keywords.get('break_on_ignition', False):
+                        printer.reactor_state_printer(cur_time, 
+                                                      self.species_names,
+                                                      self.ignition_time,
+                                                      end=False)
+                        break
                 
                 # Set the ``prev_time`` array equal to the ``cur_time`` 
                 #  array so we can go to the next time step.
