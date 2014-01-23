@@ -61,11 +61,14 @@ class SimulationCase(object):
         # If the equivalence ratio has been specified, send the 
         # keywords for conversion.
         if 'eqRatio' in self.keywords:
-            reactants = utils.equivalence_ratio(self.gas,self.keywords['eqRatio'],self.keywords['fuel'],
-                                          self.keywords['oxidizer'],
-                                          self.keywords['completeProducts'],
-                                          self.keywords['additionalSpecies'],
-                                          )
+            reactants = utils.equivalence_ratio(
+                self.gas,
+                self.keywords['eqRatio'],
+                self.keywords['fuel'],
+                self.keywords['oxidizer'],
+                self.keywords['completeProducts'],
+                self.keywords['additionalSpecies'],
+                )
         else:
             # The reactants are stored in the ``keywords`` dictionary 
             # as a list of strings, so they need to be joined.
@@ -197,7 +200,10 @@ class SimulationCase(object):
         save_time_int = self.keywords.get('saveTimeInt')
         max_time_int = self.keywords.get('maxTimeStep')
         
-        time_ints = [value for value in [print_time_int,save_time_int,max_time_int] if value is not None]
+        time_ints = [value for value in 
+                        [print_time_int,save_time_int,max_time_int] 
+                        if value is not None
+                    ]
         
         if time_ints:
             self.netw.set_max_time_step(min(time_ints))
@@ -229,21 +235,24 @@ class SimulationCase(object):
         output file format, then runs the simulation by using 
         ``ReactorNet.step(self.tend)``.
         """
-        # Use the table format of hdf instead of the array format. This way, each variable can be saved 
-        # in its own column and referenced individually when read. Solution to the interpolation problem 
-        # was made by saving the most recent time steps into numpy arrays. The arrays are not vertically
-        # appended so we should eliminate the hassle associated with that.
-        table_def = {'time':tables.Float64Col(pos=0),
-                     'temperature':tables.Float64Col(pos=1),
-                     'pressure':tables.Float64Col(pos=2),
-                     'volume':tables.Float64Col(pos=3),
-                     'massfractions':tables.Float64Col(
-                          shape=(self.reac.thermo.n_species),pos=4
+        # Use the table format of hdf instead of the array format. This 
+        # way, each variable can be saved in its own column and 
+        # referenced individually when read. Solution to the 
+        # interpolation problem was made by saving the most recent time 
+        # steps into numpy arrays. The arrays are not vertically 
+        # appended so we should eliminate the hassle associated with 
+        # that.
+        table_def = {'time':tables.Float64Col(pos=0), 
+                     'temperature':tables.Float64Col(pos=1), 
+                     'pressure':tables.Float64Col(pos=2), 
+                     'volume':tables.Float64Col(pos=3), 
+                     'massfractions':tables.Float64Col( 
+                          shape=(self.reac.thermo.n_species),pos=4 
                           ),
                      }
         if self.sensitivity:
-            table_def['sensitivity'] = tables.Float64Col(
-                shape=(self.n_vars,self.netw.n_sensitivity_params),pos=5
+            table_def['sensitivity'] = tables.Float64Col( 
+                shape=(self.n_vars,self.netw.n_sensitivity_params),pos=5 
                 )
             
         with tables.open_file(self.save_filename, mode = 'w', 
@@ -302,7 +311,7 @@ class SimulationCase(object):
                 cur_time = np.hstack((self.netw.time, self.reac.thermo.T, 
                                       self.reac.thermo.P, self.reac.volume, 
                                       self.wall.vdot(self.netw.time), 
-                                      self.reac.thermo.X
+                                      self.reac.thermo.X 
                                       ))
                 
                 # If we have passed the end time, interpolate backwards 
@@ -318,7 +327,7 @@ class SimulationCase(object):
                                                              cur_time)
                     printer.reactor_state_printer(interp_state, 
                                                   self.species_names, 
-                                                  self.ignition_time,
+                                                  self.ignition_time, 
                                                   end=True)
                     timestep['time'] = self.tend
                     timestep['temperature'] = interp_state[1]
@@ -339,8 +348,8 @@ class SimulationCase(object):
                         cur_sens = self.netw.sensitivities()
                         prev_time = table.cols.time[-1]
                         cur_time = self.netw.time
-                        interp_sens = prev_sens + ((self.tend - prev_time) *
-                                                   (cur_sens - prev_sens) /
+                        interp_sens = prev_sens + ((self.tend - prev_time) * 
+                                                   (cur_sens - prev_sens) / 
                                                    (cur_time - prev_time))
                     # We don't need any of the rest of this step, so 
                     # break
@@ -394,13 +403,13 @@ class SimulationCase(object):
                     self.ignition_time = self.netw.time
                     if self.keywords.get('break_on_ignition', False):
                         printer.reactor_state_printer(cur_time, 
-                                                      self.species_names,
-                                                      self.ignition_time,
+                                                      self.species_names, 
+                                                      self.ignition_time, 
                                                       end=False)
                         break
                 
                 # Set the ``prev_time`` array equal to the ``cur_time`` 
-                #  array so we can go to the next time step.
+                # array so we can go to the next time step.
                 prev_time = cur_time
                 
     def run_simulation(self):
