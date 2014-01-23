@@ -50,6 +50,8 @@
   <h1>Source code for run_cases</h1><div class="highlight"><pre>
 <span class="c"># Standard libraries</span>
 <span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">math</span> 
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">zip_longest</span>
 
 <span class="c"># Related modules</span>
 <span class="k">try</span><span class="p">:</span>
@@ -71,7 +73,7 @@
     <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
 <span class="c"># Local imports</span>
-<span class="kn">import</span> <span class="nn">printer</span>
+<span class="kn">from</span> <span class="nn">printer</span> <span class="kn">import</span> <span class="n">divider</span>
 <span class="kn">import</span> <span class="nn">utils</span>
 <span class="kn">from</span> <span class="nn">profiles</span> <span class="kn">import</span> <span class="n">VolumeProfile</span><span class="p">,</span> <span class="n">TemperatureProfile</span><span class="p">,</span> <span class="n">PressureProfile</span>
 
@@ -111,11 +113,14 @@
         <span class="c"># If the equivalence ratio has been specified, send the </span>
         <span class="c"># keywords for conversion.</span>
         <span class="k">if</span> <span class="s">&#39;eqRatio&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">keywords</span><span class="p">:</span>
-            <span class="n">reactants</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">equivalence_ratio</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gas</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">keywords</span><span class="p">[</span><span class="s">&#39;eqRatio&#39;</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">keywords</span><span class="p">[</span><span class="s">&#39;fuel&#39;</span><span class="p">],</span>
-                                          <span class="bp">self</span><span class="o">.</span><span class="n">keywords</span><span class="p">[</span><span class="s">&#39;oxidizer&#39;</span><span class="p">],</span>
-                                          <span class="bp">self</span><span class="o">.</span><span class="n">keywords</span><span class="p">[</span><span class="s">&#39;completeProducts&#39;</span><span class="p">],</span>
-                                          <span class="bp">self</span><span class="o">.</span><span class="n">keywords</span><span class="p">[</span><span class="s">&#39;additionalSpecies&#39;</span><span class="p">],</span>
-                                          <span class="p">)</span>
+            <span class="n">reactants</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">equivalence_ratio</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">gas</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">keywords</span><span class="p">[</span><span class="s">&#39;eqRatio&#39;</span><span class="p">],</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">keywords</span><span class="p">[</span><span class="s">&#39;fuel&#39;</span><span class="p">],</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">keywords</span><span class="p">[</span><span class="s">&#39;oxidizer&#39;</span><span class="p">],</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">keywords</span><span class="p">[</span><span class="s">&#39;completeProducts&#39;</span><span class="p">],</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">keywords</span><span class="p">[</span><span class="s">&#39;additionalSpecies&#39;</span><span class="p">],</span>
+                <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c"># The reactants are stored in the ``keywords`` dictionary </span>
             <span class="c"># as a list of strings, so they need to be joined.</span>
@@ -247,7 +252,10 @@
         <span class="n">save_time_int</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">keywords</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;saveTimeInt&#39;</span><span class="p">)</span>
         <span class="n">max_time_int</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">keywords</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;maxTimeStep&#39;</span><span class="p">)</span>
         
-        <span class="n">time_ints</span> <span class="o">=</span> <span class="p">[</span><span class="n">value</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="p">[</span><span class="n">print_time_int</span><span class="p">,</span><span class="n">save_time_int</span><span class="p">,</span><span class="n">max_time_int</span><span class="p">]</span> <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">]</span>
+        <span class="n">time_ints</span> <span class="o">=</span> <span class="p">[</span><span class="n">value</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> 
+                        <span class="p">[</span><span class="n">print_time_int</span><span class="p">,</span><span class="n">save_time_int</span><span class="p">,</span><span class="n">max_time_int</span><span class="p">]</span> 
+                        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span>
+                    <span class="p">]</span>
         
         <span class="k">if</span> <span class="n">time_ints</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">netw</span><span class="o">.</span><span class="n">set_max_time_step</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">time_ints</span><span class="p">))</span>
@@ -279,21 +287,24 @@
 <span class="sd">        output file format, then runs the simulation by using </span>
 <span class="sd">        ``ReactorNet.step(self.tend)``.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c"># Use the table format of hdf instead of the array format. This way, each variable can be saved </span>
-        <span class="c"># in its own column and referenced individually when read. Solution to the interpolation problem </span>
-        <span class="c"># was made by saving the most recent time steps into numpy arrays. The arrays are not vertically</span>
-        <span class="c"># appended so we should eliminate the hassle associated with that.</span>
-        <span class="n">table_def</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;time&#39;</span><span class="p">:</span><span class="n">tables</span><span class="o">.</span><span class="n">Float64Col</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
-                     <span class="s">&#39;temperature&#39;</span><span class="p">:</span><span class="n">tables</span><span class="o">.</span><span class="n">Float64Col</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
-                     <span class="s">&#39;pressure&#39;</span><span class="p">:</span><span class="n">tables</span><span class="o">.</span><span class="n">Float64Col</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
-                     <span class="s">&#39;volume&#39;</span><span class="p">:</span><span class="n">tables</span><span class="o">.</span><span class="n">Float64Col</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span>
-                     <span class="s">&#39;massfractions&#39;</span><span class="p">:</span><span class="n">tables</span><span class="o">.</span><span class="n">Float64Col</span><span class="p">(</span>
-                          <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reac</span><span class="o">.</span><span class="n">thermo</span><span class="o">.</span><span class="n">n_species</span><span class="p">),</span><span class="n">pos</span><span class="o">=</span><span class="mi">4</span>
+        <span class="c"># Use the table format of hdf instead of the array format. This </span>
+        <span class="c"># way, each variable can be saved in its own column and </span>
+        <span class="c"># referenced individually when read. Solution to the </span>
+        <span class="c"># interpolation problem was made by saving the most recent time </span>
+        <span class="c"># steps into numpy arrays. The arrays are not vertically </span>
+        <span class="c"># appended so we should eliminate the hassle associated with </span>
+        <span class="c"># that.</span>
+        <span class="n">table_def</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;time&#39;</span><span class="p">:</span><span class="n">tables</span><span class="o">.</span><span class="n">Float64Col</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> 
+                     <span class="s">&#39;temperature&#39;</span><span class="p">:</span><span class="n">tables</span><span class="o">.</span><span class="n">Float64Col</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> 
+                     <span class="s">&#39;pressure&#39;</span><span class="p">:</span><span class="n">tables</span><span class="o">.</span><span class="n">Float64Col</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span> 
+                     <span class="s">&#39;volume&#39;</span><span class="p">:</span><span class="n">tables</span><span class="o">.</span><span class="n">Float64Col</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span> 
+                     <span class="s">&#39;massfractions&#39;</span><span class="p">:</span><span class="n">tables</span><span class="o">.</span><span class="n">Float64Col</span><span class="p">(</span> 
+                          <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reac</span><span class="o">.</span><span class="n">thermo</span><span class="o">.</span><span class="n">n_species</span><span class="p">),</span><span class="n">pos</span><span class="o">=</span><span class="mi">4</span> 
                           <span class="p">),</span>
                      <span class="p">}</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensitivity</span><span class="p">:</span>
-            <span class="n">table_def</span><span class="p">[</span><span class="s">&#39;sensitivity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tables</span><span class="o">.</span><span class="n">Float64Col</span><span class="p">(</span>
-                <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_vars</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">netw</span><span class="o">.</span><span class="n">n_sensitivity_params</span><span class="p">),</span><span class="n">pos</span><span class="o">=</span><span class="mi">5</span>
+            <span class="n">table_def</span><span class="p">[</span><span class="s">&#39;sensitivity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tables</span><span class="o">.</span><span class="n">Float64Col</span><span class="p">(</span> 
+                <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_vars</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">netw</span><span class="o">.</span><span class="n">n_sensitivity_params</span><span class="p">),</span><span class="n">pos</span><span class="o">=</span><span class="mi">5</span> 
                 <span class="p">)</span>
             
         <span class="k">with</span> <span class="n">tables</span><span class="o">.</span><span class="n">open_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">save_filename</span><span class="p">,</span> <span class="n">mode</span> <span class="o">=</span> <span class="s">&#39;w&#39;</span><span class="p">,</span> 
@@ -323,7 +334,7 @@
                                    <span class="bp">self</span><span class="o">.</span><span class="n">reac</span><span class="o">.</span><span class="n">thermo</span><span class="o">.</span><span class="n">X</span>
                                    <span class="p">))</span>
             <span class="c"># Print the initial information to the screen</span>
-            <span class="k">print</span><span class="p">(</span><span class="n">printer</span><span class="o">.</span><span class="n">divider</span><span class="p">)</span>
+            <span class="k">print</span><span class="p">(</span><span class="n">divider</span><span class="p">)</span>
             <span class="k">print</span><span class="p">(</span><span class="s">&#39;Kinetic Mechanism Details:</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
             <span class="k">print</span><span class="p">((</span><span class="s">&#39;Total Gas Phase Species     = {0}</span><span class="se">\n</span><span class="s">&#39;</span>
                    <span class="s">&#39;Total Gas Phase Reactions   = {1}&#39;</span>
@@ -332,9 +343,10 @@
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensitivity</span><span class="p">:</span>
                 <span class="k">print</span><span class="p">((</span><span class="s">&#39;Total Sensitivity Reactions = {}&#39;</span>
                        <span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">netw</span><span class="o">.</span><span class="n">n_sensitivity_params</span><span class="p">))</span>
-            <span class="k">print</span><span class="p">(</span><span class="n">printer</span><span class="o">.</span><span class="n">divider</span><span class="p">,</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+            <span class="k">print</span><span class="p">(</span><span class="n">divider</span><span class="p">,</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
             
-            <span class="n">printer</span><span class="o">.</span><span class="n">reactor_state_printer</span><span class="p">(</span><span class="n">prev_time</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">species_names</span><span class="p">)</span>
+            <span class="k">print</span><span class="p">(</span><span class="n">prev_time</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reactor_state_printer</span><span class="p">(</span><span class="n">prev_time</span><span class="p">)</span>
             
             <span class="c"># Main loop to run the calculation. As long as the time in </span>
             <span class="c"># the ``ReactorNet`` is less than the end time, keep going.</span>
@@ -352,7 +364,7 @@
                 <span class="n">cur_time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">netw</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">reac</span><span class="o">.</span><span class="n">thermo</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> 
                                       <span class="bp">self</span><span class="o">.</span><span class="n">reac</span><span class="o">.</span><span class="n">thermo</span><span class="o">.</span><span class="n">P</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">reac</span><span class="o">.</span><span class="n">volume</span><span class="p">,</span> 
                                       <span class="bp">self</span><span class="o">.</span><span class="n">wall</span><span class="o">.</span><span class="n">vdot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">netw</span><span class="o">.</span><span class="n">time</span><span class="p">),</span> 
-                                      <span class="bp">self</span><span class="o">.</span><span class="n">reac</span><span class="o">.</span><span class="n">thermo</span><span class="o">.</span><span class="n">X</span>
+                                      <span class="bp">self</span><span class="o">.</span><span class="n">reac</span><span class="o">.</span><span class="n">thermo</span><span class="o">.</span><span class="n">X</span> 
                                       <span class="p">))</span>
                 
                 <span class="c"># If we have passed the end time, interpolate backwards </span>
@@ -366,10 +378,7 @@
                     <span class="n">interp_state</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">reactor_interpolate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tend</span><span class="p">,</span> 
                                                              <span class="n">prev_time</span><span class="p">,</span> 
                                                              <span class="n">cur_time</span><span class="p">)</span>
-                    <span class="n">printer</span><span class="o">.</span><span class="n">reactor_state_printer</span><span class="p">(</span><span class="n">interp_state</span><span class="p">,</span> 
-                                                  <span class="bp">self</span><span class="o">.</span><span class="n">species_names</span><span class="p">,</span> 
-                                                  <span class="bp">self</span><span class="o">.</span><span class="n">ignition_time</span><span class="p">,</span>
-                                                  <span class="n">end</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">reactor_state_printer</span><span class="p">(</span><span class="n">interp_state</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
                     <span class="n">timestep</span><span class="p">[</span><span class="s">&#39;time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tend</span>
                     <span class="n">timestep</span><span class="p">[</span><span class="s">&#39;temperature&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">interp_state</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
                     <span class="n">timestep</span><span class="p">[</span><span class="s">&#39;pressure&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">interp_state</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
@@ -389,8 +398,8 @@
                         <span class="n">cur_sens</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">netw</span><span class="o">.</span><span class="n">sensitivities</span><span class="p">()</span>
                         <span class="n">prev_time</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">cols</span><span class="o">.</span><span class="n">time</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
                         <span class="n">cur_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">netw</span><span class="o">.</span><span class="n">time</span>
-                        <span class="n">interp_sens</span> <span class="o">=</span> <span class="n">prev_sens</span> <span class="o">+</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">tend</span> <span class="o">-</span> <span class="n">prev_time</span><span class="p">)</span> <span class="o">*</span>
-                                                   <span class="p">(</span><span class="n">cur_sens</span> <span class="o">-</span> <span class="n">prev_sens</span><span class="p">)</span> <span class="o">/</span>
+                        <span class="n">interp_sens</span> <span class="o">=</span> <span class="n">prev_sens</span> <span class="o">+</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">tend</span> <span class="o">-</span> <span class="n">prev_time</span><span class="p">)</span> <span class="o">*</span> 
+                                                   <span class="p">(</span><span class="n">cur_sens</span> <span class="o">-</span> <span class="n">prev_sens</span><span class="p">)</span> <span class="o">/</span> 
                                                    <span class="p">(</span><span class="n">cur_time</span> <span class="o">-</span> <span class="n">prev_time</span><span class="p">))</span>
                     <span class="c"># We don&#39;t need any of the rest of this step, so </span>
                     <span class="c"># break</span>
@@ -430,11 +439,10 @@
                     <span class="n">interp_state</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">reactor_interpolate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">print_time</span><span class="p">,</span> 
                                                              <span class="n">prev_time</span><span class="p">,</span> 
                                                              <span class="n">cur_time</span><span class="p">)</span>
-                    <span class="n">printer</span><span class="o">.</span><span class="n">reactor_state_printer</span><span class="p">(</span><span class="n">interp_state</span><span class="p">,</span> 
-                                                  <span class="bp">self</span><span class="o">.</span><span class="n">species_names</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">reactor_state_printer</span><span class="p">(</span><span class="n">interp_state</span><span class="p">)</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">print_time</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">print_time_step</span>
                 <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">netw</span><span class="o">.</span><span class="n">time</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">print_time</span><span class="p">:</span>
-                    <span class="n">printer</span><span class="o">.</span><span class="n">reactor_state_printer</span><span class="p">(</span><span class="n">cur_time</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">species_names</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">reactor_state_printer</span><span class="p">(</span><span class="n">cur_time</span><span class="p">)</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">print_time</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">print_time_step</span>
                 
                 <span class="c"># If the temperature limit has been exceeded, we have </span>
@@ -443,14 +451,11 @@
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">reac</span><span class="o">.</span><span class="n">T</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">temp_limit</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">ignition_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">netw</span><span class="o">.</span><span class="n">time</span>
                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">keywords</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;break_on_ignition&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">):</span>
-                        <span class="n">printer</span><span class="o">.</span><span class="n">reactor_state_printer</span><span class="p">(</span><span class="n">cur_time</span><span class="p">,</span> 
-                                                      <span class="bp">self</span><span class="o">.</span><span class="n">species_names</span><span class="p">,</span>
-                                                      <span class="bp">self</span><span class="o">.</span><span class="n">ignition_time</span><span class="p">,</span>
-                                                      <span class="n">end</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">reactor_state_printer</span><span class="p">(</span><span class="n">cur_time</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
                         <span class="k">break</span>
                 
                 <span class="c"># Set the ``prev_time`` array equal to the ``cur_time`` </span>
-                <span class="c">#  array so we can go to the next time step.</span>
+                <span class="c"># array so we can go to the next time step.</span>
                 <span class="n">prev_time</span> <span class="o">=</span> <span class="n">cur_time</span>
                 </div>
 <div class="viewcode-block" id="SimulationCase.run_simulation"><a class="viewcode-back" href="../codedocs.html#run_cases.SimulationCase.run_simulation">[docs]</a>    <span class="k">def</span> <span class="nf">run_simulation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -461,7 +466,85 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setup_case</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">run_case</span><span class="p">()</span>
-                </div></div>
+                
+        </div>
+<div class="viewcode-block" id="SimulationCase.reactor_state_printer"><a class="viewcode-back" href="../codedocs.html#run_cases.SimulationCase.reactor_state_printer">[docs]</a>    <span class="k">def</span> <span class="nf">reactor_state_printer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Produce pretty-printed output from the input reactor state.</span>
+<span class="sd">        </span>
+<span class="sd">        In this function, we have to explicitly pass in the reactor </span>
+<span class="sd">        state instead of using ``self.reac`` because we might have</span>
+<span class="sd">        interpolated to get to the proper time.</span>
+<span class="sd">        </span>
+<span class="sd">        :param state:</span>
+<span class="sd">            Vector of reactor state information.</span>
+<span class="sd">        :param end:</span>
+<span class="sd">            Boolean to tell the printer this is the final print operation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">time</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">temperature</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">pressure</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">volume</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+        <span class="n">vdot</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+        <span class="n">molefracs</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="mi">5</span><span class="p">:]</span>
+        
+        <span class="c"># Begin printing</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">divider</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">end</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&#39;Solution time (s) = {:E}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&#39;End time reached (s) = {:E}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="p">))</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ignition_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&#39;Ignition time (s) = {:E}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ignition_time</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">end</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&#39;Ignition was not found.&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">pass</span>
+            
+        <span class="k">print</span><span class="p">((</span><span class="s">&quot;Reactor Temperature (K) = {0:&gt;13.4f}</span><span class="se">\n</span><span class="s">&quot;</span>
+            <span class="s">&quot;Reactor Pressure (Pa)   = {1:&gt;13.4f}</span><span class="se">\n</span><span class="s">&quot;</span>
+            <span class="s">&quot;Reactor Volume (m**3)   = {2:&gt;13.4f}</span><span class="se">\n</span><span class="s">&quot;</span>
+            <span class="s">&quot;Reactor Vdot (m**3/s)   = {3:&gt;13.4f}&quot;</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">temperature</span><span class="p">,</span> <span class="n">pressure</span><span class="p">,</span> <span class="n">volume</span><span class="p">,</span> <span class="n">vdot</span><span class="p">))</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;Gas Phase Mole Fractions:&#39;</span><span class="p">)</span>
+        
+        <span class="c"># Here we calculate the number of columns of species mole fractions </span>
+        <span class="c"># that will best fill the available number of columns in the </span>
+        <span class="c"># terminal.</span>
+        <span class="c">#</span>
+        <span class="c"># Add one to the max_species_length to ensure that there is at </span>
+        <span class="c"># least one space between species.</span>
+        <span class="n">max_species_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">species_names</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="nb">len</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="c"># Set the precision of the printed mole fractions. This is the</span>
+        <span class="c"># number of columns that the number itself will take up, including </span>
+        <span class="c"># the decimal separator. It is not the field width.</span>
+        <span class="n">mole_frac_precision</span> <span class="o">=</span> <span class="mi">8</span>
+        <span class="c"># Calculate how much space each species print will take. It is the</span>
+        <span class="c"># max_species length + len(&#39; = &#39;) + the mole_frac_precision + </span>
+        <span class="c"># len(&#39;E+00&#39;).</span>
+        <span class="n">part_length</span> <span class="o">=</span> <span class="n">max_species_length</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">+</span> <span class="n">mole_frac_precision</span> <span class="o">+</span> <span class="mi">4</span>
+        <span class="c"># Set the default number of columns in the terminal. Choose 80</span>
+        <span class="c"># because it is the preferred width of Python source code, and </span>
+        <span class="c"># putting a bigger number may make the output text file harder</span>
+        <span class="c"># to read.</span>
+        <span class="n">cols</span> <span class="o">=</span> <span class="mi">80</span>
+        <span class="c"># Calculate the optimum number of columns as the floor of the </span>
+        <span class="c"># quotient of the print columns and the part_length</span>
+        <span class="n">num_print_cols</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">cols</span><span class="o">/</span><span class="n">part_length</span><span class="p">)</span>
+        <span class="c"># Create a list to store the values to be printed.</span>
+        <span class="n">outlist</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">species_name</span><span class="p">,</span> <span class="n">mole_frac</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">species_names</span><span class="p">,</span> <span class="n">molefracs</span><span class="p">):</span>
+                <span class="n">outlist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&#39;{0:&gt;{1}s} = {2:{3}E}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">species_name</span><span class="p">,</span> 
+                                                            <span class="n">max_species_length</span><span class="p">,</span> 
+                                                            <span class="n">mole_frac</span><span class="p">,</span> 
+                                                            <span class="n">mole_frac_precision</span><span class="p">)</span>
+                                                            <span class="p">)</span>
+        <span class="n">grouped</span> <span class="o">=</span> <span class="n">zip_longest</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="nb">iter</span><span class="p">(</span><span class="n">outlist</span><span class="p">)]</span><span class="o">*</span><span class="n">num_print_cols</span><span class="p">,</span> <span class="n">fillvalue</span> <span class="o">=</span> <span class="s">&#39;&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">items</span> <span class="ow">in</span> <span class="n">grouped</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
+                <span class="k">print</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">)</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">divider</span><span class="p">,</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span></div></div>
 </pre></div>
 
           </div>

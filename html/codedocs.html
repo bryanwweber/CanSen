@@ -130,26 +130,6 @@ input mechanism and quit.</li>
 
 </dd></dl>
 
-<dl class="function">
-<dt id="printer.reactor_state_printer">
-<tt class="descclassname">printer.</tt><tt class="descname">reactor_state_printer</tt><big>(</big><em>reactor</em>, <em>species_names</em>, <em>ignition_time=None</em>, <em>end=False</em><big>)</big><a class="reference internal" href="_modules/printer.html#reactor_state_printer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#printer.reactor_state_printer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Produce pretty-printed output from the input reactor state.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>reactor</strong> &#8211; Vector of reactor state information.</li>
-<li><strong>species_names</strong> &#8211; List of strings of species names.</li>
-<li><strong>ignition_time</strong> &#8211; Float representing the ignition time of the reactor.</li>
-<li><strong>end</strong> &#8211; Boolean to tell the printer this is the final print operation.</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 </div>
 <div class="section" id="module-profiles">
 <span id="profiles-module"></span><h2>profiles module<a class="headerlink" href="#module-profiles" title="Permalink to this headline">¶</a></h2>
@@ -188,6 +168,27 @@ by the <tt class="docutils literal"><span class="pre">Func1</span></tt> interfac
 <em class="property">class </em><tt class="descclassname">run_cases.</tt><tt class="descname">SimulationCase</tt><big>(</big><em>filenames</em><big>)</big><a class="reference internal" href="_modules/run_cases.html#SimulationCase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#run_cases.SimulationCase" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
 <p>Class that sets up and runs a simulation case.</p>
+<dl class="method">
+<dt id="run_cases.SimulationCase.reactor_state_printer">
+<tt class="descname">reactor_state_printer</tt><big>(</big><em>state</em>, <em>end=False</em><big>)</big><a class="reference internal" href="_modules/run_cases.html#SimulationCase.reactor_state_printer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#run_cases.SimulationCase.reactor_state_printer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Produce pretty-printed output from the input reactor state.</p>
+<p>In this function, we have to explicitly pass in the reactor 
+state instead of using <tt class="docutils literal"><span class="pre">self.reac</span></tt> because we might have
+interpolated to get to the proper time.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>state</strong> &#8211; Vector of reactor state information.</li>
+<li><strong>end</strong> &#8211; Boolean to tell the printer this is the final print operation.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="method">
 <dt id="run_cases.SimulationCase.run_case">
 <tt class="descname">run_case</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/run_cases.html#SimulationCase.run_case"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#run_cases.SimulationCase.run_case" title="Permalink to this definition">¶</a></dt>
