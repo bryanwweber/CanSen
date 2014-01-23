@@ -87,13 +87,15 @@
     <span class="k">def</span> <span class="nf">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         </div>
-<div class="viewcode-block" id="reactor_state_printer"><a class="viewcode-back" href="../codedocs.html#printer.reactor_state_printer">[docs]</a><span class="k">def</span> <span class="nf">reactor_state_printer</span><span class="p">(</span><span class="n">reactor</span><span class="p">,</span> <span class="n">species_names</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+<div class="viewcode-block" id="reactor_state_printer"><a class="viewcode-back" href="../codedocs.html#printer.reactor_state_printer">[docs]</a><span class="k">def</span> <span class="nf">reactor_state_printer</span><span class="p">(</span><span class="n">reactor</span><span class="p">,</span> <span class="n">species_names</span><span class="p">,</span> <span class="n">ignition_time</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Produce pretty-printed output from the input reactor state.</span>
 <span class="sd">    </span>
 <span class="sd">    :param reactor:</span>
 <span class="sd">        Vector of reactor state information.</span>
 <span class="sd">    :param species_names:</span>
 <span class="sd">        List of strings of species names.</span>
+<span class="sd">    :param ignition_time:</span>
+<span class="sd">        Float representing the ignition time of the reactor. </span>
 <span class="sd">    :param end:</span>
 <span class="sd">        Boolean to tell the printer this is the final print operation.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -107,9 +109,17 @@
     <span class="c"># Begin printing</span>
     <span class="k">print</span><span class="p">(</span><span class="n">divider</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">end</span><span class="p">:</span>
-        <span class="k">print</span><span class="p">(</span><span class="s">&#39;Solution time = {:E}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="p">))</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;Solution time (s) = {:E}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="p">))</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">print</span><span class="p">(</span><span class="s">&#39;End time reached = {:E}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="p">))</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;End time reached (s) = {:E}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="p">))</span>
+    
+    <span class="k">if</span> <span class="n">ignition_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;Ignition time (s) = {:E}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ignition_time</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">end</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;Ignition was not found.&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">pass</span>
+        
     <span class="k">print</span><span class="p">(</span><span class="s">&quot;Reactor Temperature (K) = {:&gt;13.4f}</span><span class="se">\n</span><span class="s">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">temperature</span><span class="p">),</span>
           <span class="s">&quot;Reactor Pressure (Pa)   = {:&gt;13.4f}</span><span class="se">\n</span><span class="s">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pressure</span><span class="p">),</span>
           <span class="s">&quot;Reactor Volume (m**3)   = {:&gt;13.4f}</span><span class="se">\n</span><span class="s">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">volume</span><span class="p">),</span>

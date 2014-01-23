@@ -268,6 +268,10 @@
         
         <span class="c"># Store the species names in a slightly shorter variable name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">species_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reac</span><span class="o">.</span><span class="n">thermo</span><span class="o">.</span><span class="n">species_names</span>
+        
+        <span class="c">#Initialize the ignition time, in case the end time is reached </span>
+        <span class="c"># before ignition occurs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ignition_time</span> <span class="o">=</span> <span class="bp">None</span>
         </div>
 <div class="viewcode-block" id="SimulationCase.run_case"><a class="viewcode-back" href="../codedocs.html#run_cases.SimulationCase.run_case">[docs]</a>    <span class="k">def</span> <span class="nf">run_case</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -364,6 +368,7 @@
                                                              <span class="n">cur_time</span><span class="p">)</span>
                     <span class="n">printer</span><span class="o">.</span><span class="n">reactor_state_printer</span><span class="p">(</span><span class="n">interp_state</span><span class="p">,</span> 
                                                   <span class="bp">self</span><span class="o">.</span><span class="n">species_names</span><span class="p">,</span> 
+                                                  <span class="bp">self</span><span class="o">.</span><span class="n">ignition_time</span><span class="p">,</span>
                                                   <span class="n">end</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
                     <span class="n">timestep</span><span class="p">[</span><span class="s">&#39;time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tend</span>
                     <span class="n">timestep</span><span class="p">[</span><span class="s">&#39;temperature&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">interp_state</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
@@ -437,6 +442,12 @@
                 <span class="c"># future, the ignition time may be interpolated.</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">reac</span><span class="o">.</span><span class="n">T</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">temp_limit</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">ignition_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">netw</span><span class="o">.</span><span class="n">time</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">keywords</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;break_on_ignition&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">):</span>
+                        <span class="n">printer</span><span class="o">.</span><span class="n">reactor_state_printer</span><span class="p">(</span><span class="n">cur_time</span><span class="p">,</span> 
+                                                      <span class="bp">self</span><span class="o">.</span><span class="n">species_names</span><span class="p">,</span>
+                                                      <span class="bp">self</span><span class="o">.</span><span class="n">ignition_time</span><span class="p">,</span>
+                                                      <span class="n">end</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+                        <span class="k">break</span>
                 
                 <span class="c"># Set the ``prev_time`` array equal to the ``cur_time`` </span>
                 <span class="c">#  array so we can go to the next time step.</span>

@@ -203,17 +203,18 @@ def read_input_file(input_filename):
                 keywords['sensRelTol'] = float(line.split()[1])
             elif line.upper().startswith('ATLS'):
                 keywords['sensAbsTol'] = float(line.split()[1])
+            elif line.upper().startswith('IGNBREAK'):
+                keywords['break_on_ignition'] = True
             elif line.upper()[0:3] in unsupported_keys:
                 print('Keyword', line.upper()[0:3], 'is not supported yet',
                       'and has been ignored')
                 continue
-            elif line.upper() == 'END':
-                print('\n')
-                break
+            elif line.upper().startswith('END'):
+                continue
             else:
                 print('Keyword not found',line)
                 sys.exit(1)
-        print(divider,'\n')
+        print('\n', divider, '\n', sep='')
     
     # The endTime, temperature, pressure, and problemType are required
     # input. Exit if any of them are not found.

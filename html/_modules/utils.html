@@ -253,17 +253,18 @@
                 <span class="n">keywords</span><span class="p">[</span><span class="s">&#39;sensRelTol&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">])</span>
             <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&#39;ATLS&#39;</span><span class="p">):</span>
                 <span class="n">keywords</span><span class="p">[</span><span class="s">&#39;sensAbsTol&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&#39;IGNBREAK&#39;</span><span class="p">):</span>
+                <span class="n">keywords</span><span class="p">[</span><span class="s">&#39;break_on_ignition&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
             <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">upper</span><span class="p">()[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="ow">in</span> <span class="n">unsupported_keys</span><span class="p">:</span>
                 <span class="k">print</span><span class="p">(</span><span class="s">&#39;Keyword&#39;</span><span class="p">,</span> <span class="n">line</span><span class="o">.</span><span class="n">upper</span><span class="p">()[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">],</span> <span class="s">&#39;is not supported yet&#39;</span><span class="p">,</span>
                       <span class="s">&#39;and has been ignored&#39;</span><span class="p">)</span>
                 <span class="k">continue</span>
-            <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s">&#39;END&#39;</span><span class="p">:</span>
-                <span class="k">print</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
-                <span class="k">break</span>
+            <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&#39;END&#39;</span><span class="p">):</span>
+                <span class="k">continue</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">print</span><span class="p">(</span><span class="s">&#39;Keyword not found&#39;</span><span class="p">,</span><span class="n">line</span><span class="p">)</span>
                 <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-        <span class="k">print</span><span class="p">(</span><span class="n">divider</span><span class="p">,</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">,</span> <span class="n">divider</span><span class="p">,</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">)</span>
     
     <span class="c"># The endTime, temperature, pressure, and problemType are required</span>
     <span class="c"># input. Exit if any of them are not found.</span>

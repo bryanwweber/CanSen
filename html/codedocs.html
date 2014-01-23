@@ -132,7 +132,7 @@ input mechanism and quit.</li>
 
 <dl class="function">
 <dt id="printer.reactor_state_printer">
-<tt class="descclassname">printer.</tt><tt class="descname">reactor_state_printer</tt><big>(</big><em>reactor</em>, <em>species_names</em>, <em>end=False</em><big>)</big><a class="reference internal" href="_modules/printer.html#reactor_state_printer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#printer.reactor_state_printer" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">printer.</tt><tt class="descname">reactor_state_printer</tt><big>(</big><em>reactor</em>, <em>species_names</em>, <em>ignition_time=None</em>, <em>end=False</em><big>)</big><a class="reference internal" href="_modules/printer.html#reactor_state_printer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#printer.reactor_state_printer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Produce pretty-printed output from the input reactor state.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -141,6 +141,7 @@ input mechanism and quit.</li>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>reactor</strong> &#8211; Vector of reactor state information.</li>
 <li><strong>species_names</strong> &#8211; List of strings of species names.</li>
+<li><strong>ignition_time</strong> &#8211; Float representing the ignition time of the reactor.</li>
 <li><strong>end</strong> &#8211; Boolean to tell the printer this is the final print operation.</li>
 </ul>
 </td>
