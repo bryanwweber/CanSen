@@ -12,6 +12,7 @@ Cantera supports. The Python interface will be demonstrated in this
 tutorial, but the structure of the data and thus the main content of 
 this tutorial will remain the same for all of the interfaces.
 
+.. _HDF5: http://www.hdfgroup.org/HDF5/
 .. _C++: http://ftp.hdfgroup.org/HDF5/doc/cpplus_RM/index.html
 .. _MATLAB: http://www.mathworks.com/help/matlab/hdf5-files.html;jsessionid=a596eeee2bf156629abd647818b6
 .. _Fortran 90: http://www.hdf5.com/HDF5/doc/fortran/index.html
