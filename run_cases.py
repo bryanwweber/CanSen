@@ -1,5 +1,7 @@
 # Standard libraries
 import sys
+import math 
+from itertools import zip_longest
 
 # Related modules
 try:
@@ -21,7 +23,7 @@ except ImportError:
     sys.exit(1)
 
 # Local imports
-import printer
+from printer import divider
 import utils
 from profiles import VolumeProfile, TemperatureProfile, PressureProfile
 
@@ -282,7 +284,7 @@ class SimulationCase(object):
                                    self.reac.thermo.X
                                    ))
             # Print the initial information to the screen
-            print(printer.divider)
+            print(divider)
             print('Kinetic Mechanism Details:\n')
             print(('Total Gas Phase Species     = {0}\n'
                    'Total Gas Phase Reactions   = {1}'
@@ -291,9 +293,10 @@ class SimulationCase(object):
             if self.sensitivity:
                 print(('Total Sensitivity Reactions = {}'
                        ).format(self.netw.n_sensitivity_params))
-            print(printer.divider,'\n')
+            print(divider,'\n')
             
-            printer.reactor_state_printer(prev_time,self.species_names)
+            print(prev_time[0])
+            self.reactor_state_printer(prev_time)
             
             # Main loop to run the calculation. As long as the time in 
             # the ``ReactorNet`` is less than the end time, keep going.
@@ -325,10 +328,7 @@ class SimulationCase(object):
                     interp_state = utils.reactor_interpolate(self.tend, 
                                                              prev_time, 
                                                              cur_time)
-                    printer.reactor_state_printer(interp_state, 
-                                                  self.species_names, 
-                                                  self.ignition_time, 
-                                                  end=True)
+                    self.reactor_state_printer(interp_state, end=True)
                     timestep['time'] = self.tend
                     timestep['temperature'] = interp_state[1]
                     timestep['pressure'] = interp_state[2]
@@ -389,11 +389,10 @@ class SimulationCase(object):
                     interp_state = utils.reactor_interpolate(self.print_time, 
                                                              prev_time, 
                                                              cur_time)
-                    printer.reactor_state_printer(interp_state, 
-                                                  self.species_names)
+                    self.reactor_state_printer(interp_state)
                     self.print_time += self.print_time_step
                 elif self.netw.time == self.print_time:
-                    printer.reactor_state_printer(cur_time,self.species_names)
+                    self.reactor_state_printer(cur_time)
                     self.print_time += self.print_time_step
                 
                 # If the temperature limit has been exceeded, we have 
@@ -402,10 +401,7 @@ class SimulationCase(object):
                 if self.reac.T >= self.temp_limit:
                     self.ignition_time = self.netw.time
                     if self.keywords.get('break_on_ignition', False):
-                        printer.reactor_state_printer(cur_time, 
-                                                      self.species_names, 
-                                                      self.ignition_time, 
-                                                      end=False)
+                        self.reactor_state_printer(cur_time, end=False)
                         break
                 
                 # Set the ``prev_time`` array equal to the ``cur_time`` 
@@ -421,3 +417,81 @@ class SimulationCase(object):
         self.setup_case()
         self.run_case()
                 
+        
+    def reactor_state_printer(self, state, end=False):
+        """Produce pretty-printed output from the input reactor state.
+        
+        In this function, we have to explicitly pass in the reactor 
+        state instead of using ``self.reac`` because we might have
+        interpolated to get to the proper time.
+        
+        :param state:
+            Vector of reactor state information.
+        :param end:
+            Boolean to tell the printer this is the final print operation.
+        """
+        time = state[0]
+        temperature = state[1]
+        pressure = state[2]
+        volume = state[3]
+        vdot = state[4]
+        molefracs = state[5:]
+        
+        # Begin printing
+        print(divider)
+        if not end:
+            print('Solution time (s) = {:E}'.format(time))
+        else:
+            print('End time reached (s) = {:E}'.format(time))
+        
+        if self.ignition_time is not None:
+            print('Ignition time (s) = {:E}'.format(self.ignition_time))
+        elif end:
+            print('Ignition was not found.')
+        else:
+            pass
+            
+        print(("Reactor Temperature (K) = {0:>13.4f}\n"
+            "Reactor Pressure (Pa)   = {1:>13.4f}\n"
+            "Reactor Volume (m**3)   = {2:>13.4f}\n"
+            "Reactor Vdot (m**3/s)   = {3:>13.4f}"
+            ).format(temperature, pressure, volume, vdot))
+        print('Gas Phase Mole Fractions:')
+        
+        # Here we calculate the number of columns of species mole fractions 
+        # that will best fill the available number of columns in the 
+        # terminal.
+        #
+        # Add one to the max_species_length to ensure that there is at 
+        # least one space between species.
+        max_species_length = len(max(self.species_names, key=len)) + 1
+        # Set the precision of the printed mole fractions. This is the
+        # number of columns that the number itself will take up, including 
+        # the decimal separator. It is not the field width.
+        mole_frac_precision = 8
+        # Calculate how much space each species print will take. It is the
+        # max_species length + len(' = ') + the mole_frac_precision + 
+        # len('E+00').
+        part_length = max_species_length + 3 + mole_frac_precision + 4
+        # Set the default number of columns in the terminal. Choose 80
+        # because it is the preferred width of Python source code, and 
+        # putting a bigger number may make the output text file harder
+        # to read.
+        cols = 80
+        # Calculate the optimum number of columns as the floor of the 
+        # quotient of the print columns and the part_length
+        num_print_cols = math.floor(cols/part_length)
+        # Create a list to store the values to be printed.
+        outlist = []
+        for species_name, mole_frac in zip(self.species_names, molefracs):
+                outlist.append('{0:>{1}s} = {2:{3}E}'.format(species_name, 
+                                                            max_species_length, 
+                                                            mole_frac, 
+                                                            mole_frac_precision)
+                                                            )
+        grouped = zip_longest(*[iter(outlist)]*num_print_cols, fillvalue = '')
+        for items in grouped:
+            for item in items:
+                print(item, end='')
+            print('\n',end='')
+        print(divider,'\n')
