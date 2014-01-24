@@ -1,11 +1,14 @@
-#! /usr/bin/python3
+#! /usr/bin/env python3
+
+# Python 2 compatibility
+from __future__ import print_function
 
 # Standard libraries
 import os
 import sys
-import utils
 
 #Local imports
+import utils
 from printer import Tee
 from run_cases import SimulationCase
 

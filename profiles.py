@@ -1,7 +1,8 @@
+# Related modules
 try:    
     import numpy as np
 except ImportError:
-    print('Numpy must be installed')
+    print('NumPy must be installed')
     sys.exit(1)
 
 
@@ -37,7 +38,7 @@ class VolumeProfile(object):
         self.velocity = np.diff(self.volume)/np.diff(self.time)
         self.velocity = np.append(self.velocity,0)
         
-    def __call__(self,t):
+    def __call__(self, t):
         """Return the velocity when called during a time step.
         
         Using linear interpolation, deterimine the velocity at a given 
@@ -71,7 +72,7 @@ class TemperatureProfile(object):
     are handled by the ``Func1`` interface of Cantera. Used with the 
     input keyword ``TPRO``
     """
-    def __init__(self,keywords):
+    def __init__(self, keywords):
         """Set the initial values of the arrays from the input keywords.
         
         The time and temperature are read from the input file and 
@@ -82,7 +83,7 @@ class TemperatureProfile(object):
         self.time = np.array(keywords['TproTime'])
         self.temperature = np.array(keywords['TproTemp'])
         
-    def __call__(self,t):
+    def __call__(self, t):
         """Return the temperature when called during a time step.
         
         Using linear interpolation, determine the temperature at a 

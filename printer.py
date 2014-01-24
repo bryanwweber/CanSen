@@ -1,5 +1,5 @@
+# Standard Libraries
 import sys
-import os
 
 # Create a string to use as a divider. Use a default column width of 
 # 80 chars.

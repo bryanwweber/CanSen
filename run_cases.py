@@ -1,7 +1,15 @@
+# Python 2 compatibility
+from __future__ import print_function
+
 # Standard libraries
 import sys
 import math 
-from itertools import zip_longest
+
+# More Python 2 compatibility
+if sys.version_info.major == 3:
+    from itertools import zip_longest
+elif sys.version_info.major == 2:
+    from itertools import izip_longest
 
 # Related modules
 try:
@@ -13,7 +21,7 @@ except ImportError:
 try:    
     import numpy as np
 except ImportError:
-    print('Numpy must be installed')
+    print('NumPy must be installed')
     sys.exit(1)
 
 try:
@@ -295,7 +303,6 @@ class SimulationCase(object):
                        ).format(self.netw.n_sensitivity_params))
             print(divider,'\n')
             
-            print(prev_time[0])
             self.reactor_state_printer(prev_time)
             
             # Main loop to run the calculation. As long as the time in 
@@ -304,7 +311,7 @@ class SimulationCase(object):
                 # If we are using a function to set the temperature as 
                 # a function of time, use it here.
                 if self.temp_func is not None:
-                    self.gas.TP = tempFunc(self.netw.time), None
+                    self.gas.TP = self.temp_func(self.netw.time), None
                 
                 # Take the step towards the end time.
                 self.netw.step(self.tend)
@@ -480,7 +487,7 @@ class SimulationCase(object):
         cols = 80
         # Calculate the optimum number of columns as the floor of the 
         # quotient of the print columns and the part_length
-        num_print_cols = math.floor(cols/part_length)
+        num_print_cols = int(math.floor(cols/part_length))
         # Create a list to store the values to be printed.
         outlist = []
         for species_name, mole_frac in zip(self.species_names, molefracs):
@@ -489,7 +496,10 @@ class SimulationCase(object):
                                                             mole_frac, 
                                                             mole_frac_precision)
                                                             )
-        grouped = zip_longest(*[iter(outlist)]*num_print_cols, fillvalue = '')
+        if sys.version_info.major == 3:
+            grouped = zip_longest(*[iter(outlist)]*num_print_cols, fillvalue = '')
+        elif sys.version_info.major == 2:
+            grouped = izip_longest(*[iter(outlist)]*num_print_cols, fillvalue = '')
         for items in grouped:
             for item in items:
                 print(item, end='')

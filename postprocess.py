@@ -1,4 +1,9 @@
 #! /usr/bin/python3
+
+#Python 2 compatibility
+from __future__ import print_function
+
+# Related modules
 try:
     import tables
 except ImportError:

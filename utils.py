@@ -1,13 +1,19 @@
+# Python 2 compatibility
+from __future__ import print_function
+
+# Standard libraries
 import sys
 import os
 import getopt
 
+# Related modules
 try:
     from cantera import ck2cti
 except ImportError:
     print('Error: Cantera must be installed.')
     sys.exit(1)
     
+# Local imports
 from printer import divider
 
 def convert_mech(mech_filename, thermo_filename):
