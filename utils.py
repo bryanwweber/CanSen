@@ -5,6 +5,7 @@ from __future__ import print_function
 import sys
 import os
 import getopt
+from itertools import product
 
 # Related modules
 try:
@@ -409,6 +410,22 @@ def equivalence_ratio(gas, eq_ratio, fuel, oxidizer, complete_products,
     num_C_cprod = 0
     num_O_cprod = 0
     reactants = ''
+    cprod_elems = []
+    
+    # Check oxidation state of complete products
+    oxid_state = 0
+    for sp, el in product(complete_products, gas.element_names):
+        if el.upper() == 'C':
+            num_C_cprod += int(gas.n_atoms(sp, el))
+            oxid_state += 4*int(gas.n_atoms(sp, el))
+        elif el.upper() == 'O':
+            oxid_state -= 2*int(gas.n_atoms(sp, el))
+        elif el.upper() == 'H':
+            oxid_state += int(gas.n_atoms(sp, el))
+            
+    if oxid_state != 0:
+        print("Warning: One or more products of incomplete combustion"
+              "were specified.")
     
     # Find the number of H, C, and O atoms in the fuel molecules.
     for species, fuel_amt in fuel.items():
