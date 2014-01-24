@@ -48,16 +48,22 @@
           <div class="body">
             
   <h1>Source code for utils</h1><div class="highlight"><pre>
+<span class="c"># Python 2 compatibility</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
+
+<span class="c"># Standard libraries</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">getopt</span>
 
+<span class="c"># Related modules</span>
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">cantera</span> <span class="kn">import</span> <span class="n">ck2cti</span>
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
     <span class="k">print</span><span class="p">(</span><span class="s">&#39;Error: Cantera must be installed.&#39;</span><span class="p">)</span>
     <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
     
+<span class="c"># Local imports</span>
 <span class="kn">from</span> <span class="nn">printer</span> <span class="kn">import</span> <span class="n">divider</span>
 
 <div class="viewcode-block" id="convert_mech"><a class="viewcode-back" href="../codedocs.html#utils.convert_mech">[docs]</a><span class="k">def</span> <span class="nf">convert_mech</span><span class="p">(</span><span class="n">mech_filename</span><span class="p">,</span> <span class="n">thermo_filename</span><span class="p">):</span>

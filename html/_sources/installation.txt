@@ -62,12 +62,16 @@ Then, install ``distribute`` and ``pip``::
     -O - | sudo python3.2
     sudo easy_install-3.2 pip
     
-Finally, with ``pip`` installed, install NumPy, Cython, and finally, 
+Finally, with ``pip`` installed, install NumPy, Cython, numexpr, and finally, 
 PyTables::
 
-    sudo pip-3.2 install numpy cython
+    sudo pip-3.2 install numpy cython numexpr
     sudo pip-3.2 install pytables
-    
+
+Instructions for more complicated cases can be found on the `PyTables documentation`_. 
+
+.. _PyTables documentation: http://pytables.github.io/usersguide/installation.html
+
 Compilation/installation instructions for Cantera can be found in the 
 Cantera `documentation`_.
 
