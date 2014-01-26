@@ -452,6 +452,8 @@ def equivalence_ratio(gas, eq_ratio, fuel, oxidizer, complete_products,
     
     num_O_oxid = oxid_elems.get('O', 0)
     
+    # Check that all of the elements specified in the fuel and oxidizer 
+    # are present in the complete products and vice versa.
     for el in cprod_elems.keys():
         if ((sum(cprod_elems[el].values()) > 0 and fuel_elems[el] == 0 and 
             oxid_elems[el] == 0) or (sum(cprod_elems[el].values()) == 0 and 
@@ -459,7 +461,9 @@ def equivalence_ratio(gas, eq_ratio, fuel, oxidizer, complete_products,
             print('Error: Must specify all elements in the fuel + oxidizer '
                   'in the complete products')
             sys.exit(1)
-            
+    
+    # Compute the amount of oxidizer required to consume all the 
+    # carbon and hydrogen in the complete products
     if num_C_cprod > 0:
         spec = cprod_elems['C'].keys()
         ox = sum([cprod_elems['O'][sp] for sp in spec if cprod_elems['C'][sp] > 0])
@@ -473,14 +477,17 @@ def equivalence_ratio(gas, eq_ratio, fuel, oxidizer, complete_products,
         H_multiplier = ox/num_H_cprod
     else:
         H_multiplier = 0
-        
+    
+    # Compute how many O atoms are required to oxidize everybody
     num_O_req = num_C_fuel * C_multiplier + num_H_fuel * H_multiplier - num_O_fuel
     O_mult = num_O_req/num_O_oxid
     
+    # Find the total number of moles in the fuel + oxidizer mixture
     total_oxid_moles = sum([O_mult * amt for amt in oxidizer.values()])
     total_fuel_moles = sum([eq_ratio * amt for amt in fuel.values()])
     total_reactant_moles = total_oxid_moles + total_fuel_moles
     
+    # Handle the case where additional species are specified separately 
     if additional_species:
         total_additional_species = sum(additional_species.values())
         if total_additional_species >= 1.0:
@@ -491,8 +498,11 @@ def equivalence_ratio(gas, eq_ratio, fuel, oxidizer, complete_products,
             reactants = ','.join([reactants,add_spec])
     else:
         remain = 1.0
-        
-    for species,ox_amt in oxidizer.items():
+    
+    # Compute the mole fractions of the fuel and oxidizer components 
+    # given that a certain portion of the mixture will have been taken 
+    # up by the additional species, if any.
+    for species, ox_amt in oxidizer.items():
         molefrac = ox_amt * O_mult/total_reactant_moles * remain
         add_spec = ':'.join([species,str(molefrac)])
         reactants = ','.join([reactants,add_spec])
