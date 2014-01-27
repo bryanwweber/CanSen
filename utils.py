@@ -6,6 +6,7 @@ import sys
 import os
 import getopt
 from itertools import product
+from math import pi
 
 # Related modules
 try:
@@ -232,6 +233,14 @@ def read_input_file(input_filename):
                 keywords['rod_radius_ratio'] = float(line.split()[1])
             elif line.upper().startswith('RPM'):
                 keywords['rev_per_min'] = float(line.split()[1])
+            elif line.upper().startswith('BORE'):
+                keywords['cyl_bore'] = float(line.split()[1])
+            elif line.upper().startswith('STROKE'):
+                keywords['stroke_length'] = float(line.split()[1])
+            elif line.upper().startswith('RODL'):
+                keywords['connect_rod_len'] = float(line.split()[1])
+            elif line.upper().startswith('CRAD'):
+                keywords['crank_radius'] = float(line.split()[1])
             elif line.upper()[0:3] in unsupported_keys:
                 print('Keyword', line.upper()[0:3], 'is not supported yet',
                       'and has been ignored')
@@ -267,11 +276,92 @@ def read_input_file(input_filename):
     elif keywords.get('problemType') == 8:
         keywords['TproTime'] = TproTime
         keywords['TproTemp'] = TproTemp
-    elif (keywords.get('problemType') == 9 and ('clear_volume' not in keywords 
-            and 'swept_volume' not in keywords)):
-        print("Error: One of 'VOLD', 'VOLC' must be specified.")
-        sys.exit(1)
+    elif (keywords.get('problemType') == 9:
+        # Variables I need: Stroke length, rod length to crank radius ratio, rpm, starting angle, initial volume
+        # Ways to get stroke length:
+            # Specify stroke length
+            # Swept volume divided by piston area
+            # Compression ratio + Clearance volume -> swept volume divided by piston area
+            # 2*crank radius
+        # Ways to get rod length to crank radius ratio:
+            # Specify LOLR
+            # rod length / crank radius
+        # Ways to get initial volume:
+            # Swept volume + clearance volume
+            # Compression ratio times clearance volume
+            # Swept volume divided by compression ration minus 1 -> clearance volume + swept volume
+            # piston area * stroke length -> swept volume + clearance volume
+            # Specify initial volume
+        if 'rev_per_min' not in keywords:
+            print("Error: 'RPM' must be specified.")
+            sys.exit(1)
         
+        if 'stroke_length' in keywords:
+            if any(key in keywords for key in ('clear_volume', 'swept_volume', 
+                                               'comp_ratio', 'crank_radius')):
+                print("Warning: 'STROKE' has been specified, and will "
+                    "overwrite the stroke length calculated from other "
+                    "keywords.")
+                    
+        # if all(key not in keywords for key in ('clear_volume', 
+                                               # 'swept_volume',
+                                               # 'comp_ratio')):
+            # print("Error: Any two of 'VOLD', 'VOLC', 'CMPR' must be "
+                # "specified.")
+            # sys.exit(1)
+        # elif all(key in keywords for key in ('clear_volume', 'swept_volume', 
+                                             # 'comp_ratio')):
+            # print("Error: Only two of 'CMPR', 'VOLD', 'VOLC' can be "
+                # "specified.")
+            # sys.exit(1)
+        # elif all(key in keywords for key in ('rod_radius_ratio', 
+                                             # 'connect_rod_length', 
+                                             # 'crank_radius')):
+            # print("Error: Only two of 'LOLR', 'RODL', 'CRAD' can be "
+                # "specified.")
+            # sys.exit(1)
+        # elif all(key in keywords for key in ('cyl_bore', 'swept_volume', 
+                                             # 'stroke_length')):
+            # print("Error: Either ('BORE' and 'STROKE') or ('VOLD') can be "
+                # "specified.")
+            # sys.exit(1)
+        # elif 'reactorVolume' in keywords:
+            # print('Warning: Overriding user specified initial volume with '
+                  # 'volume calculated from the sum of the swept volume and '
+                  # 'clearance volume.')
+        # elif 'rev_per_min' not in keywords:
+            # print("Error: 'RPM' keyword must be specified.")
+            # sys.exit(1)
+        # elif 'rod_radius_ratio' not in keywords:
+            # print("Error: 'LOLR' keyword must be specified.")
+            # sys.exit(1)
+                  
+        # if 'clear_volume' in keywords:
+            # initial_volume = keywords['clear_volume']
+            # if all(key in keywords for key in ('cyl_bore', 'stroke_length')):
+                # initial_volume += (pi * keywords['cyl_bore']**2 * 
+                                  # keywords['stroke_length'] / 4)
+            # elif 'swept_volume' in keywords:
+                # initial_volume += keywords['swept_volume']
+                # if 'cyl_bore' in keywords and 'stroke_length' not in keywords:
+                    # keywords['stroke_length'] = (4*keywords['swept_volume'] /
+                                                # (pi*keyword['cyl_bore']**2))
+                
+        # keywords['reactorVolume'] = initial_volume
+        # if 'swept_volume' not in keywords and 'comp_ratio' in keywords:
+            # keywords['swept_volume'] = (keywords['clear_volume']*
+                                # (keywords['comp_ratio'] - 1))
+        # elif 'clear_volume' not in keywords and 'comp_ratio' in keywords:
+            # keywords['clear_volume'] = (keywords['swept_volume']/
+                                    # (keywords['comp_ratio'] - 1))
+        # else:
+            # keywords['comp_ratio'] = ((keywords['swept_volume'] + 
+                # keywords['clear_volume'])/keywords['clear_volume'])
+    
+    # Set the default reactor volume, if it is not specified
+    if 'reactorVolume' not in keywords:
+        keywords['reactorVolume'] = 1.0E-6
+        print('Warning: No reactor volume specified, assuming 1.0 cm**3.')
     
     # The reactants can be specified by REAC or EQUI + FUEL + OXID + 
     # CPROD. One or the other of these must be present; if neither or 
