@@ -33,7 +33,8 @@ except ImportError:
 # Local imports
 from printer import divider
 import utils
-from profiles import VolumeProfile, TemperatureProfile, PressureProfile
+from profiles import (VolumeProfile, TemperatureProfile, PressureProfile, 
+                      ICEngineProfile)
 
 class SimulationCase(object):
     """
@@ -152,7 +153,14 @@ class SimulationCase(object):
             self.n_vars = self.reac.kinetics.n_species + 2
             self.wall = ct.Wall(self.reac, env, A=1.0, velocity=0)
             self.temp_func = ct.Func1(TemperatureProfile(self.keywords))
-        
+        elif self.keywords['problemType'] == 9:
+            self.reac = ct.IdealGasReactor(self.gas)
+            # Number of solution variables is number of species + mass, 
+            # volume, temperature
+            self.n_vars = self.reac.kinetics.n_species + 3
+            self.wall = ct.Wall(env, self.reac, A=1.0,
+                                velocity=ICEngineProfile(self.keywords))
+            
         if 'reactorVolume' in self.keywords:
             self.reac.volume = self.keywords['reactorVolume']
         
@@ -305,6 +313,8 @@ class SimulationCase(object):
             
             self.reactor_state_printer(prev_time)
             
+            ignition_found = False
+            
             # Main loop to run the calculation. As long as the time in 
             # the ``ReactorNet`` is less than the end time, keep going.
             while self.netw.time < self.tend:
@@ -405,8 +415,9 @@ class SimulationCase(object):
                 # If the temperature limit has been exceeded, we have 
                 # ignition! Save the time this occurs at. In the 
                 # future, the ignition time may be interpolated.
-                if self.reac.T >= self.temp_limit:
+                if self.reac.T >= self.temp_limit and ignition_found == False:
                     self.ignition_time = self.netw.time
+                    ignition_found = True
                     if self.keywords.get('break_on_ignition', False):
                         self.reactor_state_printer(cur_time, end=False)
                         break
@@ -459,9 +470,9 @@ class SimulationCase(object):
             pass
             
         print(("Reactor Temperature (K) = {0:>13.4f}\n"
-            "Reactor Pressure (Pa)   = {1:>13.4f}\n"
-            "Reactor Volume (m**3)   = {2:>13.4f}\n"
-            "Reactor Vdot (m**3/s)   = {3:>13.4f}"
+            "Reactor Pressure (Pa)   = {1:>13.4E}\n"
+            "Reactor Volume (cm**3)  = {2:>13.4E}\n"
+            "Reactor Vdot (m**3/s)   = {3:>13.4E}"
             ).format(temperature, pressure, volume, vdot))
         print('Gas Phase Mole Fractions:')
         

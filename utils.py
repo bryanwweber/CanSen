@@ -159,6 +159,14 @@ def read_input_file(input_filename):
                     TproTime = [float(line.split()[1])]
                     TproTemp = [float(line.split()[2])]
                     problem_type = True
+            elif line.upper().startswith('ICEN'):
+                if problem_type:
+                    print('Error: more than one problem type keyword '
+                          'was specified.')
+                    sys.exit(1)
+                else:
+                    keywords['problemType'] = 9
+                    problem_type = True
             elif line.upper().startswith('TEMP'):
                 keywords['temperature'] = float(line.split()[1])
             elif line.upper().startswith('REAC'):
@@ -202,7 +210,7 @@ def read_input_file(input_filename):
                 additional_species[species] = molefrac
             elif line.upper().startswith('SENS'):
                 keywords['sensitivity'] = True
-            elif line.upper().startswith('VOL'):
+            elif line.upper().startswith('VOL '):
                 # The default units of volume in SENKIN are cm**3, but
                 # the default in Cantera is m**3 so we have to convert.
                 keywords['reactorVolume'] = float(line.split()[1])/1.0E6
@@ -212,6 +220,18 @@ def read_input_file(input_filename):
                 keywords['sensAbsTol'] = float(line.split()[1])
             elif line.upper().startswith('IGNBREAK'):
                 keywords['break_on_ignition'] = True
+            elif line.upper().startswith('CMPR'):
+                keywords['comp_ratio'] = float(line.split()[1])
+            elif line.upper().startswith('DEG0'):
+                keywords['start_crank_angle'] = float(line.split()[1])
+            elif line.upper().startswith('VOLD'):
+                keywords['swept_volume'] = float(line.split()[1])/1.0E6
+            elif line.upper().startswith('VOLC'):
+                keywords['clear_volume'] = float(line.split()[1])/1.0E6
+            elif line.upper().startswith('LOLR'):
+                keywords['rod_radius_ratio'] = float(line.split()[1])
+            elif line.upper().startswith('RPM'):
+                keywords['rev_per_min'] = float(line.split()[1])
             elif line.upper()[0:3] in unsupported_keys:
                 print('Keyword', line.upper()[0:3], 'is not supported yet',
                       'and has been ignored')
@@ -247,6 +267,11 @@ def read_input_file(input_filename):
     elif keywords.get('problemType') == 8:
         keywords['TproTime'] = TproTime
         keywords['TproTemp'] = TproTemp
+    elif (keywords.get('problemType') == 9 and ('clear_volume' not in keywords 
+            and 'swept_volume' not in keywords)):
+        print("Error: One of 'VOLD', 'VOLC' must be specified.")
+        sys.exit(1)
+        
     
     # The reactants can be specified by REAC or EQUI + FUEL + OXID + 
     # CPROD. One or the other of these must be present; if neither or 
