@@ -234,7 +234,7 @@ def read_input_file(input_filename):
             elif line.upper().startswith('RPM'):
                 keywords['rev_per_min'] = float(line.split()[1])
             elif line.upper().startswith('BORE'):
-                keywords['cyl_bore'] = float(line.split()[1])
+                keywords['cyl_bore'] = float(line.split()[1])/1.0E2
             elif line.upper().startswith('STROKE'):
                 keywords['stroke_length'] = float(line.split()[1])
             elif line.upper().startswith('RODL'):
@@ -276,87 +276,98 @@ def read_input_file(input_filename):
     elif keywords.get('problemType') == 8:
         keywords['TproTime'] = TproTime
         keywords['TproTemp'] = TproTemp
-    elif (keywords.get('problemType') == 9:
-        # Variables I need: Stroke length, rod length to crank radius ratio, rpm, starting angle, initial volume
-        # Ways to get stroke length:
-            # Specify stroke length
-            # Swept volume divided by piston area
-            # Compression ratio + Clearance volume -> swept volume divided by piston area
-            # 2*crank radius
-        # Ways to get rod length to crank radius ratio:
-            # Specify LOLR
-            # rod length / crank radius
-        # Ways to get initial volume:
-            # Swept volume + clearance volume
-            # Compression ratio times clearance volume
-            # Swept volume divided by compression ration minus 1 -> clearance volume + swept volume
-            # piston area * stroke length -> swept volume + clearance volume
-            # Specify initial volume
+    elif keywords.get('problemType') == 9:
+        # Variables needed to calculate piston velocity and other 
+        # quantities for the IC Engine model: Stroke length, rod 
+        # length to crank radius ratio, rpm, starting angle, initial 
+        # volume
+        
         if 'rev_per_min' not in keywords:
             print("Error: 'RPM' must be specified.")
             sys.exit(1)
         
+        # Handle the various ways to calculate the stroke length
         if 'stroke_length' in keywords:
-            if any(key in keywords for key in ('clear_volume', 'swept_volume', 
-                                               'comp_ratio', 'crank_radius')):
-                print("Warning: 'STROKE' has been specified, and will "
-                    "overwrite the stroke length calculated from other "
-                    "keywords.")
-                    
-        # if all(key not in keywords for key in ('clear_volume', 
-                                               # 'swept_volume',
-                                               # 'comp_ratio')):
-            # print("Error: Any two of 'VOLD', 'VOLC', 'CMPR' must be "
-                # "specified.")
-            # sys.exit(1)
-        # elif all(key in keywords for key in ('clear_volume', 'swept_volume', 
-                                             # 'comp_ratio')):
-            # print("Error: Only two of 'CMPR', 'VOLD', 'VOLC' can be "
-                # "specified.")
-            # sys.exit(1)
-        # elif all(key in keywords for key in ('rod_radius_ratio', 
-                                             # 'connect_rod_length', 
-                                             # 'crank_radius')):
-            # print("Error: Only two of 'LOLR', 'RODL', 'CRAD' can be "
-                # "specified.")
-            # sys.exit(1)
-        # elif all(key in keywords for key in ('cyl_bore', 'swept_volume', 
-                                             # 'stroke_length')):
-            # print("Error: Either ('BORE' and 'STROKE') or ('VOLD') can be "
-                # "specified.")
-            # sys.exit(1)
-        # elif 'reactorVolume' in keywords:
-            # print('Warning: Overriding user specified initial volume with '
-                  # 'volume calculated from the sum of the swept volume and '
-                  # 'clearance volume.')
-        # elif 'rev_per_min' not in keywords:
-            # print("Error: 'RPM' keyword must be specified.")
-            # sys.exit(1)
-        # elif 'rod_radius_ratio' not in keywords:
-            # print("Error: 'LOLR' keyword must be specified.")
-            # sys.exit(1)
-                  
-        # if 'clear_volume' in keywords:
-            # initial_volume = keywords['clear_volume']
-            # if all(key in keywords for key in ('cyl_bore', 'stroke_length')):
-                # initial_volume += (pi * keywords['cyl_bore']**2 * 
-                                  # keywords['stroke_length'] / 4)
-            # elif 'swept_volume' in keywords:
-                # initial_volume += keywords['swept_volume']
-                # if 'cyl_bore' in keywords and 'stroke_length' not in keywords:
-                    # keywords['stroke_length'] = (4*keywords['swept_volume'] /
-                                                # (pi*keyword['cyl_bore']**2))
-                
-        # keywords['reactorVolume'] = initial_volume
-        # if 'swept_volume' not in keywords and 'comp_ratio' in keywords:
-            # keywords['swept_volume'] = (keywords['clear_volume']*
-                                # (keywords['comp_ratio'] - 1))
-        # elif 'clear_volume' not in keywords and 'comp_ratio' in keywords:
-            # keywords['clear_volume'] = (keywords['swept_volume']/
-                                    # (keywords['comp_ratio'] - 1))
-        # else:
-            # keywords['comp_ratio'] = ((keywords['swept_volume'] + 
-                # keywords['clear_volume'])/keywords['clear_volume'])
+            print("Info: 'STROKE' was specified, and will be used for the "
+                "stroke length regardless of other parameters.")
+        elif all(key in keywords for key in ('swept_volume', 'cyl_bore')):
+            print("Info: Using swept volume and cylinder bore to "
+                "calculate stroke length.")
+            keywords['stroke_length'] = (keywords['swept_volume']*4 / 
+                                        (pi*keywords['cyl_bore']**2))
+        elif all(key in keywords for key in ('comp_ratio', 
+                                             'clear_volume',
+                                             'cyl_bore')):
+            print("Info: Using compression ratio, clearance volume, and "
+                "cylinder bore to calculate stroke length.")
+            keywords['swept_volume'] = (keywords['clear_volume'] * 
+                                       (keywords['comp_ratio'] - 1))
+            keywords['stroke_length'] = (keywords['swept_volume']*4 / 
+                                        (pi*keywords['cyl_bore']**2))
+        elif 'crank_radius' in keywords:
+            print("Info: Using crank radius to compute the stroke length.")
+            keywords['stroke_length'] = 2*keywords['crank_radius']
+        else:
+            print("Error: I could not compute the stroke length. Please "
+                "specify one of the following combinations:\n"
+                "1) STROKE\n2) VOLD + BORE\n3) CMPR + VOLC + BORE\n4) CRAD")
+            sys.exit(1)
+        
+        # Handle the various ways to calculate the initial volume
+        if 'reactorVolume' in keywords:
+            print("Info: The inital reactor volume was specified by the VOL "
+                "keyword and this value will be used regardless of other "
+                "settings.")
+        elif all(key in keywords for key in ('swept_volume', 'clear_volume', 
+                                             'comp_ratio')):
+            print("Error: Only two of 'VOLD', 'VOLC', and 'CMPR' may be "
+                "specified.")
+            sys.exit(1)
+        elif all(key in keywords for key in ('swept_volume', 'clear_volume')):
+            print("Info: Computing initial reactor volume from the swept "
+                "volume and the clearance volume.")
+            keywords['reactorVolume'] = (keywords['swept_volume'] + 
+                                         keywords['clear_volume'])
+        elif all(key in keywords for key in ('comp_ratio', 'clear_volume')):
+            print("Info: Computing initial reactor volume from the "
+                "compression ratio and clearance volume.")
+            keywords['reactorVolume'] = (keywords['comp_ratio'] * 
+                                         keywords['clear_volume'])
+        elif all(key in keywords for key in ('comp_ratio', 'swept_volume')):
+            print("Info: Computing initial reactor volume from the "
+                "compression ratio and swept volume.")
+            keywords['reactorVolume'] = (keywords['swept_volume'] * 
+                                        (1 + 1/(keywords['comp_ratio'] - 1)))
+        elif all(key in keywords for key in ('clear_volume', 'cyl_bore')):
+            print("Info: Computing initial reactor volume from the cylinder "
+                "bore, stroke length, and clearance volume.")
+            keywords['reactorVolume'] = (pi/4*keywords['cyl_bore']**2 * 
+                                        keywords['stroke_length'] + 
+                                        keywords['clear_volume'])
+        else:
+            print("Error: I cannot compute the initial volume of the reactor. "
+                "Please specify one of the following combinations:\n"
+                "1) VOLD + VOLC\n2) CMPR + VOLC\n3) CMPR + VOLD\n"
+                "4) BORE + VOLC\n5) VOL")
+            sys.exit(1)
+        
+        # Handle the ways to calculate the rod length to radius ratio
+        if 'rod_radius_ratio' in keywords:
+            print("Info: The connnecting rod length to crank radius ratio was "
+                "specified by the 'LOLR' keyword and this value will be "
+                "used regardless of other settings.")
+        elif all(key in keywords for key in ('connect_rod_len', 
+                                             'crank_radius')):
+            print("Info: Using given connecting rod length and crank radius "
+                "to compute the ratio.")
+            keywords['rod_radius_ratio'] = (keywords['connect_rod_len'] /
+                                            keywords['crank_radius'])
+        else:
+            print("Error: Unable to calculate the connecting rod length to "
+                "crank radius ratio. Please specify one of the following "
+                "options:\n"
+                "1) LOLR\n2) CRAD + RODL")
+            sys.exit(1)
     
     # Set the default reactor volume, if it is not specified
     if 'reactorVolume' not in keywords:

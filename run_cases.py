@@ -471,7 +471,7 @@ class SimulationCase(object):
             
         print(("Reactor Temperature (K) = {0:>13.4f}\n"
             "Reactor Pressure (Pa)   = {1:>13.4E}\n"
-            "Reactor Volume (cm**3)  = {2:>13.4E}\n"
+            "Reactor Volume (m**3)   = {2:>13.4E}\n"
             "Reactor Vdot (m**3/s)   = {3:>13.4E}"
             ).format(temperature, pressure, volume, vdot))
         print('Gas Phase Mole Fractions:')
