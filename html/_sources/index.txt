@@ -29,6 +29,7 @@ Contents:
    installation
    usage
    keywords
+   icengine
    postprocessing
    Code Documentation <codedocs>
 

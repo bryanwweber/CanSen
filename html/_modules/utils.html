@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
     <link rel="top" title="CanSen 1.0.0 documentation" href="../index.html" />
     <link rel="up" title="Module code" href="index.html" /> 
   </head>
@@ -55,6 +55,8 @@
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">getopt</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">product</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">pi</span>
 
 <span class="c"># Related modules</span>
 <span class="k">try</span><span class="p">:</span>
@@ -208,6 +210,14 @@
                     <span class="n">TproTime</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">])]</span>
                     <span class="n">TproTemp</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">2</span><span class="p">])]</span>
                     <span class="n">problem_type</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&#39;ICEN&#39;</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">problem_type</span><span class="p">:</span>
+                    <span class="k">print</span><span class="p">(</span><span class="s">&#39;Error: more than one problem type keyword &#39;</span>
+                          <span class="s">&#39;was specified.&#39;</span><span class="p">)</span>
+                    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">keywords</span><span class="p">[</span><span class="s">&#39;problemType&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">9</span>
+                    <span class="n">problem_type</span> <span class="o">=</span> <span class="bp">True</span>
             <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&#39;TEMP&#39;</span><span class="p">):</span>
                 <span class="n">keywords</span><span class="p">[</span><span class="s">&#39;temperature&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">])</span>
             <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&#39;REAC&#39;</span><span class="p">):</span>
@@ -251,7 +261,7 @@
                 <span class="n">additional_species</span><span class="p">[</span><span class="n">species</span><span class="p">]</span> <span class="o">=</span> <span class="n">molefrac</span>
             <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&#39;SENS&#39;</span><span class="p">):</span>
                 <span class="n">keywords</span><span class="p">[</span><span class="s">&#39;sensitivity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
-            <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&#39;VOL&#39;</span><span class="p">):</span>
+            <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&#39;VOL &#39;</span><span class="p">):</span>
                 <span class="c"># The default units of volume in SENKIN are cm**3, but</span>
                 <span class="c"># the default in Cantera is m**3 so we have to convert.</span>
                 <span class="n">keywords</span><span class="p">[</span><span class="s">&#39;reactorVolume&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="mf">1.0E6</span>
@@ -261,6 +271,26 @@
                 <span class="n">keywords</span><span class="p">[</span><span class="s">&#39;sensAbsTol&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">])</span>
             <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&#39;IGNBREAK&#39;</span><span class="p">):</span>
                 <span class="n">keywords</span><span class="p">[</span><span class="s">&#39;break_on_ignition&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&#39;CMPR&#39;</span><span class="p">):</span>
+                <span class="n">keywords</span><span class="p">[</span><span class="s">&#39;comp_ratio&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&#39;DEG0&#39;</span><span class="p">):</span>
+                <span class="n">keywords</span><span class="p">[</span><span class="s">&#39;start_crank_angle&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&#39;VOLD&#39;</span><span class="p">):</span>
+                <span class="n">keywords</span><span class="p">[</span><span class="s">&#39;swept_volume&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="mf">1.0E6</span>
+            <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&#39;VOLC&#39;</span><span class="p">):</span>
+                <span class="n">keywords</span><span class="p">[</span><span class="s">&#39;clear_volume&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="mf">1.0E6</span>
+            <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&#39;LOLR&#39;</span><span class="p">):</span>
+                <span class="n">keywords</span><span class="p">[</span><span class="s">&#39;rod_radius_ratio&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&#39;RPM&#39;</span><span class="p">):</span>
+                <span class="n">keywords</span><span class="p">[</span><span class="s">&#39;rev_per_min&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&#39;BORE&#39;</span><span class="p">):</span>
+                <span class="n">keywords</span><span class="p">[</span><span class="s">&#39;cyl_bore&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="mf">1.0E2</span>
+            <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&#39;STROKE&#39;</span><span class="p">):</span>
+                <span class="n">keywords</span><span class="p">[</span><span class="s">&#39;stroke_length&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="mf">1.0E2</span>
+            <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&#39;RODL&#39;</span><span class="p">):</span>
+                <span class="n">keywords</span><span class="p">[</span><span class="s">&#39;connect_rod_len&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="mf">1.0E2</span>
+            <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&#39;CRAD&#39;</span><span class="p">):</span>
+                <span class="n">keywords</span><span class="p">[</span><span class="s">&#39;crank_radius&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="mf">1.0E2</span>
             <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">upper</span><span class="p">()[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="ow">in</span> <span class="n">unsupported_keys</span><span class="p">:</span>
                 <span class="k">print</span><span class="p">(</span><span class="s">&#39;Keyword&#39;</span><span class="p">,</span> <span class="n">line</span><span class="o">.</span><span class="n">upper</span><span class="p">()[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">],</span> <span class="s">&#39;is not supported yet&#39;</span><span class="p">,</span>
                       <span class="s">&#39;and has been ignored&#39;</span><span class="p">)</span>
@@ -296,6 +326,103 @@
     <span class="k">elif</span> <span class="n">keywords</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;problemType&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">8</span><span class="p">:</span>
         <span class="n">keywords</span><span class="p">[</span><span class="s">&#39;TproTime&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">TproTime</span>
         <span class="n">keywords</span><span class="p">[</span><span class="s">&#39;TproTemp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">TproTemp</span>
+    <span class="k">elif</span> <span class="n">keywords</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;problemType&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">9</span><span class="p">:</span>
+        <span class="c"># Variables needed to calculate piston velocity and other </span>
+        <span class="c"># quantities for the IC Engine model: Stroke length, rod </span>
+        <span class="c"># length to crank radius ratio, rpm, starting angle, initial </span>
+        <span class="c"># volume</span>
+        
+        <span class="k">if</span> <span class="s">&#39;rev_per_min&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">keywords</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&quot;Error: &#39;RPM&#39; must be specified.&quot;</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        
+        <span class="c"># Handle the various ways to calculate the stroke length</span>
+        <span class="k">if</span> <span class="s">&#39;stroke_length&#39;</span> <span class="ow">in</span> <span class="n">keywords</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&quot;Info: &#39;STROKE&#39; was specified, and will be used for the &quot;</span>
+                <span class="s">&quot;stroke length regardless of other parameters.&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">all</span><span class="p">(</span><span class="n">key</span> <span class="ow">in</span> <span class="n">keywords</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="s">&#39;swept_volume&#39;</span><span class="p">,</span> <span class="s">&#39;cyl_bore&#39;</span><span class="p">)):</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&quot;Info: Using swept volume and cylinder bore to &quot;</span>
+                <span class="s">&quot;calculate stroke length.&quot;</span><span class="p">)</span>
+            <span class="n">keywords</span><span class="p">[</span><span class="s">&#39;stroke_length&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">keywords</span><span class="p">[</span><span class="s">&#39;swept_volume&#39;</span><span class="p">]</span><span class="o">*</span><span class="mi">4</span> <span class="o">/</span> 
+                                        <span class="p">(</span><span class="n">pi</span><span class="o">*</span><span class="n">keywords</span><span class="p">[</span><span class="s">&#39;cyl_bore&#39;</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="nb">all</span><span class="p">(</span><span class="n">key</span> <span class="ow">in</span> <span class="n">keywords</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="s">&#39;comp_ratio&#39;</span><span class="p">,</span> 
+                                             <span class="s">&#39;clear_volume&#39;</span><span class="p">,</span>
+                                             <span class="s">&#39;cyl_bore&#39;</span><span class="p">)):</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&quot;Info: Using compression ratio, clearance volume, and &quot;</span>
+                <span class="s">&quot;cylinder bore to calculate stroke length.&quot;</span><span class="p">)</span>
+            <span class="n">keywords</span><span class="p">[</span><span class="s">&#39;swept_volume&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">keywords</span><span class="p">[</span><span class="s">&#39;clear_volume&#39;</span><span class="p">]</span> <span class="o">*</span> 
+                                       <span class="p">(</span><span class="n">keywords</span><span class="p">[</span><span class="s">&#39;comp_ratio&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+            <span class="n">keywords</span><span class="p">[</span><span class="s">&#39;stroke_length&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">keywords</span><span class="p">[</span><span class="s">&#39;swept_volume&#39;</span><span class="p">]</span><span class="o">*</span><span class="mi">4</span> <span class="o">/</span> 
+                                        <span class="p">(</span><span class="n">pi</span><span class="o">*</span><span class="n">keywords</span><span class="p">[</span><span class="s">&#39;cyl_bore&#39;</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="s">&#39;crank_radius&#39;</span> <span class="ow">in</span> <span class="n">keywords</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&quot;Info: Using crank radius to compute the stroke length.&quot;</span><span class="p">)</span>
+            <span class="n">keywords</span><span class="p">[</span><span class="s">&#39;stroke_length&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">keywords</span><span class="p">[</span><span class="s">&#39;crank_radius&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&quot;Error: I could not compute the stroke length. Please &quot;</span>
+                <span class="s">&quot;specify one of the following combinations:</span><span class="se">\n</span><span class="s">&quot;</span>
+                <span class="s">&quot;1) STROKE</span><span class="se">\n</span><span class="s">2) VOLD + BORE</span><span class="se">\n</span><span class="s">3) CMPR + VOLC + BORE</span><span class="se">\n</span><span class="s">4) CRAD&quot;</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        
+        <span class="c"># Handle the various ways to calculate the initial volume</span>
+        <span class="k">if</span> <span class="s">&#39;reactorVolume&#39;</span> <span class="ow">in</span> <span class="n">keywords</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&quot;Info: The inital reactor volume was specified by the VOL &quot;</span>
+                <span class="s">&quot;keyword and this value will be used regardless of other &quot;</span>
+                <span class="s">&quot;settings.&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">all</span><span class="p">(</span><span class="n">key</span> <span class="ow">in</span> <span class="n">keywords</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="s">&#39;swept_volume&#39;</span><span class="p">,</span> <span class="s">&#39;clear_volume&#39;</span><span class="p">,</span> 
+                                             <span class="s">&#39;comp_ratio&#39;</span><span class="p">)):</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&quot;Error: Only two of &#39;VOLD&#39;, &#39;VOLC&#39;, and &#39;CMPR&#39; may be &quot;</span>
+                <span class="s">&quot;specified.&quot;</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">all</span><span class="p">(</span><span class="n">key</span> <span class="ow">in</span> <span class="n">keywords</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="s">&#39;swept_volume&#39;</span><span class="p">,</span> <span class="s">&#39;clear_volume&#39;</span><span class="p">)):</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&quot;Info: Computing initial reactor volume from the swept &quot;</span>
+                <span class="s">&quot;volume and the clearance volume.&quot;</span><span class="p">)</span>
+            <span class="n">keywords</span><span class="p">[</span><span class="s">&#39;reactorVolume&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">keywords</span><span class="p">[</span><span class="s">&#39;swept_volume&#39;</span><span class="p">]</span> <span class="o">+</span> 
+                                         <span class="n">keywords</span><span class="p">[</span><span class="s">&#39;clear_volume&#39;</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="nb">all</span><span class="p">(</span><span class="n">key</span> <span class="ow">in</span> <span class="n">keywords</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="s">&#39;comp_ratio&#39;</span><span class="p">,</span> <span class="s">&#39;clear_volume&#39;</span><span class="p">)):</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&quot;Info: Computing initial reactor volume from the &quot;</span>
+                <span class="s">&quot;compression ratio and clearance volume.&quot;</span><span class="p">)</span>
+            <span class="n">keywords</span><span class="p">[</span><span class="s">&#39;reactorVolume&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">keywords</span><span class="p">[</span><span class="s">&#39;comp_ratio&#39;</span><span class="p">]</span> <span class="o">*</span> 
+                                         <span class="n">keywords</span><span class="p">[</span><span class="s">&#39;clear_volume&#39;</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="nb">all</span><span class="p">(</span><span class="n">key</span> <span class="ow">in</span> <span class="n">keywords</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="s">&#39;comp_ratio&#39;</span><span class="p">,</span> <span class="s">&#39;swept_volume&#39;</span><span class="p">)):</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&quot;Info: Computing initial reactor volume from the &quot;</span>
+                <span class="s">&quot;compression ratio and swept volume.&quot;</span><span class="p">)</span>
+            <span class="n">keywords</span><span class="p">[</span><span class="s">&#39;reactorVolume&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">keywords</span><span class="p">[</span><span class="s">&#39;swept_volume&#39;</span><span class="p">]</span> <span class="o">*</span> 
+                                        <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="n">keywords</span><span class="p">[</span><span class="s">&#39;comp_ratio&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)))</span>
+        <span class="k">elif</span> <span class="nb">all</span><span class="p">(</span><span class="n">key</span> <span class="ow">in</span> <span class="n">keywords</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="s">&#39;clear_volume&#39;</span><span class="p">,</span> <span class="s">&#39;cyl_bore&#39;</span><span class="p">)):</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&quot;Info: Computing initial reactor volume from the cylinder &quot;</span>
+                <span class="s">&quot;bore, stroke length, and clearance volume.&quot;</span><span class="p">)</span>
+            <span class="n">keywords</span><span class="p">[</span><span class="s">&#39;reactorVolume&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">pi</span><span class="o">/</span><span class="mi">4</span><span class="o">*</span><span class="n">keywords</span><span class="p">[</span><span class="s">&#39;cyl_bore&#39;</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> 
+                                        <span class="n">keywords</span><span class="p">[</span><span class="s">&#39;stroke_length&#39;</span><span class="p">]</span> <span class="o">+</span> 
+                                        <span class="n">keywords</span><span class="p">[</span><span class="s">&#39;clear_volume&#39;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&quot;Error: I cannot compute the initial volume of the reactor. &quot;</span>
+                <span class="s">&quot;Please specify one of the following combinations:</span><span class="se">\n</span><span class="s">&quot;</span>
+                <span class="s">&quot;1) VOLD + VOLC</span><span class="se">\n</span><span class="s">2) CMPR + VOLC</span><span class="se">\n</span><span class="s">3) CMPR + VOLD</span><span class="se">\n</span><span class="s">&quot;</span>
+                <span class="s">&quot;4) BORE + VOLC</span><span class="se">\n</span><span class="s">5) VOL&quot;</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        
+        <span class="c"># Handle the ways to calculate the rod length to radius ratio</span>
+        <span class="k">if</span> <span class="s">&#39;rod_radius_ratio&#39;</span> <span class="ow">in</span> <span class="n">keywords</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&quot;Info: The connnecting rod length to crank radius ratio was &quot;</span>
+                <span class="s">&quot;specified by the &#39;LOLR&#39; keyword and this value will be &quot;</span>
+                <span class="s">&quot;used regardless of other settings.&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">all</span><span class="p">(</span><span class="n">key</span> <span class="ow">in</span> <span class="n">keywords</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="s">&#39;connect_rod_len&#39;</span><span class="p">,</span> 
+                                             <span class="s">&#39;crank_radius&#39;</span><span class="p">)):</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&quot;Info: Using given connecting rod length and crank radius &quot;</span>
+                <span class="s">&quot;to compute the ratio.&quot;</span><span class="p">)</span>
+            <span class="n">keywords</span><span class="p">[</span><span class="s">&#39;rod_radius_ratio&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">keywords</span><span class="p">[</span><span class="s">&#39;connect_rod_len&#39;</span><span class="p">]</span> <span class="o">/</span>
+                                            <span class="n">keywords</span><span class="p">[</span><span class="s">&#39;crank_radius&#39;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&quot;Error: Unable to calculate the connecting rod length to &quot;</span>
+                <span class="s">&quot;crank radius ratio. Please specify one of the following &quot;</span>
+                <span class="s">&quot;options:</span><span class="se">\n</span><span class="s">&quot;</span>
+                <span class="s">&quot;1) LOLR</span><span class="se">\n</span><span class="s">2) CRAD + RODL&quot;</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    
+    <span class="c"># Set the default reactor volume, if it is not specified</span>
+    <span class="k">if</span> <span class="s">&#39;reactorVolume&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">keywords</span><span class="p">:</span>
+        <span class="n">keywords</span><span class="p">[</span><span class="s">&#39;reactorVolume&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0E-6</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;Warning: No reactor volume specified, assuming 1.0 cm**3.&#39;</span><span class="p">)</span>
     
     <span class="c"># The reactants can be specified by REAC or EQUI + FUEL + OXID + </span>
     <span class="c"># CPROD. One or the other of these must be present; if neither or </span>
@@ -449,72 +576,94 @@
 <span class="sd">        The mole fractions given in this dictionary are as a fraction </span>
 <span class="sd">        of the total mixture.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">num_H_fuel</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">num_C_fuel</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">num_O_fuel</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">num_H_oxid</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">num_C_oxid</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">num_O_oxid</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">num_H_cprod</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">num_C_cprod</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">num_O_cprod</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">reactants</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+    <span class="n">cprod_elems</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">fuel_elems</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">oxid_elems</span> <span class="o">=</span> <span class="p">{}</span>
+    
+    <span class="c"># Check sum of fuel and oxidizer values; normalize if greater than 1</span>
+    <span class="n">fuel_sum</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">fuel</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+    <span class="k">if</span> <span class="n">fuel_sum</span> <span class="o">&gt;</span> <span class="mf">1.0</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">sp</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">fuel</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">fuel</span><span class="p">[</span><span class="n">sp</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="o">/</span><span class="n">fuel_sum</span>
+    
+    <span class="n">oxid_sum</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">oxidizer</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+    <span class="k">if</span> <span class="n">oxid_sum</span> <span class="o">&gt;</span> <span class="mf">1.0</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">sp</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">oxidizer</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">oxidizer</span><span class="p">[</span><span class="n">sp</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="o">/</span><span class="n">oxid_sum</span>
+    
+    <span class="c"># Check oxidation state of complete products</span>
+    <span class="k">for</span> <span class="n">sp</span><span class="p">,</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">product</span><span class="p">(</span><span class="n">complete_products</span><span class="p">,</span> <span class="n">gas</span><span class="o">.</span><span class="n">element_names</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">el</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cprod_elems</span><span class="p">:</span>
+            <span class="n">cprod_elems</span><span class="p">[</span><span class="n">el</span><span class="o">.</span><span class="n">upper</span><span class="p">()]</span> <span class="o">=</span> <span class="p">{}</span>
+        
+        <span class="n">cprod_elems</span><span class="p">[</span><span class="n">el</span><span class="o">.</span><span class="n">upper</span><span class="p">()][</span><span class="n">sp</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">gas</span><span class="o">.</span><span class="n">n_atoms</span><span class="p">(</span><span class="n">sp</span><span class="p">,</span> <span class="n">el</span><span class="p">))</span>
+    
+    <span class="n">num_C_cprod</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">cprod_elems</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;C&#39;</span><span class="p">,</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">})</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+    <span class="n">num_H_cprod</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">cprod_elems</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;H&#39;</span><span class="p">,</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">})</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+    <span class="n">num_O_cprod</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">cprod_elems</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;O&#39;</span><span class="p">,</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span><span class="mi">0</span><span class="p">})</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+    
+    <span class="n">oxid_state</span> <span class="o">=</span> <span class="mi">4</span><span class="o">*</span><span class="n">num_C_cprod</span> <span class="o">+</span> <span class="n">num_H_cprod</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">num_O_cprod</span>
+    <span class="k">if</span> <span class="n">oxid_state</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&quot;Warning: One or more products of incomplete combustion &quot;</span>
+              <span class="s">&quot;were specified.&quot;</span><span class="p">)</span>
     
     <span class="c"># Find the number of H, C, and O atoms in the fuel molecules.</span>
-    <span class="k">for</span> <span class="n">species</span><span class="p">,</span> <span class="n">fuel_amt</span> <span class="ow">in</span> <span class="n">fuel</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">num_H_fuel</span> <span class="o">+=</span> <span class="n">gas</span><span class="o">.</span><span class="n">n_atoms</span><span class="p">(</span><span class="n">species</span><span class="p">,</span><span class="s">&#39;H&#39;</span><span class="p">)</span><span class="o">*</span><span class="n">fuel_amt</span>
-        <span class="n">num_C_fuel</span> <span class="o">+=</span> <span class="n">gas</span><span class="o">.</span><span class="n">n_atoms</span><span class="p">(</span><span class="n">species</span><span class="p">,</span><span class="s">&#39;C&#39;</span><span class="p">)</span><span class="o">*</span><span class="n">fuel_amt</span>
-        <span class="n">num_O_fuel</span> <span class="o">+=</span> <span class="n">gas</span><span class="o">.</span><span class="n">n_atoms</span><span class="p">(</span><span class="n">species</span><span class="p">,</span><span class="s">&#39;O&#39;</span><span class="p">)</span><span class="o">*</span><span class="n">fuel_amt</span>
+    <span class="k">for</span> <span class="n">sp</span><span class="p">,</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">product</span><span class="p">(</span><span class="n">fuel</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">gas</span><span class="o">.</span><span class="n">element_names</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">el</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">fuel_elems</span><span class="p">:</span>
+            <span class="n">fuel_elems</span><span class="p">[</span><span class="n">el</span><span class="o">.</span><span class="n">upper</span><span class="p">()]</span> <span class="o">=</span> <span class="mi">0</span>
+            
+        <span class="n">fuel_elems</span><span class="p">[</span><span class="n">el</span><span class="o">.</span><span class="n">upper</span><span class="p">()]</span> <span class="o">+=</span> <span class="n">gas</span><span class="o">.</span><span class="n">n_atoms</span><span class="p">(</span><span class="n">sp</span><span class="p">,</span> <span class="n">el</span><span class="p">)</span> <span class="o">*</span> <span class="n">fuel</span><span class="p">[</span><span class="n">sp</span><span class="p">]</span>
+    
+    <span class="n">num_C_fuel</span> <span class="o">=</span> <span class="n">fuel_elems</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;C&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">num_H_fuel</span> <span class="o">=</span> <span class="n">fuel_elems</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;H&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">num_O_fuel</span> <span class="o">=</span> <span class="n">fuel_elems</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;O&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
     
     <span class="c"># Find the number of H, C, and O atoms in the oxidizer molecules.</span>
-    <span class="k">for</span> <span class="n">species</span><span class="p">,</span> <span class="n">oxid_amt</span> <span class="ow">in</span> <span class="n">oxidizer</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">num_H_oxid</span> <span class="o">+=</span> <span class="n">gas</span><span class="o">.</span><span class="n">n_atoms</span><span class="p">(</span><span class="n">species</span><span class="p">,</span><span class="s">&#39;H&#39;</span><span class="p">)</span><span class="o">*</span><span class="n">oxid_amt</span>
-        <span class="n">num_C_oxid</span> <span class="o">+=</span> <span class="n">gas</span><span class="o">.</span><span class="n">n_atoms</span><span class="p">(</span><span class="n">species</span><span class="p">,</span><span class="s">&#39;C&#39;</span><span class="p">)</span><span class="o">*</span><span class="n">oxid_amt</span>
-        <span class="n">num_O_oxid</span> <span class="o">+=</span> <span class="n">gas</span><span class="o">.</span><span class="n">n_atoms</span><span class="p">(</span><span class="n">species</span><span class="p">,</span><span class="s">&#39;O&#39;</span><span class="p">)</span><span class="o">*</span><span class="n">oxid_amt</span>
-        
-    <span class="n">num_H_req</span> <span class="o">=</span> <span class="n">num_H_fuel</span> <span class="o">+</span> <span class="n">num_H_oxid</span>
-    <span class="n">num_C_req</span> <span class="o">=</span> <span class="n">num_C_fuel</span> <span class="o">+</span> <span class="n">num_C_oxid</span>
-    
-    <span class="k">for</span> <span class="n">species</span> <span class="ow">in</span> <span class="n">complete_products</span><span class="p">:</span>
-        <span class="n">num_H_cprod</span> <span class="o">+=</span> <span class="n">gas</span><span class="o">.</span><span class="n">n_atoms</span><span class="p">(</span><span class="n">species</span><span class="p">,</span><span class="s">&#39;H&#39;</span><span class="p">)</span>
-        <span class="n">num_C_cprod</span> <span class="o">+=</span> <span class="n">gas</span><span class="o">.</span><span class="n">n_atoms</span><span class="p">(</span><span class="n">species</span><span class="p">,</span><span class="s">&#39;C&#39;</span><span class="p">)</span>
-    
-    <span class="k">if</span> <span class="p">((</span><span class="n">num_H_cprod</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">num_H_req</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> 
-            <span class="p">(</span><span class="n">num_H_cprod</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">num_H_req</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)):</span>
-        <span class="k">if</span> <span class="n">num_H_req</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">print</span><span class="p">(</span><span class="s">&#39;Error: All elements specified in the Complete Products &#39;</span>
-                  <span class="s">&#39;must be in the Fuel or Oxidizer&#39;</span><span class="p">)</span>
-            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">sp</span><span class="p">,</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">product</span><span class="p">(</span><span class="n">oxidizer</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">gas</span><span class="o">.</span><span class="n">element_names</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">el</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">oxid_elems</span><span class="p">:</span>
+            <span class="n">oxid_elems</span><span class="p">[</span><span class="n">el</span><span class="o">.</span><span class="n">upper</span><span class="p">()]</span> <span class="o">=</span> <span class="mi">0</span>
             
-        <span class="n">H_multiplier</span> <span class="o">=</span> <span class="n">num_H_req</span><span class="o">/</span><span class="n">num_H_cprod</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">H_multiplier</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">oxid_elems</span><span class="p">[</span><span class="n">el</span><span class="o">.</span><span class="n">upper</span><span class="p">()]</span> <span class="o">+=</span> <span class="n">gas</span><span class="o">.</span><span class="n">n_atoms</span><span class="p">(</span><span class="n">sp</span><span class="p">,</span> <span class="n">el</span><span class="p">)</span> <span class="o">*</span> <span class="n">oxidizer</span><span class="p">[</span><span class="n">sp</span><span class="p">]</span>
     
+    <span class="n">num_O_oxid</span> <span class="o">=</span> <span class="n">oxid_elems</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;O&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c"># Check that all of the elements specified in the fuel and oxidizer </span>
+    <span class="c"># are present in the complete products and vice versa.</span>
+    <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">cprod_elems</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">if</span> <span class="p">((</span><span class="nb">sum</span><span class="p">(</span><span class="n">cprod_elems</span><span class="p">[</span><span class="n">el</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">fuel_elems</span><span class="p">[</span><span class="n">el</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> 
+            <span class="n">oxid_elems</span><span class="p">[</span><span class="n">el</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">cprod_elems</span><span class="p">[</span><span class="n">el</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> 
+           <span class="p">(</span><span class="n">fuel_elems</span><span class="p">[</span><span class="n">el</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">oxid_elems</span><span class="p">[</span><span class="n">el</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">))):</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&#39;Error: Must specify all elements in the fuel + oxidizer &#39;</span>
+                  <span class="s">&#39;in the complete products&#39;</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    
+    <span class="c"># Compute the amount of oxidizer required to consume all the </span>
+    <span class="c"># carbon and hydrogen in the complete products</span>
     <span class="k">if</span> <span class="n">num_C_cprod</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">num_C_req</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">print</span><span class="p">(</span><span class="s">&#39;Error: All elements specified in the Complete Products &#39;</span>
-                  <span class="s">&#39;must be in the Fuel or Oxidizer&#39;</span><span class="p">)</span>
-            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-            
-        <span class="n">C_multiplier</span> <span class="o">=</span> <span class="n">num_C_req</span><span class="o">/</span><span class="n">num_C_cprod</span>
+        <span class="n">spec</span> <span class="o">=</span> <span class="n">cprod_elems</span><span class="p">[</span><span class="s">&#39;C&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="n">ox</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">cprod_elems</span><span class="p">[</span><span class="s">&#39;O&#39;</span><span class="p">][</span><span class="n">sp</span><span class="p">]</span> <span class="k">for</span> <span class="n">sp</span> <span class="ow">in</span> <span class="n">spec</span> <span class="k">if</span> <span class="n">cprod_elems</span><span class="p">[</span><span class="s">&#39;C&#39;</span><span class="p">][</span><span class="n">sp</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="n">C_multiplier</span> <span class="o">=</span> <span class="n">ox</span><span class="o">/</span><span class="n">num_C_cprod</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">C_multiplier</span> <span class="o">=</span> <span class="mi">0</span>
     
-    <span class="k">for</span> <span class="n">species</span> <span class="ow">in</span> <span class="n">complete_products</span><span class="p">:</span>
-        <span class="n">num_C</span> <span class="o">=</span> <span class="n">gas</span><span class="o">.</span><span class="n">n_atoms</span><span class="p">(</span><span class="n">species</span><span class="p">,</span><span class="s">&#39;C&#39;</span><span class="p">)</span>
-        <span class="n">num_H</span> <span class="o">=</span> <span class="n">gas</span><span class="o">.</span><span class="n">n_atoms</span><span class="p">(</span><span class="n">species</span><span class="p">,</span><span class="s">&#39;H&#39;</span><span class="p">)</span>
-        <span class="n">num_O</span> <span class="o">=</span> <span class="n">gas</span><span class="o">.</span><span class="n">n_atoms</span><span class="p">(</span><span class="n">species</span><span class="p">,</span><span class="s">&#39;O&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">num_C</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">num_O_cprod</span> <span class="o">+=</span> <span class="n">num_O</span> <span class="o">*</span> <span class="n">C_multiplier</span>
-        <span class="k">elif</span> <span class="n">num_H</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">num_O_cprod</span> <span class="o">+=</span> <span class="n">num_O</span> <span class="o">*</span> <span class="n">H_multiplier</span>
+    <span class="k">if</span> <span class="n">num_H_cprod</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">spec</span> <span class="o">=</span> <span class="n">cprod_elems</span><span class="p">[</span><span class="s">&#39;H&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="n">ox</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">cprod_elems</span><span class="p">[</span><span class="s">&#39;O&#39;</span><span class="p">][</span><span class="n">sp</span><span class="p">]</span> <span class="k">for</span> <span class="n">sp</span> <span class="ow">in</span> <span class="n">spec</span> <span class="k">if</span> <span class="n">cprod_elems</span><span class="p">[</span><span class="s">&#39;H&#39;</span><span class="p">][</span><span class="n">sp</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="n">H_multiplier</span> <span class="o">=</span> <span class="n">ox</span><span class="o">/</span><span class="n">num_H_cprod</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">H_multiplier</span> <span class="o">=</span> <span class="mi">0</span>
     
-    <span class="n">O_mult</span> <span class="o">=</span> <span class="p">(</span><span class="n">num_O_cprod</span> <span class="o">-</span> <span class="n">num_O_fuel</span><span class="p">)</span><span class="o">/</span><span class="n">num_O_oxid</span>
+    <span class="c"># Compute how many O atoms are required to oxidize everybody</span>
+    <span class="n">num_O_req</span> <span class="o">=</span> <span class="n">num_C_fuel</span> <span class="o">*</span> <span class="n">C_multiplier</span> <span class="o">+</span> <span class="n">num_H_fuel</span> <span class="o">*</span> <span class="n">H_multiplier</span> <span class="o">-</span> <span class="n">num_O_fuel</span>
+    <span class="n">O_mult</span> <span class="o">=</span> <span class="n">num_O_req</span><span class="o">/</span><span class="n">num_O_oxid</span>
     
+    <span class="c"># Find the total number of moles in the fuel + oxidizer mixture</span>
     <span class="n">total_oxid_moles</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">O_mult</span> <span class="o">*</span> <span class="n">amt</span> <span class="k">for</span> <span class="n">amt</span> <span class="ow">in</span> <span class="n">oxidizer</span><span class="o">.</span><span class="n">values</span><span class="p">()])</span>
     <span class="n">total_fuel_moles</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">eq_ratio</span> <span class="o">*</span> <span class="n">amt</span> <span class="k">for</span> <span class="n">amt</span> <span class="ow">in</span> <span class="n">fuel</span><span class="o">.</span><span class="n">values</span><span class="p">()])</span>
     <span class="n">total_reactant_moles</span> <span class="o">=</span> <span class="n">total_oxid_moles</span> <span class="o">+</span> <span class="n">total_fuel_moles</span>
     
+    <span class="c"># Handle the case where additional species are specified separately </span>
     <span class="k">if</span> <span class="n">additional_species</span><span class="p">:</span>
         <span class="n">total_additional_species</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">additional_species</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
         <span class="k">if</span> <span class="n">total_additional_species</span> <span class="o">&gt;=</span> <span class="mf">1.0</span><span class="p">:</span>
@@ -525,8 +674,11 @@
             <span class="n">reactants</span> <span class="o">=</span> <span class="s">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">reactants</span><span class="p">,</span><span class="n">add_spec</span><span class="p">])</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">remain</span> <span class="o">=</span> <span class="mf">1.0</span>
-        
-    <span class="k">for</span> <span class="n">species</span><span class="p">,</span><span class="n">ox_amt</span> <span class="ow">in</span> <span class="n">oxidizer</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    
+    <span class="c"># Compute the mole fractions of the fuel and oxidizer components </span>
+    <span class="c"># given that a certain portion of the mixture will have been taken </span>
+    <span class="c"># up by the additional species, if any.</span>
+    <span class="k">for</span> <span class="n">species</span><span class="p">,</span> <span class="n">ox_amt</span> <span class="ow">in</span> <span class="n">oxidizer</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="n">molefrac</span> <span class="o">=</span> <span class="n">ox_amt</span> <span class="o">*</span> <span class="n">O_mult</span><span class="o">/</span><span class="n">total_reactant_moles</span> <span class="o">*</span> <span class="n">remain</span>
         <span class="n">add_spec</span> <span class="o">=</span> <span class="s">&#39;:&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">species</span><span class="p">,</span><span class="nb">str</span><span class="p">(</span><span class="n">molefrac</span><span class="p">)])</span>
         <span class="n">reactants</span> <span class="o">=</span> <span class="s">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">reactants</span><span class="p">,</span><span class="n">add_spec</span><span class="p">])</span>

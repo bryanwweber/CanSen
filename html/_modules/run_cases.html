@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
     <link rel="top" title="CanSen 1.0.0 documentation" href="../index.html" />
     <link rel="up" title="Module code" href="index.html" /> 
   </head>
@@ -83,7 +83,8 @@
 <span class="c"># Local imports</span>
 <span class="kn">from</span> <span class="nn">printer</span> <span class="kn">import</span> <span class="n">divider</span>
 <span class="kn">import</span> <span class="nn">utils</span>
-<span class="kn">from</span> <span class="nn">profiles</span> <span class="kn">import</span> <span class="n">VolumeProfile</span><span class="p">,</span> <span class="n">TemperatureProfile</span><span class="p">,</span> <span class="n">PressureProfile</span>
+<span class="kn">from</span> <span class="nn">profiles</span> <span class="kn">import</span> <span class="p">(</span><span class="n">VolumeProfile</span><span class="p">,</span> <span class="n">TemperatureProfile</span><span class="p">,</span> <span class="n">PressureProfile</span><span class="p">,</span> 
+                      <span class="n">ICEngineProfile</span><span class="p">)</span>
 
 <div class="viewcode-block" id="SimulationCase"><a class="viewcode-back" href="../codedocs.html#run_cases.SimulationCase">[docs]</a><span class="k">class</span> <span class="nc">SimulationCase</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -202,7 +203,14 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">n_vars</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reac</span><span class="o">.</span><span class="n">kinetics</span><span class="o">.</span><span class="n">n_species</span> <span class="o">+</span> <span class="mi">2</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">wall</span> <span class="o">=</span> <span class="n">ct</span><span class="o">.</span><span class="n">Wall</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reac</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">A</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">velocity</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">temp_func</span> <span class="o">=</span> <span class="n">ct</span><span class="o">.</span><span class="n">Func1</span><span class="p">(</span><span class="n">TemperatureProfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">keywords</span><span class="p">))</span>
-        
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">keywords</span><span class="p">[</span><span class="s">&#39;problemType&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">9</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reac</span> <span class="o">=</span> <span class="n">ct</span><span class="o">.</span><span class="n">IdealGasReactor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gas</span><span class="p">)</span>
+            <span class="c"># Number of solution variables is number of species + mass, </span>
+            <span class="c"># volume, temperature</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">n_vars</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reac</span><span class="o">.</span><span class="n">kinetics</span><span class="o">.</span><span class="n">n_species</span> <span class="o">+</span> <span class="mi">3</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">wall</span> <span class="o">=</span> <span class="n">ct</span><span class="o">.</span><span class="n">Wall</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">reac</span><span class="p">,</span> <span class="n">A</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+                                <span class="n">velocity</span><span class="o">=</span><span class="n">ICEngineProfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">keywords</span><span class="p">))</span>
+            
         <span class="k">if</span> <span class="s">&#39;reactorVolume&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">keywords</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">reac</span><span class="o">.</span><span class="n">volume</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">keywords</span><span class="p">[</span><span class="s">&#39;reactorVolume&#39;</span><span class="p">]</span>
         
@@ -355,6 +363,8 @@
             
             <span class="bp">self</span><span class="o">.</span><span class="n">reactor_state_printer</span><span class="p">(</span><span class="n">prev_time</span><span class="p">)</span>
             
+            <span class="n">ignition_found</span> <span class="o">=</span> <span class="bp">False</span>
+            
             <span class="c"># Main loop to run the calculation. As long as the time in </span>
             <span class="c"># the ``ReactorNet`` is less than the end time, keep going.</span>
             <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">netw</span><span class="o">.</span><span class="n">time</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">tend</span><span class="p">:</span>
@@ -455,8 +465,9 @@
                 <span class="c"># If the temperature limit has been exceeded, we have </span>
                 <span class="c"># ignition! Save the time this occurs at. In the </span>
                 <span class="c"># future, the ignition time may be interpolated.</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">reac</span><span class="o">.</span><span class="n">T</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">temp_limit</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">reac</span><span class="o">.</span><span class="n">T</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">temp_limit</span> <span class="ow">and</span> <span class="n">ignition_found</span> <span class="o">==</span> <span class="bp">False</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">ignition_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">netw</span><span class="o">.</span><span class="n">time</span>
+                    <span class="n">ignition_found</span> <span class="o">=</span> <span class="bp">True</span>
                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">keywords</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;break_on_ignition&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">):</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">reactor_state_printer</span><span class="p">(</span><span class="n">cur_time</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
                         <span class="k">break</span>
@@ -509,9 +520,9 @@
             <span class="k">pass</span>
             
         <span class="k">print</span><span class="p">((</span><span class="s">&quot;Reactor Temperature (K) = {0:&gt;13.4f}</span><span class="se">\n</span><span class="s">&quot;</span>
-            <span class="s">&quot;Reactor Pressure (Pa)   = {1:&gt;13.4f}</span><span class="se">\n</span><span class="s">&quot;</span>
-            <span class="s">&quot;Reactor Volume (m**3)   = {2:&gt;13.4f}</span><span class="se">\n</span><span class="s">&quot;</span>
-            <span class="s">&quot;Reactor Vdot (m**3/s)   = {3:&gt;13.4f}&quot;</span>
+            <span class="s">&quot;Reactor Pressure (Pa)   = {1:&gt;13.4E}</span><span class="se">\n</span><span class="s">&quot;</span>
+            <span class="s">&quot;Reactor Volume (m**3)   = {2:&gt;13.4E}</span><span class="se">\n</span><span class="s">&quot;</span>
+            <span class="s">&quot;Reactor Vdot (m**3/s)   = {3:&gt;13.4E}&quot;</span>
             <span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">temperature</span><span class="p">,</span> <span class="n">pressure</span><span class="p">,</span> <span class="n">volume</span><span class="p">,</span> <span class="n">vdot</span><span class="p">))</span>
         <span class="k">print</span><span class="p">(</span><span class="s">&#39;Gas Phase Mole Fractions:&#39;</span><span class="p">)</span>
         

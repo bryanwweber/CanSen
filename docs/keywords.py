@@ -17,16 +17,20 @@ keywords['ATOL'] = ("Absolute tolerance of the accuracy of the solution. "
                     "Example::\n\n    ATOL 1E-20")
 keywords['CONP'] = ("Solve a constant pressure reactor with the energy "
                     "equation on. One of |CONP|_, |CONT|_, |CONV|_, |COTV|_, "
-                    "|TPRO|_, |TTIM|_, |VPRO|_, or |VTIM|_ must be specified.")
+                    "|ICEN|_, |TPRO|_, |TTIM|_, |VPRO|_, or |VTIM|_ must be "
+                    "specified.")
 keywords['CONT'] = ("Solve a constant pressure reactor with the energy "
                     "equation off. One of |CONP|_, |CONT|_, |CONV|_, |COTV|_, "
-                    "|TPRO|_, |TTIM|_, |VPRO|_, or |VTIM|_ must be specified.")
+                    "|ICEN|_, |TPRO|_, |TTIM|_, |VPRO|_, or |VTIM|_ must be "
+                    "specified.")
 keywords['CONV'] = ("Solve a constant volume reactor with the energy "
                     "equation on. One of |CONP|_, |CONT|_, |CONV|_, |COTV|_, "
-                    "|TPRO|_, |TTIM|_, |VPRO|_, or |VTIM|_ must be specified.")
+                    "|ICEN|_, |TPRO|_, |TTIM|_, |VPRO|_, or |VTIM|_ must be "
+                    "specified.")
 keywords['COTV'] = ("Solve a constant volume reactor with the energy "
                     "equation off. One of |CONP|_, |CONT|_, |CONV|_, |COTV|_, "
-                    "|TPRO|_, |TTIM|_, |VPRO|_, or |VTIM|_ must be specified.")
+                    "|ICEN|_, |TPRO|_, |TTIM|_, |VPRO|_, or |VTIM|_ must be "
+                    "specified.")
 keywords['CPROD'] = ("Complete products of stoichiometric combustion for the "
                      "given fuel and oxidizer compositions. Only valid when "
                      "the equivalence ratio option is used to specify the "
@@ -143,8 +147,8 @@ keywords['TPRO'] = ("Specify the reactor temperature as a function of time. "
                     "any solver time step. When the end time of the profile "
                     "is exceeded, the temperature remains constant at the "
                     "last specified value. One of |CONP|_, |CONT|_, |CONV|_, "
-                    "|COTV|_, |TPRO|_, |TTIM|_, |VPRO|_, or |VTIM|_ must be "
-                    "specified. Units: seconds, K.\n\n"
+                    "|COTV|_, |ICEN|_, |TPRO|_, |TTIM|_, |VPRO|_, or |VTIM|_ "
+                    "must be specified. Units: seconds, K.\n\n"
                     "Example::\n\n    TPRO 0.0 800\n    TPRO 0.1 900")
 keywords['TTIM'] = ("Specify the reactor temperature as a user-provided "
                     "function of time. To use this keyword, the user must "
@@ -159,8 +163,8 @@ keywords['TTIM'] = ("Specify the reactor temperature as a user-provided "
                     ":meth:`TemperatureFunctionTime.__call__` method should "
                     "contain the actual calculation and return of the "
                     "temperature given the input ``time``.One of |CONP|_, "
-                    "|CONT|_, |CONV|_, |COTV|_, |TPRO|_, |TTIM|_, |VPRO|_, or "
-                    "|VTIM|_ must be specified. Units: K.")
+                    "|CONT|_, |CONV|_, |COTV|_, |ICEN|_, |TPRO|_, |TTIM|_, "
+                    "|VPRO|_, or |VTIM|_ must be specified. Units: K.")
 keywords['VOL'] = ("Initial volume of the reactor. Optional keyword, default: "
                    "1E6 cm**3. Units: cm**3.\n\n"
                    "Example::\n\n    VOL 1.0")
@@ -171,8 +175,8 @@ keywords['VPRO'] = ("Specify the reactor volume as a function of time. "
                     "any solver time step. When the end time of the profile "
                     "is exceeded, the volume remains constant at the "
                     "last specified value. One of |CONP|_, |CONT|_, |CONV|_, "
-                    "|COTV|_, |TPRO|_, |TTIM|_, |VPRO|_, or |VTIM|_ must be "
-                    "specified. Units: seconds, m**3.\n\n"
+                    "|COTV|_, |ICEN|_, |TPRO|_, |TTIM|_, |VPRO|_, or |VTIM|_ "
+                    "must be specified. Units: seconds, m**3.\n\n"
                     "Example::\n\n    VPRO 0.0 1E-5\n    VPRO 0.1 1E-6")
 keywords['VTIM'] = ("Specify the reactor volume as a user-provided "
                     "function of time. To use this keyword, the user must "
@@ -186,11 +190,50 @@ keywords['VTIM'] = ("Specify the reactor volume as a user-provided "
                     ":meth:`VolumeFunctionTime.__call__` method. The "
                     ":meth:`VolumeFunctionTime.__call__` method should "
                     "contain the actual calculation and must return the "
-                    "velocity of the wall given the input ``time``.One of "
-                    "|CONP|_, |CONT|_, |CONV|_, |COTV|_, |TPRO|_, |TTIM|_, "
-                    "|VPRO|_, or |VTIM|_ must be specified. Units: m/s.")
+                    "velocity of the wall given the input ``time``. One of "
+                    "|CONP|_, |CONT|_, |CONV|_, |COTV|_, |ICEN|_, |TPRO|_, "
+                    "|TTIM|_, |VPRO|_, or |VTIM|_ must be specified. Units: "
+                    "m/s.")
+keywords['ICEN'] = ("Specify the internal combustion engine model be used. See "
+                    ":ref:`the documentation for the model <icengine.html>` for "
+                    "information on the derivation. See also |BORE|_, |CMPR|_, "
+                    "|CRAD|_, |DEG0|_, |LOLR|_, |RODL|_, |RPM|_, |STROKE|_, "
+                    "|VOLD|_, and |VOLC|_. One of |CONP|_, |CONT|_, |CONV|_, "
+                    "|COTV|_, |ICEN|_, |TPRO|_, |TTIM|_, |VPRO|_, or |VTIM|_ "
+                    "must be specified.")
+keywords['CMPR'] = ("Specify the compression ratio for the internal combustion "
+                    "engine model. Defined as the maximum total volume in the "
+                    "cylinder divided by the clearance volume.\n\n"
+                    ".. math::\n    r_c = \\frac{V_d + V_c}{V_c}\n\n"
+                    "where :math:`r_c` is the compression ratio, :math:`V_d` "
+                    "is the swept volume, and :math:`V_c` is the clearance "
+                    "volume. See also: |VOLC|_, |VOLD|_.\n\nExample::\n\n"
+                    "    CMPR 10.0")
+keywords['DEG0'] = ("Specify the initial crank angle of the simulation. "
+                    "Units: degrees. Default: 180 deg.\nExample::\n\n    "
+                    "DEG0 180")
+keywords['VOLD'] = ("Specify the swept or displaced volume, :math:`V_d`. "
+                    "Units: cm**3. See |CMPR|_, |VOLC|_.\n\n"
+                    "Example::\n\n    VOLD 10.0")
+keywords['VOLC'] = ("Specify the clearance volume, :math:`V_c`.  Units: "
+                    "cm**3. See |CMPR|_, |VOLD|_.\n\n"
+                    "Example::\n\n    VOLC 1.0")
+keywords['LOLR'] = ("Specify the ratio of the connecting rod length, "
+                    ":math:`\\ell`, to the crank radius, :math:`a`. See "
+                    "|RODL|_, |CRAD|_.\n\nExample::\n\n    LOLR 3.5")
+keywords['RPM'] = ("Specify the rotation rate of the engine in revolutions "
+                   "per minute.\n\nExample::\n\n    RPM 1500")
+keywords['BORE'] = ("CanSen specific keyword. Bore diameter of the engine "
+                    "cylinder. Units: cm.\n\nExample::\n\n    BORE 1.0")
+keywords['STROKE'] = ("CanSen specific keyword. Specify the stroke length "
+                      "of the engine, :math:`L`. Units: cm.\n\nExample::\n\n"
+                      "    STROKE 7.0")
+keywords['RODL'] = ("CanSen specific keyword. Specify the connecting rod "
+                    "length, :math:`\\ell`. Units: cm.\n\nExample::\n\n"
+                    "    RODL 5.0")
+keywords['CRAD'] = ("CanSen specific keyword. Specify the crank radius. "
+                    "Units: cm.\n\nExample::\n\n    CRAD 3.5")
                     
-
 sorted_keys = sorted(keywords.keys())
 print(sorted_keys)
 out_list = []

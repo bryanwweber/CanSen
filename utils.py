@@ -236,11 +236,11 @@ def read_input_file(input_filename):
             elif line.upper().startswith('BORE'):
                 keywords['cyl_bore'] = float(line.split()[1])/1.0E2
             elif line.upper().startswith('STROKE'):
-                keywords['stroke_length'] = float(line.split()[1])
+                keywords['stroke_length'] = float(line.split()[1])/1.0E2
             elif line.upper().startswith('RODL'):
-                keywords['connect_rod_len'] = float(line.split()[1])
+                keywords['connect_rod_len'] = float(line.split()[1])/1.0E2
             elif line.upper().startswith('CRAD'):
-                keywords['crank_radius'] = float(line.split()[1])
+                keywords['crank_radius'] = float(line.split()[1])/1.0E2
             elif line.upper()[0:3] in unsupported_keys:
                 print('Keyword', line.upper()[0:3], 'is not supported yet',
                       'and has been ignored')

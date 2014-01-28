@@ -9,9 +9,9 @@ SENKIN-format input file:
 
 | |ADD|_ |ATLS|_ |ATOL|_ |CONP|_ |CONT|_ |CONV|_ |COTV|_ 
 | |CPROD|_ |DELT|_ |DTIGN|_ |DTSV|_ |END|_ |EQUI|_ |FUEL|_ 
-| |IGNBREAK|_ |OXID|_ |PRES|_ |REAC|_ |RTLS|_ |RTOL|_ |SENS|_ 
-| |STPT|_ |TEMP|_ |TIME|_ |TLIM|_ |TPRO|_ |TTIM|_ |VOL|_ 
-| |VPRO|_ |VTIM|_ 
+| |ICEN|_ |IGNBREAK|_ |OXID|_ |PRES|_ |REAC|_ |RTLS|_ |RTOL|_ 
+| |SENS|_ |STPT|_ |TEMP|_ |TIME|_ |TLIM|_ |TPRO|_ |TTIM|_ 
+| |VOL|_ |VPRO|_ |VTIM|_ 
 
 .. |ADD| replace:: ``ADD``
 .. _ADD:
@@ -43,22 +43,22 @@ Example::
 .. |CONP| replace:: ``CONP``
 .. _CONP:
 
-``CONP``: Solve a constant pressure reactor with the energy equation on. One of |CONP|_, |CONT|_, |CONV|_, |COTV|_, |TPRO|_, |TTIM|_, |VPRO|_, or |VTIM|_ must be specified.
+``CONP``: Solve a constant pressure reactor with the energy equation on. One of |CONP|_, |CONT|_, |CONV|_, |COTV|_, |ICEN|_, |TPRO|_, |TTIM|_, |VPRO|_, or |VTIM|_ must be specified.
 
 .. |CONT| replace:: ``CONT``
 .. _CONT:
 
-``CONT``: Solve a constant pressure reactor with the energy equation off. One of |CONP|_, |CONT|_, |CONV|_, |COTV|_, |TPRO|_, |TTIM|_, |VPRO|_, or |VTIM|_ must be specified.
+``CONT``: Solve a constant pressure reactor with the energy equation off. One of |CONP|_, |CONT|_, |CONV|_, |COTV|_, |ICEN|_, |TPRO|_, |TTIM|_, |VPRO|_, or |VTIM|_ must be specified.
 
 .. |CONV| replace:: ``CONV``
 .. _CONV:
 
-``CONV``: Solve a constant volume reactor with the energy equation on. One of |CONP|_, |CONT|_, |CONV|_, |COTV|_, |TPRO|_, |TTIM|_, |VPRO|_, or |VTIM|_ must be specified.
+``CONV``: Solve a constant volume reactor with the energy equation on. One of |CONP|_, |CONT|_, |CONV|_, |COTV|_, |ICEN|_, |TPRO|_, |TTIM|_, |VPRO|_, or |VTIM|_ must be specified.
 
 .. |COTV| replace:: ``COTV``
 .. _COTV:
 
-``COTV``: Solve a constant volume reactor with the energy equation off. One of |CONP|_, |CONT|_, |CONV|_, |COTV|_, |TPRO|_, |TTIM|_, |VPRO|_, or |VTIM|_ must be specified.
+``COTV``: Solve a constant volume reactor with the energy equation off. One of |CONP|_, |CONT|_, |CONV|_, |COTV|_, |ICEN|_, |TPRO|_, |TTIM|_, |VPRO|_, or |VTIM|_ must be specified.
 
 .. |CPROD| replace:: ``CPROD``
 .. _CPROD:
@@ -119,6 +119,16 @@ Example::
 Example::
 
  FUEL CH4 1.0
+
+.. |ICEN| replace:: ``ICEN``
+.. _ICEN:
+
+``ICEN``: Specify the internal combustion engine model be used. The equation for the velocity of the piston is derived from [HEYW1988]_, Page 44, Eq. 2.5. The distance from the crank center to the piston pin is given by:
+
+.. math::
+    s = a \cos{\theta} + (\ell^2 - a^2 \sin^2{\theta})^{1/2}
+
+blah.
 
 .. |IGNBREAK| replace:: ``IGNBREAK``
 .. _IGNBREAK:
@@ -228,7 +238,7 @@ Example::
 .. |TPRO| replace:: ``TPRO``
 .. _TPRO:
 
-``TPRO``: Specify the reactor temperature as a function of time. Multiple invocations of this keyword build a profile of the temperature over the given times. This profile is linearly interpolated to set the reactor temperature at any solver time step. When the end time of the profile is exceeded, the temperature remains constant at the last specified value. One of |CONP|_, |CONT|_, |CONV|_, |COTV|_, |TPRO|_, |TTIM|_, |VPRO|_, or |VTIM|_ must be specified. Units: seconds, K.
+``TPRO``: Specify the reactor temperature as a function of time. Multiple invocations of this keyword build a profile of the temperature over the given times. This profile is linearly interpolated to set the reactor temperature at any solver time step. When the end time of the profile is exceeded, the temperature remains constant at the last specified value. One of |CONP|_, |CONT|_, |CONV|_, |COTV|_, |ICEN|_, |TPRO|_, |TTIM|_, |VPRO|_, or |VTIM|_ must be specified. Units: seconds, K.
 
 Example::
 
@@ -238,7 +248,7 @@ Example::
 .. |TTIM| replace:: ``TTIM``
 .. _TTIM:
 
-``TTIM``: Specify the reactor temperature as a user-provided function of time. To use this keyword, the user must edit the :class:`TemperatureFunctionTime` class in the :mod:`user_routines.py` file. Any parameters to be read from external files should be loaded in the :meth:`TemperatureFunctionTime.__init__` method so that they are not read on every time step. The parameters should be stored in the ``self`` instance of the class so that they can be accessed in the :meth:`TemperatureFunctionTime.__call__` method. The :meth:`TemperatureFunctionTime.__call__` method should contain the actual calculation and return of the temperature given the input ``time``.One of |CONP|_, |CONT|_, |CONV|_, |COTV|_, |TPRO|_, |TTIM|_, |VPRO|_, or |VTIM|_ must be specified. Units: K.
+``TTIM``: Specify the reactor temperature as a user-provided function of time. To use this keyword, the user must edit the :class:`TemperatureFunctionTime` class in the :mod:`user_routines.py` file. Any parameters to be read from external files should be loaded in the :meth:`TemperatureFunctionTime.__init__` method so that they are not read on every time step. The parameters should be stored in the ``self`` instance of the class so that they can be accessed in the :meth:`TemperatureFunctionTime.__call__` method. The :meth:`TemperatureFunctionTime.__call__` method should contain the actual calculation and return of the temperature given the input ``time``.One of |CONP|_, |CONT|_, |CONV|_, |COTV|_, |ICEN|_, |TPRO|_, |TTIM|_, |VPRO|_, or |VTIM|_ must be specified. Units: K.
 
 .. |VOL| replace:: ``VOL``
 .. _VOL:
@@ -252,7 +262,7 @@ Example::
 .. |VPRO| replace:: ``VPRO``
 .. _VPRO:
 
-``VPRO``: Specify the reactor volume as a function of time. Multiple invocations of this keyword build a profile of the volume over the given times. This profile is linearly interpolated to set the reactor volume at any solver time step. When the end time of the profile is exceeded, the volume remains constant at the last specified value. One of |CONP|_, |CONT|_, |CONV|_, |COTV|_, |TPRO|_, |TTIM|_, |VPRO|_, or |VTIM|_ must be specified. Units: seconds, m**3.
+``VPRO``: Specify the reactor volume as a function of time. Multiple invocations of this keyword build a profile of the volume over the given times. This profile is linearly interpolated to set the reactor volume at any solver time step. When the end time of the profile is exceeded, the volume remains constant at the last specified value. One of |CONP|_, |CONT|_, |CONV|_, |COTV|_, |ICEN|_, |TPRO|_, |TTIM|_, |VPRO|_, or |VTIM|_ must be specified. Units: seconds, m**3.
 
 Example::
 
@@ -262,5 +272,5 @@ Example::
 .. |VTIM| replace:: ``VTIM``
 .. _VTIM:
 
-``VTIM``: Specify the reactor volume as a user-provided function of time. To use this keyword, the user must edit the :class:`VolumeFunctionTime` class in the :mod:`user_routines.py` file. Any parameters to be read from external files should be loaded in the :meth:`VolumeFunctionTime.__init__` method so that they are not read on every time step. The parameters should be stored in the ``self`` instance of the class so that they can be accessed in the :meth:`VolumeFunctionTime.__call__` method. The :meth:`VolumeFunctionTime.__call__` method should contain the actual calculation and must return the velocity of the wall given the input ``time``.One of |CONP|_, |CONT|_, |CONV|_, |COTV|_, |TPRO|_, |TTIM|_, |VPRO|_, or |VTIM|_ must be specified. Units: m/s.
+``VTIM``: Specify the reactor volume as a user-provided function of time. To use this keyword, the user must edit the :class:`VolumeFunctionTime` class in the :mod:`user_routines.py` file. Any parameters to be read from external files should be loaded in the :meth:`VolumeFunctionTime.__init__` method so that they are not read on every time step. The parameters should be stored in the ``self`` instance of the class so that they can be accessed in the :meth:`VolumeFunctionTime.__call__` method. The :meth:`VolumeFunctionTime.__call__` method should contain the actual calculation and must return the velocity of the wall given the input ``time``.One of |CONP|_, |CONT|_, |CONV|_, |COTV|_, |ICEN|_, |TPRO|_, |TTIM|_, |VPRO|_, or |VTIM|_ must be specified. Units: m/s.
 

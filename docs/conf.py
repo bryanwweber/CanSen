@@ -36,6 +36,8 @@ extensions = [
     'sphinx.ext.viewcode',
 ]
 
+mathjax_path = 'http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default'
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
@@ -73,7 +75,7 @@ release = '1.0.0'
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
-exclude_patterns = ['_build','keywords.py']
+exclude_patterns = ['_build','keywords.py', '_piston']
 
 # The reST default role (used for this markup: `text`) to use for all
 # documents.
