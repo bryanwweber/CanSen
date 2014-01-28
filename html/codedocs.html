@@ -54,6 +54,26 @@
 <div class="section" id="module-cansen">
 <span id="cansen-module"></span><h2>cansen module<a class="headerlink" href="#module-cansen" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
+<dt id="cansen.main">
+<tt class="descclassname">cansen.</tt><tt class="descname">main</tt><big>(</big><em>filenames</em>, <em>convert</em>, <em>version</em><big>)</big><a class="reference internal" href="_modules/cansen.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cansen.main" title="Permalink to this definition">¶</a></dt>
+<dd><p>The main driver function of CanSen.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>filenames</strong> &#8211; Dictionary of filenames related to the simulation.</li>
+<li><strong>convert</strong> &#8211; Boolean indicating that the user wishes only to convert the 
+input mechanism and quit.</li>
+<li><strong>version</strong> &#8211; Version string of CanSen.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="cansen.cansen">
 <tt class="descclassname">cansen.</tt><tt class="descname">cansen</tt><big>(</big><em>argv</em><big>)</big><a class="reference internal" href="_modules/cansen.html#cansen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cansen.cansen" title="Permalink to this definition">¶</a></dt>
 <dd><p>CanSen - the SENKIN-like wrapper for Cantera written in Python.</p>
@@ -84,26 +104,6 @@ file. Otherwise, required.</dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="cansen.main">
-<tt class="descclassname">cansen.</tt><tt class="descname">main</tt><big>(</big><em>filenames</em>, <em>convert</em>, <em>version</em><big>)</big><a class="reference internal" href="_modules/cansen.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cansen.main" title="Permalink to this definition">¶</a></dt>
-<dd><p>The main driver function of CanSen.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>filenames</strong> &#8211; Dictionary of filenames related to the simulation.</li>
-<li><strong>convert</strong> &#8211; Boolean indicating that the user wishes only to convert the 
-input mechanism and quit.</li>
-<li><strong>version</strong> &#8211; Version string of CanSen.</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 </div>
 <div class="section" id="module-printer">
 <span id="printer-module"></span><h2>printer module<a class="headerlink" href="#module-printer" title="Permalink to this headline">¶</a></h2>
@@ -112,21 +112,24 @@ input mechanism and quit.</li>
 <em class="property">class </em><tt class="descclassname">printer.</tt><tt class="descname">Tee</tt><big>(</big><em>name</em>, <em>mode</em><big>)</big><a class="reference internal" href="_modules/printer.html#Tee"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#printer.Tee" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
 <p>Write to screen and text output file</p>
+<p>Initialize output.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> &#8211; Output file name.</li>
+<li><strong>mode</strong> &#8211; Read/Write mode of the output file.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="printer.Tee.close">
 <tt class="descname">close</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/printer.html#Tee.close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#printer.Tee.close" title="Permalink to this definition">¶</a></dt>
 <dd><p>Close output file and restore standard behavior</p>
 </dd></dl>
-
-<dl class="method">
-<dt id="printer.Tee.flush">
-<tt class="descname">flush</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/printer.html#Tee.flush"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#printer.Tee.flush" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="printer.Tee.write">
-<tt class="descname">write</tt><big>(</big><em>data</em><big>)</big><a class="reference internal" href="_modules/printer.html#Tee.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#printer.Tee.write" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 
 </dd></dl>
 
@@ -134,18 +137,44 @@ input mechanism and quit.</li>
 <div class="section" id="module-profiles">
 <span id="profiles-module"></span><h2>profiles module<a class="headerlink" href="#module-profiles" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
-<dt id="profiles.ICEngineProfile">
-<em class="property">class </em><tt class="descclassname">profiles.</tt><tt class="descname">ICEngineProfile</tt><big>(</big><em>keywords</em><big>)</big><a class="reference internal" href="_modules/profiles.html#ICEngineProfile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#profiles.ICEngineProfile" title="Permalink to this definition">¶</a></dt>
+<dt id="profiles.VolumeProfile">
+<em class="property">class </em><tt class="descclassname">profiles.</tt><tt class="descname">VolumeProfile</tt><big>(</big><em>keywords</em><big>)</big><a class="reference internal" href="_modules/profiles.html#VolumeProfile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#profiles.VolumeProfile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
-<p>Set the velocity of the wall according to the parameters of a 
-reciprocating engine. Used with the input keyword <tt class="docutils literal"><span class="pre">ICEN</span></tt>.</p>
+<p>Set the velocity of the piston by using a user specified volume 
+profile. The initialization and calling of this class are handled 
+by the <a class="reference external" href="http://cantera.github.io/docs/sphinx/html/cython/zerodim.html#cantera.Func1">Func1</a> 
+interface of Cantera. Used with the input keyword <a class="reference internal" href="keywords.html#vpro"><em>VPRO</em></a></p>
+<p>Set the initial values of the arrays from the input keywords.</p>
+<p>The time and volume are read from the input file and stored in 
+the <tt class="docutils literal"><span class="pre">keywords</span></tt> dictionary. The velocity is calculated by 
+assuming a unit area and using the forward difference, 
+calculated by <tt class="docutils literal"><span class="pre">numpy.diff</span></tt>. This function is only called
+once when the class is initialized at the beginning of a 
+problem so it is efficient.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>keywords</strong> &#8211; Dictionary of keywords read from the input file</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="profiles.VolumeProfile.__call__">
+<tt class="descname">__call__</tt><big>(</big><em>t</em><big>)</big><a class="reference internal" href="_modules/profiles.html#VolumeProfile.__call__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#profiles.VolumeProfile.__call__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the velocity when called during a time step.</p>
+<p>Using linear interpolation, deterimine the velocity at a given 
+input time <tt class="docutils literal"><span class="pre">t</span></tt>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>t</strong> &#8211; Input float, current simulation time.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
-<dl class="class">
-<dt id="profiles.PressureProfile">
-<em class="property">class </em><tt class="descclassname">profiles.</tt><tt class="descname">PressureProfile</tt><a class="reference internal" href="_modules/profiles.html#PressureProfile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#profiles.PressureProfile" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
-<p>Dummy class for the pressure profile, to be implemented in CanSen v2.0</p>
 </dd></dl>
 
 <dl class="class">
@@ -154,18 +183,65 @@ reciprocating engine. Used with the input keyword <tt class="docutils literal"><
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
 <p>Set the temperature of the reactor by using a user specified 
 temperature profile. The initialization and calling of this class 
-are handled by the <tt class="docutils literal"><span class="pre">Func1</span></tt> interface of Cantera. Used with the 
-input keyword <tt class="docutils literal"><span class="pre">TPRO</span></tt></p>
+are handled by the  <a class="reference external" href="http://cantera.github.io/docs/sphinx/html/cython/zerodim.html#cantera.Func1">Func1</a> 
+interface of Cantera. Used with the input keyword <a class="reference internal" href="keywords.html#tpro"><em>TPRO</em></a></p>
+<p>Set the initial values of the arrays from the input keywords.</p>
+<p>The time and temperature are read from the input file and 
+stored in the <tt class="docutils literal"><span class="pre">keywords</span></tt> dictionary as lists. This function 
+is only called once when the class is initialized at the 
+beginning of a problem so it is efficient.</p>
+<dl class="method">
+<dt id="profiles.TemperatureProfile.__call__">
+<tt class="descname">__call__</tt><big>(</big><em>t</em><big>)</big><a class="reference internal" href="_modules/profiles.html#TemperatureProfile.__call__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#profiles.TemperatureProfile.__call__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the temperature when called during a time step.</p>
+<p>Using linear interpolation, determine the temperature at a 
+given input time <tt class="docutils literal"><span class="pre">t</span></tt>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>t</strong> &#8211; Input float, current simulation time.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
-<dt id="profiles.VolumeProfile">
-<em class="property">class </em><tt class="descclassname">profiles.</tt><tt class="descname">VolumeProfile</tt><big>(</big><em>keywords</em><big>)</big><a class="reference internal" href="_modules/profiles.html#VolumeProfile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#profiles.VolumeProfile" title="Permalink to this definition">¶</a></dt>
+<dt id="profiles.ICEngineProfile">
+<em class="property">class </em><tt class="descclassname">profiles.</tt><tt class="descname">ICEngineProfile</tt><big>(</big><em>keywords</em><big>)</big><a class="reference internal" href="_modules/profiles.html#ICEngineProfile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#profiles.ICEngineProfile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
-<p>Set the velocity of the piston by using a user specified volume 
-profile. The initialization and calling of this class are handled 
-by the <tt class="docutils literal"><span class="pre">Func1</span></tt> interface of Cantera. Used with the input keyword 
-<tt class="docutils literal"><span class="pre">VPRO</span></tt></p>
+<p>Set the velocity of the wall according to the parameters of a 
+reciprocating engine. The initialization and calling of this class 
+are handled by the  <a class="reference external" href="http://cantera.github.io/docs/sphinx/html/cython/zerodim.html#cantera.Func1">Func1</a> 
+interface of Cantera. Used with the input keyword <a class="reference internal" href="keywords.html#icen"><em>ICEN</em></a>.</p>
+<p>Set the initial values of the engine parameters.</p>
+<p>The parameters are read from the input file into the 
+<tt class="docutils literal"><span class="pre">keywords</span></tt> dictionary.</p>
+<dl class="method">
+<dt id="profiles.ICEngineProfile.__call__">
+<tt class="descname">__call__</tt><big>(</big><em>time</em><big>)</big><a class="reference internal" href="_modules/profiles.html#ICEngineProfile.__call__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#profiles.ICEngineProfile.__call__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the velocity of the piston when called.</p>
+<p>The function for the velocity is given by Heywood.
+See <a class="reference internal" href="icengine.html"><em>Internal Combustion Engine Model</em></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>time</strong> &#8211; Input float, current simulation time</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="profiles.PressureProfile">
+<em class="property">class </em><tt class="descclassname">profiles.</tt><tt class="descname">PressureProfile</tt><a class="reference internal" href="_modules/profiles.html#PressureProfile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#profiles.PressureProfile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
+<p>Dummy class for the pressure profile, to be implemented in CanSen v2.0</p>
 </dd></dl>
 
 </div>
@@ -176,6 +252,42 @@ by the <tt class="docutils literal"><span class="pre">Func1</span></tt> interfac
 <em class="property">class </em><tt class="descclassname">run_cases.</tt><tt class="descname">SimulationCase</tt><big>(</big><em>filenames</em><big>)</big><a class="reference internal" href="_modules/run_cases.html#SimulationCase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#run_cases.SimulationCase" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
 <p>Class that sets up and runs a simulation case.</p>
+<p>Initialize the simulation case.</p>
+<p>Read the SENKIN-format input file is read into the <tt class="docutils literal"><span class="pre">keywords</span></tt> 
+dictionary.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filenames</strong> &#8211; Dictionary containing the relevant file names for this
+case.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="run_cases.SimulationCase.setup_case">
+<tt class="descname">setup_case</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/run_cases.html#SimulationCase.setup_case"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#run_cases.SimulationCase.setup_case" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets up the case to be run. Initializes the <tt class="docutils literal"><span class="pre">ThermoPhase</span></tt>, 
+<tt class="docutils literal"><span class="pre">Reactor</span></tt>, and ReactorNet according to the values from the 
+input file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="run_cases.SimulationCase.run_case">
+<tt class="descname">run_case</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/run_cases.html#SimulationCase.run_case"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#run_cases.SimulationCase.run_case" title="Permalink to this definition">¶</a></dt>
+<dd><p>Actually run the case set up by <tt class="docutils literal"><span class="pre">setup_case</span></tt>. Sets binary 
+output file format, then runs the simulation by using 
+<tt class="docutils literal"><span class="pre">ReactorNet.step(self.tend)</span></tt>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="run_cases.SimulationCase.run_simulation">
+<tt class="descname">run_simulation</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/run_cases.html#SimulationCase.run_simulation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#run_cases.SimulationCase.run_simulation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper function that sequentially sets up the simulation case 
+and runs it. Useful for cases where nothing needs to be changed 
+between the setup and run. See <cite>setup_case</cite> and <cite>run_case</cite>.</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="run_cases.SimulationCase.reactor_state_printer">
 <tt class="descname">reactor_state_printer</tt><big>(</big><em>state</em>, <em>end=False</em><big>)</big><a class="reference internal" href="_modules/run_cases.html#SimulationCase.reactor_state_printer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#run_cases.SimulationCase.reactor_state_printer" title="Permalink to this definition">¶</a></dt>
@@ -197,68 +309,100 @@ interpolated to get to the proper time.</p>
 </table>
 </dd></dl>
 
-<dl class="method">
-<dt id="run_cases.SimulationCase.run_case">
-<tt class="descname">run_case</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/run_cases.html#SimulationCase.run_case"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#run_cases.SimulationCase.run_case" title="Permalink to this definition">¶</a></dt>
-<dd><p>Actually run the case set up by <tt class="docutils literal"><span class="pre">setup_case</span></tt>. Sets binary 
-output file format, then runs the simulation by using 
-<tt class="docutils literal"><span class="pre">ReactorNet.step(self.tend)</span></tt>.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="run_cases.SimulationCase.run_simulation">
-<tt class="descname">run_simulation</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/run_cases.html#SimulationCase.run_simulation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#run_cases.SimulationCase.run_simulation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Helper function that sequentially sets up the simulation case 
-and runs it. Useful for cases where nothing needs to be changed 
-between the setup and run. See <cite>setup_case</cite> and <cite>run_case</cite>.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="run_cases.SimulationCase.setup_case">
-<tt class="descname">setup_case</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/run_cases.html#SimulationCase.setup_case"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#run_cases.SimulationCase.setup_case" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sets up the case to be run. Initializes the <tt class="docutils literal"><span class="pre">ThermoPhase</span></tt>, 
-<tt class="docutils literal"><span class="pre">Reactor</span></tt>, and ReactorNet according to the values from the 
-input file.</p>
-</dd></dl>
-
 </dd></dl>
 
 </div>
 <div class="section" id="module-user_routines">
 <span id="user-routines-module"></span><h2>user_routines module<a class="headerlink" href="#module-user_routines" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
-<dt id="user_routines.TemperatureFunctionTime">
-<em class="property">class </em><tt class="descclassname">user_routines.</tt><tt class="descname">TemperatureFunctionTime</tt><a class="reference internal" href="_modules/user_routines.html#TemperatureFunctionTime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#user_routines.TemperatureFunctionTime" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
-<p>Calculate the temperature of the reactor as a user specified 
-function of time.</p>
-</dd></dl>
-
-<dl class="class">
 <dt id="user_routines.VolumeFunctionTime">
 <em class="property">class </em><tt class="descclassname">user_routines.</tt><tt class="descname">VolumeFunctionTime</tt><a class="reference internal" href="_modules/user_routines.html#VolumeFunctionTime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#user_routines.VolumeFunctionTime" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
 <p>Calculate the volume of the reactor as a user specified function 
 of time.</p>
+<p>Set up the function to be calculated.</p>
+<p>The init function should be used to import any parameters for 
+the volume as a function of time from external files. Do not
+calculate the volume as a function of time here. Store all of
+the parameters in the <tt class="docutils literal"><span class="pre">self</span></tt> instance. The reason for this is 
+to avoid running the <tt class="docutils literal"><span class="pre">__init__</span></tt> function on every time step.
+See the example below.</p>
+<p>Example to load polynomial parameters from a file:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># Read the file into the list ``self.params``. The lines of </span>
+<span class="c"># the file are read as strings.</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;file.txt&#39;</span><span class="p">,</span><span class="s">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">input_file</span><span class="p">:</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="n">input_file</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+<span class="c"># Convert the strings to floats.</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">param</span><span class="p">)</span> <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">]</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">area</span> <span class="o">=</span> <span class="mi">1</span> <span class="c"># m**2</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="user_routines.VolumeFunctionTime.__call__">
+<tt class="descname">__call__</tt><big>(</big><em>time</em><big>)</big><a class="reference internal" href="_modules/user_routines.html#VolumeFunctionTime.__call__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#user_routines.VolumeFunctionTime.__call__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the velocity of the piston at the given time.</p>
+<p>The call function should be where the implementation of the
+volume as a function of time is done. Cantera expects the 
+velocity to be returned - v = dV/dt * 1/A. Get all of the
+needed parameters that were stored in the <tt class="docutils literal"><span class="pre">self</span></tt> instance.
+See the example below.</p>
+<p>Example to use the previously stored polynomial parameters:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">volume</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">time</span> <span class="o">+</span> 
+    <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">time</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">*</span><span class="n">time</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="c"># m**3</span>
+<span class="n">dvoldt</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">time</span> <span class="o">+</span> 
+    <span class="mi">3</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">*</span><span class="n">time</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="c"># m**3/s</span>
+<span class="n">velocity</span> <span class="o">=</span> <span class="n">dvoldt</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">area</span> <span class="c"># m/s</span>
+<span class="k">return</span> <span class="n">velocity</span> 
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="user_routines.TemperatureFunctionTime">
+<em class="property">class </em><tt class="descclassname">user_routines.</tt><tt class="descname">TemperatureFunctionTime</tt><a class="reference internal" href="_modules/user_routines.html#TemperatureFunctionTime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#user_routines.TemperatureFunctionTime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
+<p>Calculate the temperature of the reactor as a user specified 
+function of time.</p>
+<p>Set up the function to be calculated.</p>
+<p>The init function should be used to import any parameters for 
+the temperature as a function of time from external files. Do not
+calculate the temperature as a function of time here. Store all of
+the parameters in the <tt class="docutils literal"><span class="pre">self</span></tt> instance. The reason for this is 
+to avoid running the <tt class="docutils literal"><span class="pre">__init__</span></tt> function on every time step.
+See the example below.</p>
+<p>Example to load polynomial parameters from a file:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># Read the file into the list ``self.params``. The lines of </span>
+<span class="c"># the file are read as strings.</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;file.txt&#39;</span><span class="p">,</span><span class="s">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">input_file</span><span class="p">:</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="n">input_file</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+<span class="c"># Convert the strings to floats.</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">param</span><span class="p">)</span> <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">]</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="user_routines.TemperatureFunctionTime.__call__">
+<tt class="descname">__call__</tt><big>(</big><em>time</em><big>)</big><a class="reference internal" href="_modules/user_routines.html#TemperatureFunctionTime.__call__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#user_routines.TemperatureFunctionTime.__call__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the velocity of the piston at the given time.</p>
+<p>The call function should be where the implementation of the
+temperature as a function of time is done. Get all of the
+needed parameters that were stored in the <tt class="docutils literal"><span class="pre">self</span></tt> instance.
+See the example below. Note: <tt class="docutils literal"><span class="pre">None</span></tt> is not a valid return
+value, so this function does not work as written.</p>
+<p>Example to use the previously stored polynomial parameters:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">temperature</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">time</span> <span class="o">+</span> 
+    <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">time</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">*</span><span class="n">time</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="c"># K</span>
+<span class="k">return</span> <span class="n">temperature</span> 
+</pre></div>
+</div>
+</dd></dl>
+
 </dd></dl>
 
 </div>
 <div class="section" id="module-utils">
 <span id="utils-module"></span><h2>utils module<a class="headerlink" href="#module-utils" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="utils.cli_parser">
-<tt class="descclassname">utils.</tt><tt class="descname">cli_parser</tt><big>(</big><em>argv</em><big>)</big><a class="reference internal" href="_modules/utils.html#cli_parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.cli_parser" title="Permalink to this definition">¶</a></dt>
-<dd><p>Parse command line interface input.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>argv</strong> &#8211; List of command line options.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 <dl class="function">
 <dt id="utils.convert_mech">
 <tt class="descclassname">utils.</tt><tt class="descname">convert_mech</tt><big>(</big><em>mech_filename</em>, <em>thermo_filename</em><big>)</big><a class="reference internal" href="_modules/utils.html#convert_mech"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.convert_mech" title="Permalink to this definition">¶</a></dt>
@@ -274,6 +418,53 @@ the Cantera built-in script <cite>ck2cti</cite>.</p>
 CTI file will have the same name, but with <cite>.cti</cite> extension.</li>
 <li><strong>thermo_filename</strong> &#8211; Filename of the thermodynamic database. Optional if the 
 thermodynamic database is present in the mechanism input.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="utils.read_input_file">
+<tt class="descclassname">utils.</tt><tt class="descname">read_input_file</tt><big>(</big><em>input_filename</em><big>)</big><a class="reference internal" href="_modules/utils.html#read_input_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.read_input_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a formatted input file and return a dictionary of keywords.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>input_filename</strong> &#8211; Filename of the SENKIN input file.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="utils.cli_parser">
+<tt class="descclassname">utils.</tt><tt class="descname">cli_parser</tt><big>(</big><em>argv</em><big>)</big><a class="reference internal" href="_modules/utils.html#cli_parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.cli_parser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse command line interface input.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>argv</strong> &#8211; List of command line options.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="utils.reactor_interpolate">
+<tt class="descclassname">utils.</tt><tt class="descname">reactor_interpolate</tt><big>(</big><em>interp_time</em>, <em>state1</em>, <em>state2</em><big>)</big><a class="reference internal" href="_modules/utils.html#reactor_interpolate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.reactor_interpolate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Linearly interpolate the reactor states to the given input time.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>interp_time</strong> &#8211; Time at which the interpolated values should be calculated</li>
+<li><strong>state1</strong> &#8211; Array of the state information at the previous time step.</li>
+<li><strong>state2</strong> &#8211; Array of the state information at the current time step.</li>
 </ul>
 </td>
 </tr>
@@ -306,39 +497,6 @@ The mole fractions given in this dictionary are as a fraction
 of the total mixture.</li>
 </ul>
 </td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="utils.reactor_interpolate">
-<tt class="descclassname">utils.</tt><tt class="descname">reactor_interpolate</tt><big>(</big><em>interp_time</em>, <em>state1</em>, <em>state2</em><big>)</big><a class="reference internal" href="_modules/utils.html#reactor_interpolate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.reactor_interpolate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Linearly interpolate the reactor states to the given input time.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>interp_time</strong> &#8211; Time at which the interpolated values should be calculated</li>
-<li><strong>state1</strong> &#8211; Array of the state information at the previous time step.</li>
-<li><strong>state2</strong> &#8211; Array of the state information at the current time step.</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="utils.read_input_file">
-<tt class="descclassname">utils.</tt><tt class="descname">read_input_file</tt><big>(</big><em>input_filename</em><big>)</big><a class="reference internal" href="_modules/utils.html#read_input_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.read_input_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read a formatted input file and return a dictionary of keywords.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>input_filename</strong> &#8211; Filename of the SENKIN input file.</td>
 </tr>
 </tbody>
 </table>

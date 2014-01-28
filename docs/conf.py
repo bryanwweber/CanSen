@@ -36,6 +36,10 @@ extensions = [
     'sphinx.ext.viewcode',
 ]
 
+add_function_parentheses = False
+autodoc_default_flags = ['members', 'show-inheritance']
+autodoc_member_order = 'bysource'
+autoclass_content = 'both'
 mathjax_path = 'http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default'
 
 # Add any paths that contain templates here, relative to this directory.

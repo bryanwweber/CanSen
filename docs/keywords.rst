@@ -7,11 +7,14 @@ Supported SENKIN Keywords
 The following is a list of the currently supported keywords in the 
 SENKIN-format input file:
 
-| |ADD|_ |ATLS|_ |ATOL|_ |CONP|_ |CONT|_ |CONV|_ |COTV|_ 
-| |CPROD|_ |DELT|_ |DTIGN|_ |DTSV|_ |END|_ |EQUI|_ |FUEL|_ 
-| |ICEN|_ |IGNBREAK|_ |OXID|_ |PRES|_ |REAC|_ |RTLS|_ |RTOL|_ 
-| |SENS|_ |STPT|_ |TEMP|_ |TIME|_ |TLIM|_ |TPRO|_ |TTIM|_ 
-| |VOL|_ |VPRO|_ |VTIM|_ 
+| |ADD|_ |ATLS|_ |ATOL|_ |BORE|_ |CMPR|_ |CONP|_ |CONT|_ 
+| |CONV|_ |COTV|_ |CPROD|_ |CRAD|_ |DEG0|_ |DELT|_ |DTIGN|_ 
+| |DTSV|_ |END|_ |EQUI|_ |FUEL|_ |ICEN|_ |IGNBREAK|_ |LOLR|_ 
+| |OXID|_ |PRES|_ |REAC|_ |RODL|_ |RPM|_ |RTLS|_ |RTOL|_ 
+| |SENS|_ |STPT|_ |STROKE|_ |TEMP|_ |TIME|_ |TLIM|_ |TPRO|_ 
+| |TTIM|_ |VOL|_ |VOLC|_ |VOLD|_ |VPRO|_ |VTIM|_ 
+
+====
 
 .. |ADD| replace:: ``ADD``
 .. _ADD:
@@ -22,6 +25,8 @@ Example::
 
     ADD Ar 0.1
 
+====
+
 .. |ATLS| replace:: ``ATLS``
 .. _ATLS:
 
@@ -30,6 +35,8 @@ Example::
 Example::
 
     ATLS 1E-06
+
+====
 
 .. |ATOL| replace:: ``ATOL``
 .. _ATOL:
@@ -40,25 +47,57 @@ Example::
 
     ATOL 1E-20
 
+====
+
+.. |BORE| replace:: ``BORE``
+.. _BORE:
+
+``BORE``: CanSen specific keyword. Bore diameter of the engine cylinder. Units: cm.
+
+Example::
+
+    BORE 1.0
+
+====
+
+.. |CMPR| replace:: ``CMPR``
+.. _CMPR:
+
+``CMPR``: Specify the compression ratio for the internal combustion engine model. Defined as the maximum total volume in the cylinder divided by the clearance volume. See the :ref:`documentation <compression-ratio>`. See also: |VOLC|_, |VOLD|_.
+
+Example::
+
+    CMPR 10.0
+
+====
+
 .. |CONP| replace:: ``CONP``
 .. _CONP:
 
 ``CONP``: Solve a constant pressure reactor with the energy equation on. One of |CONP|_, |CONT|_, |CONV|_, |COTV|_, |ICEN|_, |TPRO|_, |TTIM|_, |VPRO|_, or |VTIM|_ must be specified.
+
+====
 
 .. |CONT| replace:: ``CONT``
 .. _CONT:
 
 ``CONT``: Solve a constant pressure reactor with the energy equation off. One of |CONP|_, |CONT|_, |CONV|_, |COTV|_, |ICEN|_, |TPRO|_, |TTIM|_, |VPRO|_, or |VTIM|_ must be specified.
 
+====
+
 .. |CONV| replace:: ``CONV``
 .. _CONV:
 
 ``CONV``: Solve a constant volume reactor with the energy equation on. One of |CONP|_, |CONT|_, |CONV|_, |COTV|_, |ICEN|_, |TPRO|_, |TTIM|_, |VPRO|_, or |VTIM|_ must be specified.
 
+====
+
 .. |COTV| replace:: ``COTV``
 .. _COTV:
 
 ``COTV``: Solve a constant volume reactor with the energy equation off. One of |CONP|_, |CONT|_, |CONV|_, |COTV|_, |ICEN|_, |TPRO|_, |TTIM|_, |VPRO|_, or |VTIM|_ must be specified.
+
+====
 
 .. |CPROD| replace:: ``CPROD``
 .. _CPROD:
@@ -70,6 +109,30 @@ Example::
     CPROD H2O
     CPROD CO2
 
+====
+
+.. |CRAD| replace:: ``CRAD``
+.. _CRAD:
+
+``CRAD``: CanSen specific keyword. Specify the crank radius. Units: cm.
+
+Example::
+
+    CRAD 3.5
+
+====
+
+.. |DEG0| replace:: ``DEG0``
+.. _DEG0:
+
+``DEG0``: Specify the initial crank angle of the simulation. Units: degrees. Default: 180 deg.
+
+Example::
+
+    DEG0 180
+
+====
+
 .. |DELT| replace:: ``DELT``
 .. _DELT:
 
@@ -78,6 +141,8 @@ Example::
 Example::
 
     DELT 1E-03
+
+====
 
 .. |DTIGN| replace:: ``DTIGN``
 .. _DTIGN:
@@ -88,6 +153,8 @@ Example::
 
     DTIGN 400
 
+====
+
 .. |DTSV| replace:: ``DTSV``
 .. _DTSV:
 
@@ -97,10 +164,14 @@ Example::
 
     DTSV 1E-05
 
+====
+
 .. |END| replace:: ``END``
 .. _END:
 
 ``END``: Signifies the end of the input file in SENKIN. It is included in CanSen for compatibility with SENKIN input files, but does not do anything. Any CanSen specific keywords can be placed after |END|_ and the same input file can be used with SENKIN with no changes.
+
+====
 
 .. |EQUI| replace:: ``EQUI``
 .. _EQUI:
@@ -111,6 +182,8 @@ Example::
 
     EQUI 1.0
 
+====
+
 .. |FUEL| replace:: ``FUEL``
 .. _FUEL:
 
@@ -120,20 +193,32 @@ Example::
 
  FUEL CH4 1.0
 
+====
+
 .. |ICEN| replace:: ``ICEN``
 .. _ICEN:
 
-``ICEN``: Specify the internal combustion engine model be used. The equation for the velocity of the piston is derived from [HEYW1988]_, Page 44, Eq. 2.5. The distance from the crank center to the piston pin is given by:
+``ICEN``: Specify the internal combustion engine model be used. See :doc:`the documentation for the model </icengine>` for information on the derivation. See also |BORE|_, |CMPR|_, |CRAD|_, |DEG0|_, |LOLR|_, |RODL|_, |RPM|_, |STROKE|_, |VOLD|_, and |VOLC|_. One of |CONP|_, |CONT|_, |CONV|_, |COTV|_, |ICEN|_, |TPRO|_, |TTIM|_, |VPRO|_, or |VTIM|_ must be specified.
 
-.. math::
-    s = a \cos{\theta} + (\ell^2 - a^2 \sin^2{\theta})^{1/2}
-
-blah.
+====
 
 .. |IGNBREAK| replace:: ``IGNBREAK``
 .. _IGNBREAK:
 
 ``IGNBREAK``: CanSen specific keyword. Indicates that the simulation should exit when ignition is encountered, instead of continuing until the end time |TIME|_ is reached. The criterion for ignition is specified by |DTIGN|_ or |TLIM|_. Optional keyword.
+
+====
+
+.. |LOLR| replace:: ``LOLR``
+.. _LOLR:
+
+``LOLR``: Specify the ratio of the connecting rod length, :math:`\ell`, to the crank radius, :math:`a`. See |RODL|_, |CRAD|_.
+
+Example::
+
+    LOLR 3.5
+
+====
 
 .. |OXID| replace:: ``OXID``
 .. _OXID:
@@ -145,6 +230,8 @@ Example::
     OXID O2 1.0
     OXID N2 3.76
 
+====
+
 .. |PRES| replace:: ``PRES``
 .. _PRES:
 
@@ -153,6 +240,8 @@ Example::
 Example::
 
     PRES 1.0
+
+====
 
 .. |REAC| replace:: ``REAC``
 .. _REAC:
@@ -165,6 +254,30 @@ Example::
     REAC O2 1.0
     REAC N2 3.76
 
+====
+
+.. |RODL| replace:: ``RODL``
+.. _RODL:
+
+``RODL``: CanSen specific keyword. Specify the connecting rod length, :math:`\ell`. Units: cm.
+
+Example::
+
+    RODL 5.0
+
+====
+
+.. |RPM| replace:: ``RPM``
+.. _RPM:
+
+``RPM``: Specify the rotation rate of the engine in revolutions per minute.
+
+Example::
+
+    RPM 1500
+
+====
+
 .. |RTLS| replace:: ``RTLS``
 .. _RTLS:
 
@@ -174,6 +287,8 @@ Example::
 
     RTLS 1E-04
 
+====
+
 .. |RTOL| replace:: ``RTOL``
 .. _RTOL:
 
@@ -182,6 +297,8 @@ Example::
 Example::
 
     RTOL 1E-08
+
+====
 
 .. |SENS| replace:: ``SENS``
 .. _SENS:
@@ -199,6 +316,8 @@ For |CONP|_, |CONT|_, |TPRO|_, and |TTIM|_ cases, the order of the sensitivity c
 - 1  - temperature
 - 2+ - mass fractions of the species
 
+====
+
 .. |STPT| replace:: ``STPT``
 .. _STPT:
 
@@ -207,6 +326,19 @@ For |CONP|_, |CONT|_, |TPRO|_, and |TTIM|_ cases, the order of the sensitivity c
 Example::
 
     STPT 1E-5
+
+====
+
+.. |STROKE| replace:: ``STROKE``
+.. _STROKE:
+
+``STROKE``: CanSen specific keyword. Specify the stroke length of the engine, :math:`L`. Units: cm.
+
+Example::
+
+    STROKE 7.0
+
+====
 
 .. |TEMP| replace:: ``TEMP``
 .. _TEMP:
@@ -217,6 +349,8 @@ Example::
 
     TEMP 800
 
+====
+
 .. |TIME| replace:: ``TIME``
 .. _TIME:
 
@@ -226,6 +360,8 @@ Example::
 
     TIME 1E-03
 
+====
+
 .. |TLIM| replace:: ``TLIM``
 .. _TLIM:
 
@@ -234,6 +370,8 @@ Example::
 Example::
 
     TLIM 1200
+
+====
 
 .. |TPRO| replace:: ``TPRO``
 .. _TPRO:
@@ -245,10 +383,14 @@ Example::
     TPRO 0.0 800
     TPRO 0.1 900
 
+====
+
 .. |TTIM| replace:: ``TTIM``
 .. _TTIM:
 
-``TTIM``: Specify the reactor temperature as a user-provided function of time. To use this keyword, the user must edit the :class:`TemperatureFunctionTime` class in the :mod:`user_routines.py` file. Any parameters to be read from external files should be loaded in the :meth:`TemperatureFunctionTime.__init__` method so that they are not read on every time step. The parameters should be stored in the ``self`` instance of the class so that they can be accessed in the :meth:`TemperatureFunctionTime.__call__` method. The :meth:`TemperatureFunctionTime.__call__` method should contain the actual calculation and return of the temperature given the input ``time``.One of |CONP|_, |CONT|_, |CONV|_, |COTV|_, |ICEN|_, |TPRO|_, |TTIM|_, |VPRO|_, or |VTIM|_ must be specified. Units: K.
+``TTIM``: Specify the reactor temperature as a user-provided function of time. To use this keyword, the user must edit the :class:`~user_routines.TemperatureFunctionTime` class in the :mod:`user_routines` file. Any parameters to be read from external files should be loaded in the :meth:`~user_routines.TemperatureFunctionTime.__init__` method so that they are not read on every time step. The parameters should be stored in the ``self`` instance of the class so that they can be accessed in the :meth:`~user_routines.TemperatureFunctionTime.__call__` method. The :meth:`~user_routines.TemperatureFunctionTime.__call__` method should contain the actual calculation and return of the temperature given the input ``time``.One of |CONP|_, |CONT|_, |CONV|_, |COTV|_, |ICEN|_, |TPRO|_, |TTIM|_, |VPRO|_, or |VTIM|_ must be specified. Units: K.
+
+====
 
 .. |VOL| replace:: ``VOL``
 .. _VOL:
@@ -258,6 +400,30 @@ Example::
 Example::
 
     VOL 1.0
+
+====
+
+.. |VOLC| replace:: ``VOLC``
+.. _VOLC:
+
+``VOLC``: Specify the clearance volume, :math:`V_c`.  Units: cm**3. See |CMPR|_, |VOLD|_.
+
+Example::
+
+    VOLC 1.0
+
+====
+
+.. |VOLD| replace:: ``VOLD``
+.. _VOLD:
+
+``VOLD``: Specify the swept or displaced volume, :math:`V_d`. Units: cm**3. See |CMPR|_, |VOLC|_.
+
+Example::
+
+    VOLD 10.0
+
+====
 
 .. |VPRO| replace:: ``VPRO``
 .. _VPRO:
@@ -269,8 +435,10 @@ Example::
     VPRO 0.0 1E-5
     VPRO 0.1 1E-6
 
+====
+
 .. |VTIM| replace:: ``VTIM``
 .. _VTIM:
 
-``VTIM``: Specify the reactor volume as a user-provided function of time. To use this keyword, the user must edit the :class:`VolumeFunctionTime` class in the :mod:`user_routines.py` file. Any parameters to be read from external files should be loaded in the :meth:`VolumeFunctionTime.__init__` method so that they are not read on every time step. The parameters should be stored in the ``self`` instance of the class so that they can be accessed in the :meth:`VolumeFunctionTime.__call__` method. The :meth:`VolumeFunctionTime.__call__` method should contain the actual calculation and must return the velocity of the wall given the input ``time``.One of |CONP|_, |CONT|_, |CONV|_, |COTV|_, |ICEN|_, |TPRO|_, |TTIM|_, |VPRO|_, or |VTIM|_ must be specified. Units: m/s.
+``VTIM``: Specify the reactor volume as a user-provided function of time. To use this keyword, the user must edit the :class:`~user_routines.VolumeFunctionTime` class in the :mod:`user_routines` file. Any parameters to be read from external files should be loaded in the :meth:`~user_routines.VolumeFunctionTime.__init__` method so that they are not read on every time step. The parameters should be stored in the ``self`` instance of the class so that they can be accessed in the :meth:`~user_routines.VolumeFunctionTime.__call__` method. The :meth:`~user_routines.VolumeFunctionTime.__call__` method should contain the actual calculation and must return the velocity of the wall given the input ``time``. One of |CONP|_, |CONT|_, |CONV|_, |COTV|_, |ICEN|_, |TPRO|_, |TTIM|_, |VPRO|_, or |VTIM|_ must be specified. Units: m/s.
 

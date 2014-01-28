@@ -10,8 +10,8 @@ class VolumeProfile(object):
     """
     Set the velocity of the piston by using a user specified volume 
     profile. The initialization and calling of this class are handled 
-    by the ``Func1`` interface of Cantera. Used with the input keyword 
-    ``VPRO``
+    by the `Func1 <http://cantera.github.io/docs/sphinx/html/cython/zerodim.html#cantera.Func1>`_ 
+    interface of Cantera. Used with the input keyword :ref:`VPRO <VPRO>`
     """
     def __init__(self, keywords):
         """Set the initial values of the arrays from the input keywords.
@@ -69,8 +69,8 @@ class TemperatureProfile(object):
     """
     Set the temperature of the reactor by using a user specified 
     temperature profile. The initialization and calling of this class 
-    are handled by the ``Func1`` interface of Cantera. Used with the 
-    input keyword ``TPRO``
+    are handled by the  `Func1 <http://cantera.github.io/docs/sphinx/html/cython/zerodim.html#cantera.Func1>`_ 
+    interface of Cantera. Used with the input keyword :ref:`TPRO <TPRO>`
     """
     def __init__(self, keywords):
         """Set the initial values of the arrays from the input keywords.
@@ -113,7 +113,9 @@ class TemperatureProfile(object):
 class ICEngineProfile(object):
     """
     Set the velocity of the wall according to the parameters of a 
-    reciprocating engine. Used with the input keyword ``ICEN``.
+    reciprocating engine. The initialization and calling of this class 
+    are handled by the  `Func1 <http://cantera.github.io/docs/sphinx/html/cython/zerodim.html#cantera.Func1>`_ 
+    interface of Cantera. Used with the input keyword :ref:`ICEN <ICEN>`.
     """
     def __init__(self, keywords):
         """Set the initial values of the engine parameters.
@@ -133,8 +135,15 @@ class ICEngineProfile(object):
         """Return the velocity of the piston when called.
         
         The function for the velocity is given by Heywood.
+        See :doc:`/icengine`.
+        
+        :param time:
+            Input float, current simulation time
         """
         theta = self.start_crank_rad - self.omega * time
+        # Technically, this is negative, but the way we install the 
+        # wall between the reactor and the environment handles the 
+        # sign.
         velocity = (self.omega*self.stroke_length/2*np.sin(theta)*
                     (1 + np.cos(theta)/np.sqrt(self.rod_radius_ratio**2 - 
                                                np.sin(theta)**2)))

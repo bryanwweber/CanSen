@@ -13,7 +13,7 @@ class VolumeFunctionTime(object):
         to avoid running the ``__init__`` function on every time step.
         See the example below.
         
-        Example to load polynomial parameters from a file:
+        Example to load polynomial parameters from a file::
         
             # Read the file into the list ``self.params``. The lines of 
             # the file are read as strings.
@@ -34,7 +34,7 @@ class VolumeFunctionTime(object):
         needed parameters that were stored in the ``self`` instance.
         See the example below.
         
-        Example to use the previously stored polynomial parameters:
+        Example to use the previously stored polynomial parameters::
         
             volume = (self.params[0] + self.params[1]*time + 
                 self.params[2]*time**2 + self.params[3]*time**3) # m**3
@@ -60,7 +60,7 @@ class TemperatureFunctionTime(object):
         to avoid running the ``__init__`` function on every time step.
         See the example below.
         
-        Example to load polynomial parameters from a file:
+        Example to load polynomial parameters from a file::
         
             # Read the file into the list ``self.params``. The lines of 
             # the file are read as strings.
@@ -80,7 +80,7 @@ class TemperatureFunctionTime(object):
         See the example below. Note: ``None`` is not a valid return
         value, so this function does not work as written.
         
-        Example to use the previously stored polynomial parameters:
+        Example to use the previously stored polynomial parameters::
         
             temperature = (self.params[0] + self.params[1]*time + 
                 self.params[2]*time**2 + self.params[3]*time**3) # K

@@ -68,7 +68,7 @@ the crank, <span class="math">\(L\)</span> is the stroke length, <span class="ma
 clearance volume, and TDC and BDC are top dead center and bottom dead center
 respectively (i.e. the top and bottom of the stroke).</p>
 <p>The compression ratio of the cylinder is defined as:</p>
-<div class="math">
+<div class="math" id="compression-ratio">
 \[r_c = \frac{V_d + V_c}{V_c}\]</div>
 <p>The swept volume can either be specified directly, or can be calculated from
 the cylinder bore and stroke length:</p>
@@ -98,6 +98,13 @@ R = \frac{\ell}{a}\end{split}\]</div>
 minute, so it must be converted to radians per second:</p>
 <div class="math">
 \[\frac{rad}{s} = RPM * \frac{\pi}{30}\]</div>
+<p>By default, the starting crank angle is <span class="math">\(180^{\circ}\)</span>, or BDC,
+<span class="math">\(0^{\circ}\)</span> is TDC and the piston reaches BDC again at
+<span class="math">\(-180^{\circ}\)</span>. The starting crank angle can be set with the
+<a class="reference internal" href="keywords.html#deg0"><em>DEG0</em></a> keyword, so <span class="math">\(\theta\)</span> is calculated as a function of
+time by:</p>
+<div class="math">
+\[\theta = \frac{DEG0 * \pi}{180} - \omega * t\]</div>
 <table class="docutils footnote" frame="void" id="heyw1988" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">

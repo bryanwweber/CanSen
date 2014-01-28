@@ -24,6 +24,7 @@ respectively (i.e. the top and bottom of the stroke).
 
 The compression ratio of the cylinder is defined as:
 
+.. _compression-ratio:
 .. math::
     r_c = \frac{V_d + V_c}{V_c}
     
@@ -38,7 +39,7 @@ The initial volume of the cylinder (the volume at BDC) is:
 .. math::
     V_0 = V_d + V_c = r_c * V_c = \frac{V_d}{r_c - 1} + V_d
 
-====
+============================================================================== 
 
 The distance from the crank center to the piston pin is given by:
 
@@ -70,6 +71,13 @@ minute, so it must be converted to radians per second:
 .. math::
     \frac{rad}{s} = RPM * \frac{\pi}{30}
     
+By default, the starting crank angle is :math:`180^{\circ}`, or BDC, 
+:math:`0^{\circ}` is TDC and the piston reaches BDC again at 
+:math:`-180^{\circ}`. The starting crank angle can be set with the 
+:ref:`DEG0 <DEG0>` keyword, so :math:`\theta` is calculated as a function of
+time by:
 
+.. math::
+    \theta = \frac{DEG0 * \pi}{180} - \omega * t
                     
 .. [#HEYW1988] John B. Heywood. *Internal Combustion Engine Fundamentals.* New York: McGraw Hill, 1988. Print.

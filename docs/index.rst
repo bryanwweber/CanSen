@@ -15,8 +15,7 @@ enables the use of SENKIN-formatted input files with Cantera.
 .. _CanSen: https://github.com/bryanwweber/CanSen
 .. _Cantera: http://cantera.github.io/docs/sphinx/html/index.html
 
-CanSen is written in Python 3. Future versions will try to incorporate
-support for all of the versions of Python that Cantera supports. 
+CanSen can be used with any version of Python >= 2.6. 
 
 CanSen is hosted at `GitHub <CanSen_>`_, if you are interested in the 
 source code and development. Please report any bugs there.

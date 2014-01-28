@@ -1,4 +1,4 @@
-.. _sec-usage
+.. _sec-usage:
 
 =====
 Usage
@@ -27,7 +27,7 @@ In IPython, type::
 Ubuntu
 ======
 
-CanSen can be run either as an executable, or as a script with Python 3
+CanSen can be run either as an executable, or as a script with Python (2 or 3)
 or `IPython`_. To run as an executable, change to the directory where
 CanSen is located, add the execute bit to cansen.py, and run::
 
@@ -37,6 +37,10 @@ CanSen is located, add the execute bit to cansen.py, and run::
 To run as a script, change to the directory where CanSen is located and::
 
     python3 cansen.py [options]
+    
+    or
+    
+    python cansen.py [options]
     
 Or, in IPython::
 

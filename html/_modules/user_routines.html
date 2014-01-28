@@ -53,7 +53,7 @@
 <span class="sd">    Calculate the volume of the reactor as a user specified function </span>
 <span class="sd">    of time.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="VolumeFunctionTime.__init__"><a class="viewcode-back" href="../codedocs.html#user_routines.VolumeFunctionTime.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Set up the function to be calculated.</span>
 <span class="sd">        </span>
 <span class="sd">        The init function should be used to import any parameters for </span>
@@ -63,7 +63,7 @@
 <span class="sd">        to avoid running the ``__init__`` function on every time step.</span>
 <span class="sd">        See the example below.</span>
 <span class="sd">        </span>
-<span class="sd">        Example to load polynomial parameters from a file:</span>
+<span class="sd">        Example to load polynomial parameters from a file::</span>
 <span class="sd">        </span>
 <span class="sd">            # Read the file into the list ``self.params``. The lines of </span>
 <span class="sd">            # the file are read as strings.</span>
@@ -74,8 +74,8 @@
 <span class="sd">            self.area = 1 # m**2</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span>
-        
-    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">time</span><span class="p">):</span>
+        </div>
+<div class="viewcode-block" id="VolumeFunctionTime.__call__"><a class="viewcode-back" href="../codedocs.html#user_routines.VolumeFunctionTime.__call__">[docs]</a>    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">time</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return the velocity of the piston at the given time.</span>
 <span class="sd">        </span>
 <span class="sd">        The call function should be where the implementation of the</span>
@@ -84,7 +84,7 @@
 <span class="sd">        needed parameters that were stored in the ``self`` instance.</span>
 <span class="sd">        See the example below.</span>
 <span class="sd">        </span>
-<span class="sd">        Example to use the previously stored polynomial parameters:</span>
+<span class="sd">        Example to use the previously stored polynomial parameters::</span>
 <span class="sd">        </span>
 <span class="sd">            volume = (self.params[0] + self.params[1]*time + </span>
 <span class="sd">                self.params[2]*time**2 + self.params[3]*time**3) # m**3</span>
@@ -94,13 +94,13 @@
 <span class="sd">            return velocity </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="mi">0</span>
-    </div>
+    </div></div>
 <div class="viewcode-block" id="TemperatureFunctionTime"><a class="viewcode-back" href="../codedocs.html#user_routines.TemperatureFunctionTime">[docs]</a><span class="k">class</span> <span class="nc">TemperatureFunctionTime</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculate the temperature of the reactor as a user specified </span>
 <span class="sd">    function of time.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="TemperatureFunctionTime.__init__"><a class="viewcode-back" href="../codedocs.html#user_routines.TemperatureFunctionTime.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Set up the function to be calculated.</span>
 <span class="sd">        </span>
 <span class="sd">        The init function should be used to import any parameters for </span>
@@ -110,7 +110,7 @@
 <span class="sd">        to avoid running the ``__init__`` function on every time step.</span>
 <span class="sd">        See the example below.</span>
 <span class="sd">        </span>
-<span class="sd">        Example to load polynomial parameters from a file:</span>
+<span class="sd">        Example to load polynomial parameters from a file::</span>
 <span class="sd">        </span>
 <span class="sd">            # Read the file into the list ``self.params``. The lines of </span>
 <span class="sd">            # the file are read as strings.</span>
@@ -120,8 +120,8 @@
 <span class="sd">            self.params = [float(param) for param in self.params]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span>
-        
-    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">time</span><span class="p">):</span>
+        </div>
+<div class="viewcode-block" id="TemperatureFunctionTime.__call__"><a class="viewcode-back" href="../codedocs.html#user_routines.TemperatureFunctionTime.__call__">[docs]</a>    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">time</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return the velocity of the piston at the given time.</span>
 <span class="sd">        </span>
 <span class="sd">        The call function should be where the implementation of the</span>
@@ -130,14 +130,14 @@
 <span class="sd">        See the example below. Note: ``None`` is not a valid return</span>
 <span class="sd">        value, so this function does not work as written.</span>
 <span class="sd">        </span>
-<span class="sd">        Example to use the previously stored polynomial parameters:</span>
+<span class="sd">        Example to use the previously stored polynomial parameters::</span>
 <span class="sd">        </span>
 <span class="sd">            temperature = (self.params[0] + self.params[1]*time + </span>
 <span class="sd">                self.params[2]*time**2 + self.params[3]*time**3) # K</span>
 <span class="sd">            return temperature </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">None</span>
-        </div>
+        </div></div>
 </pre></div>
 
           </div>

@@ -7,7 +7,7 @@ CanSen Installation Guide
 .. toctree::
     :maxdepth: 1
 
-CanSen can be installed on any platform that supports Python 3 and 
+CanSen can be installed on any platform that supports Python and 
 Cantera. This guide contains instructions for Windows and Ubuntu 12.04.
 
 CanSen has several dependencies, including:
@@ -19,10 +19,10 @@ CanSen has several dependencies, including:
 Windows
 =======
 
-Python 3 can be downloaded and installed from the `Python.org page`_.
+Python can be downloaded and installed from the `Python.org page`_.
 Installation instructions for Cantera on Windows can be found on the
 `Google code`_ page. Make sure to download the correct version for 
-Python 3 and 32- or 64-bit Windows, depending on which version your
+your Python and 32- or 64-bit Windows, depending on which version your
 OS is. If NumPy is not already installed, download the proper version
 from the `Windows Binaries`_ page. From the same page, download the 
 installer for PyTables_ and its dependency numexpr_.
@@ -50,7 +50,7 @@ Ubuntu
 ======
 
 These instructions are for Ubuntu 12.04, but should work with only slight 
-changes for most major releases of Linux. First, download Python 3
+changes for most major releases of Linux. Optionally, download Python 3
 from the apt repositories. At the same time, it is good to download
 some other dependencies::
     
@@ -62,11 +62,22 @@ Then, install ``distribute`` and ``pip``::
     -O - | sudo python3.2
     sudo easy_install-3.2 pip
     
+    or
+    
+    wget https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py \
+    -O - | sudo python
+    sudo easy_install pip
+    
 Finally, with ``pip`` installed, install NumPy, Cython, numexpr, and finally, 
 PyTables::
 
     sudo pip-3.2 install numpy cython numexpr
     sudo pip-3.2 install pytables
+    
+    or
+    
+    sudo pip install numpy cython numexpr
+    pip install pytables
 
 Instructions for more complicated cases can be found on the `PyTables documentation`_. 
 

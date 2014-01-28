@@ -11,7 +11,7 @@ class Tee(object):
         """Initialize output.
         
         :param name:
-        Output file name.
+            Output file name.
         :param mode:
             Read/Write mode of the output file.
         """

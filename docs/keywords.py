@@ -152,15 +152,15 @@ keywords['TPRO'] = ("Specify the reactor temperature as a function of time. "
                     "Example::\n\n    TPRO 0.0 800\n    TPRO 0.1 900")
 keywords['TTIM'] = ("Specify the reactor temperature as a user-provided "
                     "function of time. To use this keyword, the user must "
-                    "edit the :class:`TemperatureFunctionTime` class in the "
-                    ":mod:`user_routines.py` file. Any parameters to be read "
+                    "edit the :class:`~user_routines.TemperatureFunctionTime` class in the "
+                    ":mod:`user_routines` file. Any parameters to be read "
                     "from external files should be loaded in the "
-                    ":meth:`TemperatureFunctionTime.__init__` method so that "
+                    ":meth:`~user_routines.TemperatureFunctionTime.__init__` method so that "
                     "they are not read on every time step. The parameters "
                     "should be stored in the ``self`` instance of the class "
                     "so that they can be accessed in the "
-                    ":meth:`TemperatureFunctionTime.__call__` method. The "
-                    ":meth:`TemperatureFunctionTime.__call__` method should "
+                    ":meth:`~user_routines.TemperatureFunctionTime.__call__` method. The "
+                    ":meth:`~user_routines.TemperatureFunctionTime.__call__` method should "
                     "contain the actual calculation and return of the "
                     "temperature given the input ``time``.One of |CONP|_, "
                     "|CONT|_, |CONV|_, |COTV|_, |ICEN|_, |TPRO|_, |TTIM|_, "
@@ -180,22 +180,22 @@ keywords['VPRO'] = ("Specify the reactor volume as a function of time. "
                     "Example::\n\n    VPRO 0.0 1E-5\n    VPRO 0.1 1E-6")
 keywords['VTIM'] = ("Specify the reactor volume as a user-provided "
                     "function of time. To use this keyword, the user must "
-                    "edit the :class:`VolumeFunctionTime` class in the "
-                    ":mod:`user_routines.py` file. Any parameters to be read "
+                    "edit the :class:`~user_routines.VolumeFunctionTime` class in the "
+                    ":mod:`user_routines` file. Any parameters to be read "
                     "from external files should be loaded in the "
-                    ":meth:`VolumeFunctionTime.__init__` method so that "
+                    ":meth:`~user_routines.VolumeFunctionTime.__init__` method so that "
                     "they are not read on every time step. The parameters "
                     "should be stored in the ``self`` instance of the class "
                     "so that they can be accessed in the "
-                    ":meth:`VolumeFunctionTime.__call__` method. The "
-                    ":meth:`VolumeFunctionTime.__call__` method should "
+                    ":meth:`~user_routines.VolumeFunctionTime.__call__` method. The "
+                    ":meth:`~user_routines.VolumeFunctionTime.__call__` method should "
                     "contain the actual calculation and must return the "
                     "velocity of the wall given the input ``time``. One of "
                     "|CONP|_, |CONT|_, |CONV|_, |COTV|_, |ICEN|_, |TPRO|_, "
                     "|TTIM|_, |VPRO|_, or |VTIM|_ must be specified. Units: "
                     "m/s.")
 keywords['ICEN'] = ("Specify the internal combustion engine model be used. See "
-                    ":ref:`the documentation for the model <icengine.html>` for "
+                    ":doc:`the documentation for the model </icengine>` for "
                     "information on the derivation. See also |BORE|_, |CMPR|_, "
                     "|CRAD|_, |DEG0|_, |LOLR|_, |RODL|_, |RPM|_, |STROKE|_, "
                     "|VOLD|_, and |VOLC|_. One of |CONP|_, |CONT|_, |CONV|_, "
@@ -203,14 +203,11 @@ keywords['ICEN'] = ("Specify the internal combustion engine model be used. See "
                     "must be specified.")
 keywords['CMPR'] = ("Specify the compression ratio for the internal combustion "
                     "engine model. Defined as the maximum total volume in the "
-                    "cylinder divided by the clearance volume.\n\n"
-                    ".. math::\n    r_c = \\frac{V_d + V_c}{V_c}\n\n"
-                    "where :math:`r_c` is the compression ratio, :math:`V_d` "
-                    "is the swept volume, and :math:`V_c` is the clearance "
-                    "volume. See also: |VOLC|_, |VOLD|_.\n\nExample::\n\n"
-                    "    CMPR 10.0")
+                    "cylinder divided by the clearance volume. See the "
+                    ":ref:`documentation <compression-ratio>`. See also: "
+                    "|VOLC|_, |VOLD|_.\n\nExample::\n\n    CMPR 10.0")
 keywords['DEG0'] = ("Specify the initial crank angle of the simulation. "
-                    "Units: degrees. Default: 180 deg.\nExample::\n\n    "
+                    "Units: degrees. Default: 180 deg.\n\nExample::\n\n    "
                     "DEG0 180")
 keywords['VOLD'] = ("Specify the swept or displaced volume, :math:`V_d`. "
                     "Units: cm**3. See |CMPR|_, |VOLC|_.\n\n"
@@ -259,8 +256,12 @@ with open('keywords.rst','wb') as out_file:
         for item in items:
             out_file.write(item.encode('utf-8'))
         out_file.write('\n'.encode('utf-8'))
-    out_file.write('\n'.encode('utf-8'))
-    for key in sorted_keys:
+    out_file.write('\n====\n\n'.encode('utf-8'))
+    for key in sorted_keys[:-1]:
         out_file.write(bytes('.. |' + key + '| replace:: ``' + key + '``\n','utf-8'))
         out_file.write(bytes('.. _' + key + ':\n\n','utf-8'))
-        out_file.write(bytes('``' + key + '``: ' + keywords[key] + '\n\n','utf-8'))
+        out_file.write(bytes('``' + key + '``: ' + keywords[key] + '\n\n====\n\n','utf-8'))
+    key = sorted_keys[-1]
+    out_file.write(bytes('.. |' + key + '| replace:: ``' + key + '``\n','utf-8'))
+    out_file.write(bytes('.. _' + key + ':\n\n','utf-8'))
+    out_file.write(bytes('``' + key + '``: ' + keywords[key] + '\n\n','utf-8'))

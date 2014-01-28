@@ -90,7 +90,7 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class that sets up and runs a simulation case. </span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filenames</span><span class="p">):</span>
+<div class="viewcode-block" id="SimulationCase.__init__"><a class="viewcode-back" href="../codedocs.html#run_cases.SimulationCase.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filenames</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialize the simulation case.</span>
 
 <span class="sd">        Read the SENKIN-format input file is read into the ``keywords`` </span>
@@ -106,7 +106,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">thermo_filename</span> <span class="o">=</span> <span class="n">filenames</span><span class="p">[</span><span class="s">&#39;thermo_filename&#39;</span><span class="p">]</span>
         
         <span class="bp">self</span><span class="o">.</span><span class="n">keywords</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">read_input_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_filename</span><span class="p">)</span>
-        
+        </div>
 <div class="viewcode-block" id="SimulationCase.setup_case"><a class="viewcode-back" href="../codedocs.html#run_cases.SimulationCase.setup_case">[docs]</a>    <span class="k">def</span> <span class="nf">setup_case</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Sets up the case to be run. Initializes the ``ThermoPhase``, </span>

@@ -59,7 +59,7 @@
 <ul class="simple">
 </ul>
 </div>
-<p>CanSen can be installed on any platform that supports Python 3 and
+<p>CanSen can be installed on any platform that supports Python and
 Cantera. This guide contains instructions for Windows and Ubuntu 12.04.</p>
 <p>CanSen has several dependencies, including:</p>
 <ul class="simple">
@@ -69,10 +69,10 @@ Cantera. This guide contains instructions for Windows and Ubuntu 12.04.</p>
 </ul>
 <div class="section" id="windows">
 <h2>Windows<a class="headerlink" href="#windows" title="Permalink to this headline">¶</a></h2>
-<p>Python 3 can be downloaded and installed from the <a class="reference external" href="http://www.python.org/download/">Python.org page</a>.
+<p>Python can be downloaded and installed from the <a class="reference external" href="http://www.python.org/download/">Python.org page</a>.
 Installation instructions for Cantera on Windows can be found on the
 <a class="reference external" href="https://code.google.com/p/cantera/wiki/WindowsInstallation">Google code</a> page. Make sure to download the correct version for
-Python 3 and 32- or 64-bit Windows, depending on which version your
+your Python and 32- or 64-bit Windows, depending on which version your
 OS is. If NumPy is not already installed, download the proper version
 from the <a class="reference external" href="http://www.lfd.uci.edu/~gohlke/pythonlibs/">Windows Binaries</a> page. From the same page, download the
 installer for <a class="reference external" href="http://www.lfd.uci.edu/~gohlke/pythonlibs/#pytables">PyTables</a> and its dependency <a class="reference external" href="http://www.lfd.uci.edu/~gohlke/pythonlibs/#numexpr">numexpr</a>.</p>
@@ -89,7 +89,7 @@ working at any given commit. Proceed with caution.:</p>
 <div class="section" id="ubuntu">
 <h2>Ubuntu<a class="headerlink" href="#ubuntu" title="Permalink to this headline">¶</a></h2>
 <p>These instructions are for Ubuntu 12.04, but should work with only slight
-changes for most major releases of Linux. First, download Python 3
+changes for most major releases of Linux. Optionally, download Python 3
 from the apt repositories. At the same time, it is good to download
 some other dependencies:</p>
 <div class="highlight-python"><div class="highlight"><pre>sudo apt-get install python3 python3-dev libhdf5-serial-dev
@@ -99,12 +99,23 @@ some other dependencies:</p>
 <div class="highlight-python"><div class="highlight"><pre>wget https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py \
 -O - | sudo python3.2
 sudo easy_install-3.2 pip
+
+or
+
+wget https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py \
+-O - | sudo python
+sudo easy_install pip
 </pre></div>
 </div>
 <p>Finally, with <tt class="docutils literal"><span class="pre">pip</span></tt> installed, install NumPy, Cython, numexpr, and finally,
 PyTables:</p>
 <div class="highlight-python"><div class="highlight"><pre>sudo pip-3.2 install numpy cython numexpr
 sudo pip-3.2 install pytables
+
+or
+
+sudo pip install numpy cython numexpr
+pip install pytables
 </pre></div>
 </div>
 <p>Instructions for more complicated cases can be found on the <a class="reference external" href="http://pytables.github.io/usersguide/installation.html">PyTables documentation</a>.</p>
