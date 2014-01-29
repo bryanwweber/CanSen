@@ -25,7 +25,7 @@ class VolumeFunctionTime(object):
         """
         pass
         
-    def __call__(self,time):
+    def __call__(self, time):
         """Return the velocity of the piston at the given time.
         
         The call function should be where the implementation of the
@@ -71,7 +71,7 @@ class TemperatureFunctionTime(object):
         """
         pass
         
-    def __call__(self,time):
+    def __call__(self, time):
         """Return the velocity of the piston at the given time.
         
         The call function should be where the implementation of the
