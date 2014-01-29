@@ -16,11 +16,11 @@
 *.DOCX diff=astextplain
 *.dot  diff=astextplain
 *.DOT  diff=astextplain
-*.pdf  diff=astextplain
-*.PDF	 diff=astextplain
 *.rtf	 diff=astextplain
 *.RTF	 diff=astextplain
 
 # Known binaries
 *.png    -text
 *.jpg    -text
+*.pdf    -text
+*.PDF    -text
