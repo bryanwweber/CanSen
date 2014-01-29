@@ -38,7 +38,8 @@ def convert_mech(mech_filename, thermo_filename):
     # Convert the mechanism
     ck2cti.main(arg)
     mech_filename = mech_filename[:-4]+'.cti'
-    print('Mechanism conversion successful, written to {}'.format(mech_filename))
+    print('Mechanism conversion successful, written to '
+          '{}'.format(mech_filename))
     return mech_filename
 
 def read_input_file(input_filename):
@@ -82,7 +83,7 @@ def read_input_file(input_filename):
         print('Keyword Input:\n')
         for line in input_file:
             # Echo the input back to the output file.
-            print(' '*10,line,end='')
+            print(' '*10, line, end='')
             if (line.startswith('!') or line.startswith('.') or 
                     line.startswith('/')):
                 continue
@@ -173,7 +174,7 @@ def read_input_file(input_filename):
             elif line.upper().startswith('REAC'):
                 species = line.split()[1]
                 molefrac = line.split()[2]
-                reactants.append(':'.join([species,molefrac]))
+                reactants.append(':'.join([species, molefrac]))
             elif line.upper().startswith('PRES'):
                 keywords['pressure'] = float(line.split()[1])
             elif line.upper().startswith('TIME'):
@@ -248,7 +249,7 @@ def read_input_file(input_filename):
             elif line.upper().startswith('END'):
                 continue
             else:
-                print('Keyword not found',line)
+                print('Keyword not found', line)
                 sys.exit(1)
         print('\n', divider, '\n', sep='')
     
@@ -414,9 +415,9 @@ def cli_parser(argv):
     """
     try:
         opts, args = getopt.getopt(argv, "hi:o:c:d:x:",
-                                   ["help","convert"])
+                                   ["help", "convert"])
         options = {}
-        for o,a in opts:
+        for o, a in opts:
             options[o] = a
         
         if args:
@@ -496,7 +497,8 @@ def reactor_interpolate(interp_time, state1, state2):
     :param state2:
         Array of the state information at the current time step.
     """
-    interp_state = state1 + (state2 - state1)*(interp_time - state1[0])/(state2[0] - state1[0])
+    interp_state = state1 + ((state2 - state1)*(interp_time - state1[0]) / 
+                            (state2[0] - state1[0]))
     return interp_state
     
 
@@ -592,20 +594,23 @@ def equivalence_ratio(gas, eq_ratio, fuel, oxidizer, complete_products,
     # carbon and hydrogen in the complete products
     if num_C_cprod > 0:
         spec = cprod_elems['C'].keys()
-        ox = sum([cprod_elems['O'][sp] for sp in spec if cprod_elems['C'][sp] > 0])
+        ox = sum([cprod_elems['O'][sp] 
+                for sp in spec if cprod_elems['C'][sp] > 0])
         C_multiplier = ox/num_C_cprod
     else:
         C_multiplier = 0
     
     if num_H_cprod > 0:
         spec = cprod_elems['H'].keys()
-        ox = sum([cprod_elems['O'][sp] for sp in spec if cprod_elems['H'][sp] > 0])
+        ox = sum([cprod_elems['O'][sp] 
+                for sp in spec if cprod_elems['H'][sp] > 0])
         H_multiplier = ox/num_H_cprod
     else:
         H_multiplier = 0
     
     # Compute how many O atoms are required to oxidize everybody
-    num_O_req = num_C_fuel * C_multiplier + num_H_fuel * H_multiplier - num_O_fuel
+    num_O_req = (num_C_fuel * C_multiplier + 
+                num_H_fuel * H_multiplier - num_O_fuel)
     O_mult = num_O_req/num_O_oxid
     
     # Find the total number of moles in the fuel + oxidizer mixture
@@ -620,8 +625,8 @@ def equivalence_ratio(gas, eq_ratio, fuel, oxidizer, complete_products,
             print('Error: Additional species must sum to less than 1')
         remain = 1.0 - total_additional_species
         for species, molefrac in additional_species.items():
-            add_spec = ':'.join([species,str(molefrac)])
-            reactants = ','.join([reactants,add_spec])
+            add_spec = ':'.join([species, str(molefrac)])
+            reactants = ','.join([reactants, add_spec])
     else:
         remain = 1.0
     
@@ -630,13 +635,13 @@ def equivalence_ratio(gas, eq_ratio, fuel, oxidizer, complete_products,
     # up by the additional species, if any.
     for species, ox_amt in oxidizer.items():
         molefrac = ox_amt * O_mult/total_reactant_moles * remain
-        add_spec = ':'.join([species,str(molefrac)])
-        reactants = ','.join([reactants,add_spec])
+        add_spec = ':'.join([species, str(molefrac)])
+        reactants = ','.join([reactants, add_spec])
     
     for species, fuel_amt in fuel.items():
         molefrac = fuel_amt * eq_ratio /total_reactant_moles * remain
-        add_spec = ':'.join([species,str(molefrac)])
-        reactants = ','.join([reactants,add_spec])
+        add_spec = ':'.join([species, str(molefrac)])
+        reactants = ','.join([reactants, add_spec])
         
     #Take off the first character, which is a comma
     reactants = reactants[1:]
