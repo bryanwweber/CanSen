@@ -11,7 +11,7 @@ equation of motion for the piston follows from [#HEYW1988]_, Ch. 2.
 Assuming the piston roughly appears as:
 
 .. image:: /_piston/piston.*
-   :scale: 25%
+   :width: 2in
    :align: center
    
 where :math:`s` is distance from the crank axis to the piston pin axis, 

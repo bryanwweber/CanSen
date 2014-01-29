@@ -1,29 +1,3 @@
-CANSEN
-=================
-
-SENKIN-like wrapper for Cantera
-
-Documentation
-=============
-
-Documentation can be found at <http://bryanwweber.github.io/CanSen/html/index.html>
-
-Notice
-======
-
-I have tested this software to the best of my abilities. Any user uses this 
-software with the express understanding that there may be bugs, non-working 
-features, and other gremlins that prevent a user from using the software to 
-their specification. If you find problems, please report them in the issue 
-tracker.
-
-ALL USERS ARE ENCOURAGED TO CHECK THEIR RESULTS WITH AN INDEPENDENT PROGRAM!
-Researchers especially are encouraged not to treat this software as a black 
-box. Always remember: Garbage in equals garbage out. 
-
-License
-=======
-
 The MIT License (MIT)
 
 Copyright (c) 2014 Bryan W. Weber

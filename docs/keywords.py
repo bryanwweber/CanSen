@@ -140,7 +140,9 @@ keywords['TLIM'] = ("Ignition temperature. Ignition is considered to have "
                     "|DTIGN|_. Optional keyword, default: |TEMP|_ + 400. "
                     "Units: K.\n\n"
                     "Example::\n\n    TLIM 1200")
-keywords['TPRO'] = ("Specify the reactor temperature as a function of time. "
+keywords['TPRO'] = ("Warning: |TPRO|_ is broken in CanSen v1.1 due to "
+                    "incompatibilites with Cantera 2.1."
+                    "Specify the reactor temperature as a function of time. "
                     "Multiple invocations of this keyword build a profile of "
                     "the temperature over the given times. This profile is "
                     "linearly interpolated to set the reactor temperature at "
@@ -150,7 +152,9 @@ keywords['TPRO'] = ("Specify the reactor temperature as a function of time. "
                     "|COTV|_, |ICEN|_, |TPRO|_, |TTIM|_, |VPRO|_, or |VTIM|_ "
                     "must be specified. Units: seconds, K.\n\n"
                     "Example::\n\n    TPRO 0.0 800\n    TPRO 0.1 900")
-keywords['TTIM'] = ("Specify the reactor temperature as a user-provided "
+keywords['TTIM'] = ("Warning: |TTIM|_ is broken in CanSen v1.1 due to "
+                    "incompatibilites with Cantera 2.1."
+                    "Specify the reactor temperature as a user-provided "
                     "function of time. To use this keyword, the user must "
                     "edit the :class:`~user_routines.TemperatureFunctionTime` class in the "
                     ":mod:`user_routines` file. Any parameters to be read "
@@ -246,7 +250,10 @@ Supported SENKIN Keywords
 =========================
 
 The following is a list of the currently supported keywords in the 
-SENKIN-format input file:"""
+SENKIN-format input file. Keywords that include "CanSen specific keyword" 
+should be placed after the 'END' keyword to maintain SENKIN compatibility, 
+although CanSen has no preference for the order.
+"""
 
 with open('keywords.rst','wb') as out_file:
     out_file.write(preamble.encode('utf-8'))
