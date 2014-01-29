@@ -4,7 +4,6 @@
 from __future__ import print_function
 
 # Standard libraries
-import os
 import sys
 
 #Local imports
