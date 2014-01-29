@@ -368,6 +368,7 @@ class SimulationCase(object):
                         interp_sens = prev_sens + ((self.tend - prev_time) * 
                                                    (cur_sens - prev_sens) / 
                                                    (cur_time - prev_time))
+                        timestep['sensitivity'] = interp_sens
                     # We don't need any of the rest of this step, so 
                     # break
                     break
