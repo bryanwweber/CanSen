@@ -10,7 +10,7 @@ equation of motion for the piston follows from [#HEYW1988]_, Ch. 2.
 
 Assuming the piston roughly appears as:
 
-.. image:: _static/piston.png
+.. image:: /_piston/piston.*
    :scale: 25%
    :align: center
    
