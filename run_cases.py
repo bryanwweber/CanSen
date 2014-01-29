@@ -104,28 +104,28 @@ class SimulationCase(object):
             # Number of solution variables is number of species + mass, 
             # volume, temperature
             self.n_vars = self.reac.kinetics.n_species + 3
-            self.wall = ct.Wall(self.reac, env,A=1.0, velocity=0)
+            self.wall = ct.Wall(self.reac, env, A=1.0, velocity=0)
         elif self.keywords['problemType'] == 2:
             self.reac = ct.IdealGasConstPressureReactor(self.gas)
             # Number of solution variables is number of species + mass, 
             # temperature
             self.n_vars = self.reac.kinetics.n_species + 2
-            self.wall = ct.Wall(self.reac, env,A=1.0, velocity=0)
+            self.wall = ct.Wall(self.reac, env, A=1.0, velocity=0)
         elif self.keywords['problemType'] == 3:
             self.reac = ct.IdealGasReactor(self.gas)
             # Number of solution variables is number of species + mass, 
             # volume, temperature
             self.n_vars = self.reac.kinetics.n_species + 3
-            self.wall = ct.Wall(self.reac, env,A=1.0, 
+            self.wall = ct.Wall(self.reac, env, A=1.0, 
                                 velocity=VolumeProfile(self.keywords))
         elif self.keywords['problemType'] == 4:
-            self.reac = ct.IdealGasConstPressureReactor(self.gas,energy='off')
+            self.reac = ct.IdealGasConstPressureReactor(self.gas, energy='off')
             # Number of solution variables is number of species + mass, 
             # temperature
             self.n_vars = self.reac.kinetics.n_species + 2
             self.wall = ct.Wall(self.reac, env, A=1.0, velocity=0)
         elif self.keywords['problemType'] == 5:
-            self.reac = ct.IdealGasReactor(self.gas,energy='off')
+            self.reac = ct.IdealGasReactor(self.gas, energy='off')
             # Number of solution variables is number of species + mass, 
             # volume, temperature
             self.n_vars = self.reac.kinetics.n_species + 3
@@ -140,14 +140,14 @@ class SimulationCase(object):
                                 velocity=VolumeFunctionTime())
         elif self.keywords['problemType'] == 7:
             from user_routines import TemperatureFunctionTime
-            self.reac = ct.IdealGasConstPressureReactor(self.gas,energy='off')
+            self.reac = ct.IdealGasConstPressureReactor(self.gas, energy='off')
             # Number of solution variables is number of species + mass, 
             # temperature
             self.n_vars = self.reac.kinetics.n_species + 2
             self.wall = ct.Wall(self.reac, env, A=1.0, velocity=0)
             self.temp_func = ct.Func1(TemperatureFunctionTime())
         elif self.keywords['problemType'] == 8:
-            self.reac = ct.IdealGasConstPressureReactor(self.gas,energy='off')
+            self.reac = ct.IdealGasConstPressureReactor(self.gas, energy='off')
             # Number of solution variables is number of species + mass, 
             # temperature
             self.n_vars = self.reac.kinetics.n_species + 2
@@ -219,7 +219,7 @@ class SimulationCase(object):
         max_time_int = self.keywords.get('maxTimeStep')
         
         time_ints = [value for value in 
-                        [print_time_int,save_time_int,max_time_int] 
+                        [print_time_int, save_time_int, max_time_int] 
                         if value is not None
                     ]
         
@@ -265,16 +265,16 @@ class SimulationCase(object):
                      'pressure':tables.Float64Col(pos=2), 
                      'volume':tables.Float64Col(pos=3), 
                      'massfractions':tables.Float64Col( 
-                          shape=(self.reac.thermo.n_species),pos=4 
+                          shape=(self.reac.thermo.n_species), pos=4 
                           ),
                      }
         if self.sensitivity:
             table_def['sensitivity'] = tables.Float64Col( 
-                shape=(self.n_vars,self.netw.n_sensitivity_params),pos=5 
+                shape=(self.n_vars,self.netw.n_sensitivity_params), pos=5 
                 )
             
-        with tables.open_file(self.save_filename, mode = 'w', 
-                title = 'CanSen Save File') as save_file:
+        with tables.open_file(self.save_filename, mode='w', 
+                title='CanSen Save File') as save_file:
             table = save_file.create_table(save_file.root, 'reactor', 
                                            table_def, 'Reactor State'
                                            )
@@ -309,7 +309,7 @@ class SimulationCase(object):
             if self.sensitivity:
                 print(('Total Sensitivity Reactions = {}'
                        ).format(self.netw.n_sensitivity_params))
-            print(divider,'\n')
+            print(divider, '\n')
             
             self.reactor_state_printer(prev_time)
             
@@ -502,17 +502,20 @@ class SimulationCase(object):
         # Create a list to store the values to be printed.
         outlist = []
         for species_name, mole_frac in zip(self.species_names, molefracs):
-                outlist.append('{0:>{1}s} = {2:{3}E}'.format(species_name, 
-                                                            max_species_length, 
-                                                            mole_frac, 
-                                                            mole_frac_precision)
-                                                            )
+            outlist.append('{0:>{1}s} = {2:{3}E}'.format(species_name, 
+                                                        max_species_length, 
+                                                        mole_frac, 
+                                                        mole_frac_precision)
+                                                        )
         if sys.version_info.major == 3:
-            grouped = zip_longest(*[iter(outlist)]*num_print_cols, fillvalue = '')
+            grouped = zip_longest(*[iter(outlist)]*num_print_cols, 
+                                  fillvalue='')
         elif sys.version_info.major == 2:
-            grouped = izip_longest(*[iter(outlist)]*num_print_cols, fillvalue = '')
+            grouped = izip_longest(*[iter(outlist)]*num_print_cols, 
+                                   fillvalue='')
         for items in grouped:
             for item in items:
                 print(item, end='')
-            print('\n',end='')
-        print(divider,'\n')
+            print('\n', end='')
+        print(divider, '\n')
+        
