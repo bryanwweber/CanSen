@@ -3,6 +3,9 @@
 #Python 2 compatibility
 from __future__ import print_function
 
+# Standard Libraries
+import sys
+
 # Related modules
 try:
     import tables
@@ -18,10 +21,10 @@ except ImportError:
     
 # Use a ``with`` statmement to ensure that the file is closed when the 
 # code completes, even if there is an error.
-with tables.open_file('save.hdf','r') as save_file:
+with tables.open_file('save.hdf', 'r') as save_file:
     # To print information about the save file, just type the name of 
     # its variable
-    save_file
+    print(save_file)
     
     # The data is saved in the save file with the Table format. Each
     # Row in the Table represents one time step. Each Row further
@@ -47,7 +50,7 @@ with tables.open_file('save.hdf','r') as save_file:
     # particular, the Table class defines a number of useful functions 
     # and attributes, such as ``nrows``, which prints the number of 
     # rows in the Table.
-    table.nrows
+    print(table.nrows)
     
     # PyTables provides a method to iterate over the rows in a table
     # automatically, called ``iterrows``. Here we introduce one way to 
@@ -121,3 +124,4 @@ with tables.open_file('save.hdf','r') as save_file:
     # http://pytables.github.io/usersguide/index.html and information
     # about Cantera can be found at 
     # http://cantera.github.io/docs/sphinx/html/index.html
+    
