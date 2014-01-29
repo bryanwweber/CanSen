@@ -141,7 +141,7 @@ keywords['TLIM'] = ("Ignition temperature. Ignition is considered to have "
                     "Units: K.\n\n"
                     "Example::\n\n    TLIM 1200")
 keywords['TPRO'] = ("Warning: |TPRO|_ is broken in CanSen v1.1 due to "
-                    "incompatibilites with Cantera 2.1."
+                    "incompatibilites with Cantera 2.1. "
                     "Specify the reactor temperature as a function of time. "
                     "Multiple invocations of this keyword build a profile of "
                     "the temperature over the given times. This profile is "
@@ -153,7 +153,7 @@ keywords['TPRO'] = ("Warning: |TPRO|_ is broken in CanSen v1.1 due to "
                     "must be specified. Units: seconds, K.\n\n"
                     "Example::\n\n    TPRO 0.0 800\n    TPRO 0.1 900")
 keywords['TTIM'] = ("Warning: |TTIM|_ is broken in CanSen v1.1 due to "
-                    "incompatibilites with Cantera 2.1."
+                    "incompatibilites with Cantera 2.1. "
                     "Specify the reactor temperature as a user-provided "
                     "function of time. To use this keyword, the user must "
                     "edit the :class:`~user_routines.TemperatureFunctionTime` class in the "
@@ -241,16 +241,16 @@ out_list = []
 for key in sorted_keys:
     out_list.append('|' + key + '|_ ')
     
-grouped = zip_longest(*[iter(out_list)]*7, fillvalue = '')
+grouped = zip_longest(*[iter(out_list)]*10, fillvalue = '')
     
 preamble = """.. _sec-keywords:
 
 =========================
-Supported SENKIN Keywords
+Supported Input Keywords
 =========================
 
 The following is a list of the currently supported keywords in the 
-SENKIN-format input file. Keywords that include "CanSen specific keyword" 
+input file. Keywords that include "CanSen specific keyword" 
 should be placed after the 'END' keyword to maintain SENKIN compatibility, 
 although CanSen has no preference for the order.
 """

@@ -18,11 +18,13 @@ their specification. If you find problems, please report them in the issue
 tracker.
 
 ALL USERS ARE ENCOURAGED TO CHECK THEIR RESULTS WITH AN INDEPENDENT PROGRAM!
-Researchers especially are encouraged not to treat this software as a black 
+Researchers especially are encouraged *not* to treat this software as a black 
 box. Always remember: Garbage in equals garbage out. 
 
 License
 =======
+
+Also available in [LICENSE.txt](https://github.com/bryanwweber/CanSen/blob/master/LICENSE.txt)
 
 The MIT License (MIT)
 
