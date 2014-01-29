@@ -1,3 +1,6 @@
+# Standard libraries
+import sys
+
 # Related modules
 try:    
     import numpy as np
@@ -36,7 +39,7 @@ class VolumeProfile(object):
         # input array, so we append a zero to match the length of the 
         # self.time array. 
         self.velocity = np.diff(self.volume)/np.diff(self.time)
-        self.velocity = np.append(self.velocity,0)
+        self.velocity = np.append(self.velocity, 0)
         
     def __call__(self, t):
         """Return the velocity when called during a time step.
