@@ -270,7 +270,7 @@ class SimulationCase(object):
                      }
         if self.sensitivity:
             table_def['sensitivity'] = tables.Float64Col( 
-                shape=(self.n_vars,self.netw.n_sensitivity_params), pos=5 
+                shape=(self.n_vars, self.netw.n_sensitivity_params), pos=5 
                 )
             
         with tables.open_file(self.save_filename, mode='w', 
@@ -282,7 +282,7 @@ class SimulationCase(object):
             timestep = table.row
             # Save information before the first time step.
             timestep['time'] = self.netw.time
-            (timestep['temperature'],timestep['pressure'],
+            (timestep['temperature'], timestep['pressure'],
                 timestep['massfractions']) = self.reac.thermo.TPY
             timestep['volume'] = self.reac.volume
             if self.sensitivity:
