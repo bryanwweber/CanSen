@@ -72,7 +72,7 @@ class TemperatureFunctionTime(object):
         pass
         
     def __call__(self, time):
-        """Return the velocity of the piston at the given time.
+        """Return the temperature of the piston at the given time.
         
         The call function should be where the implementation of the
         temperature as a function of time is done. Get all of the
