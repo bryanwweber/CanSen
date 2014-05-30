@@ -71,5 +71,7 @@ options::
      --convert:
         Convert the input mechanism to CTI format and quit. If 
         ``--convert`` is specified, the SENKIN input file is optional.
+     --multi:
+        Run multiple cases from the input file. Optional.
      -h, --help:
         Print this help message and quit.
