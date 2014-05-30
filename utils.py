@@ -7,6 +7,7 @@ import os
 import getopt
 from itertools import product
 from math import pi
+from tempfile import NamedTemporaryFile
 
 # Related modules
 try:
@@ -41,6 +42,62 @@ def convert_mech(mech_filename, thermo_filename):
     print('Mechanism conversion successful, written to '
           '{}'.format(mech_filename))
     return mech_filename
+
+def process_multi_input(input_filename):
+    """Process a formatted input file into multiple cases.
+    
+    Processes a formatted input file that contains multiple cases into
+    separate temporary files, for individual reading of keywords.
+    
+    :param input_filename:
+        Filename of the SENKIN input file.
+    :return filenames:
+        List of temporary filenames.
+    """
+    
+    filenames = []
+    
+    temp_file = NamedTemporaryFile(delete = False)
+    
+    with open(input_filename) as input_file:
+        for line in input_file:
+            
+            if (line.startswith('!') or line.startswith('.') or 
+                line.startswith('/') or line.strip() == ''):
+                # skip comment or blank lines
+                continue
+            elif line.upper().startswith('END'):
+                temp_file.write(line)
+                
+                # store temporary file and create new
+                temp_file.seek(0)
+                filenames.append(temp_file.name)
+                
+                temp_file = NamedTemporaryFile(delete = False)
+                
+                continue
+            else:
+                # just print line
+                temp_file.write(line)
+    
+    # check if last file actually written to; if not, close
+    if os.stat(temp_file.name).st_size == 0:
+        temp_file.close()
+    
+    return filenames
+
+def remove_files(files):
+    """Delete files.
+    
+    :param files:
+        List of names of files to be removed
+    """
+    
+    for f in files:
+        os.remove(f)
+    
+    return None
+
 
 def read_input_file(input_filename):
     """Read a formatted input file and return a dictionary of keywords.
@@ -415,7 +472,7 @@ def cli_parser(argv):
     """
     try:
         opts, args = getopt.getopt(argv, "hi:o:c:d:x:",
-                                   ["help", "convert"])
+                                   ["help", "convert", "multi"])
         options = {}
         for o, a in opts:
             options[o] = a
@@ -484,8 +541,9 @@ def cli_parser(argv):
         filenames['thermo_filename'] = None
     
     convert = '--convert' in options
+    multi = '--multi' in options
     
-    return filenames, convert
+    return filenames, convert, multi
 
 def reactor_interpolate(interp_time, state1, state2):
     """Linearly interpolate the reactor states to the given input time.

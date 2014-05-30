@@ -519,4 +519,57 @@ class SimulationCase(object):
                 print(item, end='')
             print('\n', end='')
         print(divider, '\n')
+
+class MultiSimulationCase(SimulationCase):
+    """Class that sets up and runs a simulation case, for multiple.
+    
+    When multiple cases are run, no output is printed and no simulation
+    data is saved; upon completion, the calculated ignition delay times
+    are written to the output file.
+    """
+    
+    def __init__(self, filenames):
+        """Initialize the simulation case.
+
+        Read the SENKIN-format input file is read into the ``keywords`` 
+        dictionary.
         
+        :param filenames:
+            Dictionary containing the relevant file names for this
+            case.
+        """
+        self.input_filename = filenames['input_filename']
+        self.mech_filename = filenames['mech_filename']
+        self.save_filename = filenames['save_filename']
+        self.thermo_filename = filenames['thermo_filename']
+        
+        self.keywords = utils.read_input_file(self.input_filename)
+    
+    
+    def run_case(self):
+        """
+        Actually run the case set up by ``setup_case``. Runs the 
+        simulation by using ``ReactorNet.step(self.tend)``.
+        """
+        
+        ignition_found = False
+        
+        # Main loop to run the calculation. As long as the time in 
+        # the ``ReactorNet`` is less than the end time, keep going.
+        while self.netw.time < self.tend:
+            # If we are using a function to set the temperature as 
+            # a function of time, use it here.
+            if self.temp_func is not None:
+                self.gas.TP = self.temp_func(self.netw.time), None
+            
+            # Take the step towards the end time.
+            self.netw.step(self.tend)
+            
+            # If the temperature limit has been exceeded, we have 
+            # ignition! Save the time this occurs at. In the 
+            # future, the ignition time may be interpolated.
+            if self.reac.T >= self.temp_limit and ignition_found == False:
+                self.ignition_time = self.netw.time
+                ignition_found = True
+                break
+    
