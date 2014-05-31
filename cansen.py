@@ -61,10 +61,10 @@ def main(filenames, convert, multi, version):
         f = open(os.devnull, 'w')
         orig_stdout = sys.stdout
         
+        # avoid writing anything to screen during setup/run
+        sys.stdout = f
+        
         for i in range(len(input_files)):
-            
-            # avoid writing anything to screen during setup/run            
-            sys.stdout = f
             
             local_names = filenames.copy()
             local_names['input_filename'] = input_files[i]
