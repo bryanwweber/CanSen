@@ -12,6 +12,38 @@ import utils
 from printer import Tee
 from run_cases import SimulationCase, MultiSimulationCase
 
+from multiprocessing import Process, Queue
+
+
+def worker(sim, index, results):
+    """Worker for multiprocessing of cases.
+    
+    :param sim:
+        MultiSimulationCase object to be run.
+    :param results:
+        Queue containing dict of simulation results.
+    """
+    
+    sim.run_simulation()
+    
+    # store results
+    if sim.keywords['eqRatio'] == None:
+        res = [sim.ignition_time,
+               sim.keywords['pressure'],
+               sim.keywords['temperature']]
+    else:
+        # store equivalence ratio if possible
+        res = [sim.ignition_time,
+               sim.keywords['pressure'],
+               sim.keywords['temperature'],
+               sim.keywords['eqRatio']]
+    
+    results.put(res)
+    print('Done with ' + str(index))
+    
+    return None
+
+
 def main(filenames, convert, multi, version):
     """The main driver function of CanSen.
     
@@ -55,41 +87,51 @@ def main(filenames, convert, multi, version):
         # need to preprocess the input file to separate the various
         input_files = utils.process_multi_input(filenames['input_filename'])
         
-        # create data list
-        data_lst = [None] * len(input_files)
-        
         f = open(os.devnull, 'w')
         orig_stdout = sys.stdout
         
         # avoid writing anything to screen during setup/run
         sys.stdout = f
         
+        # create result Queue and list
+        res_queue = Queue()
+        results = []
+        
+        procs = []
+        
+        # prepare all cases
         for i in range(len(input_files)):
             
             local_names = filenames.copy()
             local_names['input_filename'] = input_files[i]
             sim = MultiSimulationCase(local_names)
-            sim.run_simulation()
             
-            data_lst[i] = [sim.ignition_time,
-                           sim.keywords['pressure'],
-                           sim.keywords['temperature']]
-            
-            # store equivalence ratio if possible
-            if sim.keywords['eqRatio'] != None:
-                data_lst[i].append(sim.keywords['eqRatio'])
-            
-            print('Done with ' + str(i), file = orig_stdout)
+            # setup multiprocessing processes
+            proc = Process(target = worker, args = (sim, i, res_queue))
+            procs.append(proc)
+        
+        sys.stdout = orig_stdout
+        
+        # start running cases in parallel
+        for proc in procs:
+            proc.start()
+        
+        for proc in procs:
+            #print(res_queue.get())
+            results.append(res_queue.get())
+        
+        # ensure all finished
+        for proc in procs:
+            proc.join()
         
         # clean up
         utils.remove_files(input_files)
-        sys.stdout = orig_stdout
                 
         # write output
         print('# Ignition delay [s], Pressure [atm], Temperature [K], '
               'Equivalence ratio', file = out)
         
-        for res in data_lst:
+        for res in results:
             if len(res) == 3:
                 line = '{:.8e} {:.2f} {:.1f}'.format(*res)
             elif len(res) == 4:
@@ -149,8 +191,8 @@ def cansen(argv):
         convert = ret[1]
         multi = ret[2]
         main(filenames, convert, multi, __version__)
+
     
 if __name__ == "__main__":
     cansen(sys.argv[1:])
-
 
