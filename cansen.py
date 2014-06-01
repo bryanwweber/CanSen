@@ -6,13 +6,12 @@ from __future__ import print_function
 # Standard libraries
 import sys
 import os
+from multiprocessing import Process, Queue
 
 #Local imports
 import utils
 from printer import Tee
 from run_cases import SimulationCase, MultiSimulationCase
-
-from multiprocessing import Process, Queue
 
 
 def worker(sim, index, results):
