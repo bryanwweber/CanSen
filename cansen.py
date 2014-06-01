@@ -5,7 +5,6 @@ from __future__ import print_function
 
 # Standard libraries
 import sys
-import os
 from multiprocessing import Process, Queue
 
 #Local imports
@@ -88,12 +87,6 @@ def main(filenames, convert, multi, version):
         # need to preprocess the input file to separate the various
         input_files = utils.process_multi_input(filenames['input_filename'])
         
-        f = open(os.devnull, 'w')
-        orig_stdout = sys.stdout
-        
-        # avoid writing anything to screen during setup/run
-        sys.stdout = f
-        
         # create result Queue and list
         res_queue = Queue()
         results = []
@@ -110,8 +103,6 @@ def main(filenames, convert, multi, version):
             # setup multiprocessing processes
             proc = Process(target = worker, args = (sim, i, res_queue))
             procs.append(proc)
-        
-        sys.stdout = orig_stdout
         
         # start running cases in parallel
         for proc in procs:
