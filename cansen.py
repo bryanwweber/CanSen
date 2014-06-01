@@ -19,6 +19,8 @@ def worker(sim, index, results):
     
     :param sim:
         MultiSimulationCase object to be run.
+    :param index:
+        Index of current case (for status message).
     :param results:
         Queue containing dict of simulation results.
     """
