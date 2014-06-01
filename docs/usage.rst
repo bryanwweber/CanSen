@@ -75,3 +75,42 @@ options::
         Run multiple cases from the input file. Optional.
      -h, --help:
         Print this help message and quit.
+
+Multiple Inputs
+===============
+
+While the default operation of CanSen reads and runs a single input case, 
+using the ``--multi`` option enables multiple cases to be run independently 
+(and in parallel). In this mode, normal output is omitted, and only the 
+calculated ignition delay times (along with initial pressure, temperature, 
+and equivalence ratio) are printed to the output file. In addition, no 
+binary save output file is created.
+
+Input files should be formatted normally for each case, with an ``END`` 
+keyword indicating the end of one case. For example::
+
+    CONV
+    TEMP 1600.0
+    PRES 1.0
+    TIME 1.0E1
+    EQUI 1.0
+    FUEL CH4 1.0
+    OXID O2 0.21
+    OXID N2 0.79
+    CPROD CO2
+    CPROD H2O
+    CPROD N2
+    END
+    
+    CONP
+    TEMP 1000.0
+    PRES 10.0
+    TIME 1.0E1
+    EQUI 0.5
+    FUEL CH4 1.0
+    OXID O2 0.21
+    OXID N2 0.79
+    CPROD CO2
+    CPROD H2O
+    CPROD N2
+    END
