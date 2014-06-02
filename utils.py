@@ -545,7 +545,7 @@ def cli_parser(argv):
     multi = '-m' in options or '--multi' in options
     num_proc = None
     if '-m' in options:
-        num_proc = options['-m']
+        num_proc = int(options['-m'])
     
     return filenames, convert, multi, num_proc
 

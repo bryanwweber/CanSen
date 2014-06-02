@@ -185,7 +185,7 @@ def cansen(argv):
         filenames = ret[0]
         convert = ret[1]
         multi = ret[2]
-        num_prod = ret[3]
+        num_proc = ret[3]
         main(filenames, convert, multi, num_proc, __version__)
 
     
