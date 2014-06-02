@@ -5,7 +5,7 @@ from __future__ import print_function
 
 # Standard libraries
 import sys
-from multiprocessing import Process, Queue
+from multiprocessing import Process, Manager
 
 #Local imports
 import utils
@@ -38,7 +38,7 @@ def worker(sim, index, results):
                sim.keywords['temperature'],
                sim.keywords['eqRatio']]
     
-    results.put(res)
+    results[index] = res
     print('Done with ' + str(index))
     
     return None
@@ -87,11 +87,11 @@ def main(filenames, convert, multi, version):
         # need to preprocess the input file to separate the various
         input_files = utils.process_multi_input(filenames['input_filename'])
         
-        # create result Queue and list
-        res_queue = Queue()
-        results = []
+        # create dictionary to hold results
+        manager = Manager()
+        res_dict = manager.dict()
         
-        procs = []
+        jobs = []
         
         # prepare all cases
         for i in range(len(input_files)):
@@ -101,20 +101,16 @@ def main(filenames, convert, multi, version):
             sim = MultiSimulationCase(local_names)
             
             # setup multiprocessing processes
-            proc = Process(target = worker, args = (sim, i, res_queue))
-            procs.append(proc)
+            job = Process(target = worker, args = (sim, i, res_dict))
+            jobs.append(job)
         
-        # start running cases in parallel
-        for proc in procs:
-            proc.start()
-        
-        for proc in procs:
-            #print(res_queue.get())
-            results.append(res_queue.get())
+        # start running jobs in parallel
+        for job in jobs:
+            job.start()
         
         # ensure all finished
-        for proc in procs:
-            proc.join()
+        for job in jobs:
+            job.join()
         
         # clean up
         utils.remove_files(input_files)
@@ -123,7 +119,7 @@ def main(filenames, convert, multi, version):
         print('# Ignition delay [s], Pressure [atm], Temperature [K], '
               'Equivalence ratio', file = out)
         
-        for res in results:
+        for res in res_dict.itervalues()
             if len(res) == 3:
                 line = '{:.8e} {:.2f} {:.1f}'.format(*res)
             elif len(res) == 4:
