@@ -471,7 +471,7 @@ def cli_parser(argv):
         List of command line options.
     """
     try:
-        opts, args = getopt.getopt(argv, "hi:o:c:d:x:",
+        opts, args = getopt.getopt(argv, "hi:o:c:d:x:m:",
                                    ["help", "convert", "multi"])
         options = {}
         for o, a in opts:
@@ -541,7 +541,7 @@ def cli_parser(argv):
         filenames['thermo_filename'] = None
     
     convert = '--convert' in options
-    multi = '--multi' in options
+    multi = '--multi' in options or '-m' in options
     
     return filenames, convert, multi
 
