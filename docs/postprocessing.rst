@@ -125,6 +125,7 @@ mass fraction data in a variable
     >>> all_mass_fracs = table.cols.massfractions[:]
 
 Or, to store the fifth through tenth time steps
+
     >>> mass_fracs_5_10 = table.cols.massfractions[4:9]
 
 Or, to store every other time step from the sixth through the 

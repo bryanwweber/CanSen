@@ -378,7 +378,7 @@ Example::
 .. |TPRO| replace:: ``TPRO``
 .. _TPRO:
 
-``TPRO``: Warning: |TPRO|_ is broken in CanSen v1.1 due to incompatibilites with Cantera 2.1. Specify the reactor temperature as a function of time. Multiple invocations of this keyword build a profile of the temperature over the given times. This profile is linearly interpolated to set the reactor temperature at any solver time step. When the end time of the profile is exceeded, the temperature remains constant at the last specified value. One of |CONP|_, |CONT|_, |CONV|_, |COTV|_, |ICEN|_, |TPRO|_, |TTIM|_, |VPRO|_, or |VTIM|_ must be specified. Units: seconds, K.
+``TPRO``: Warning: |TPRO|_ is broken in CanSen v1.1 due to incompatibilities with Cantera 2.1. Specify the reactor temperature as a function of time. Multiple invocations of this keyword build a profile of the temperature over the given times. This profile is linearly interpolated to set the reactor temperature at any solver time step. When the end time of the profile is exceeded, the temperature remains constant at the last specified value. One of |CONP|_, |CONT|_, |CONV|_, |COTV|_, |ICEN|_, |TPRO|_, |TTIM|_, |VPRO|_, or |VTIM|_ must be specified. Units: seconds, K.
 
 Example::
 
@@ -390,7 +390,7 @@ Example::
 .. |TTIM| replace:: ``TTIM``
 .. _TTIM:
 
-``TTIM``: Warning: |TTIM|_ is broken in CanSen v1.1 due to incompatibilites with Cantera 2.1. Specify the reactor temperature as a user-provided function of time. To use this keyword, the user must edit the :class:`~user_routines.TemperatureFunctionTime` class in the :mod:`user_routines` file. Any parameters to be read from external files should be loaded in the :meth:`~user_routines.TemperatureFunctionTime.__init__` method so that they are not read on every time step. The parameters should be stored in the ``self`` instance of the class so that they can be accessed in the :meth:`~user_routines.TemperatureFunctionTime.__call__` method. The :meth:`~user_routines.TemperatureFunctionTime.__call__` method should contain the actual calculation and return of the temperature given the input ``time``.One of |CONP|_, |CONT|_, |CONV|_, |COTV|_, |ICEN|_, |TPRO|_, |TTIM|_, |VPRO|_, or |VTIM|_ must be specified. Units: K.
+``TTIM``: Warning: |TTIM|_ is broken in CanSen v1.1 due to incompatibilities with Cantera 2.1. Specify the reactor temperature as a user-provided function of time. To use this keyword, the user must edit the :class:`~user_routines.TemperatureFunctionTime` class in the :mod:`user_routines` file. Any parameters to be read from external files should be loaded in the :meth:`~user_routines.TemperatureFunctionTime.__init__` method so that they are not read on every time step. The parameters should be stored in the ``self`` instance of the class so that they can be accessed in the :meth:`~user_routines.TemperatureFunctionTime.__call__` method. The :meth:`~user_routines.TemperatureFunctionTime.__call__` method should contain the actual calculation and return of the temperature given the input ``time``.One of |CONP|_, |CONT|_, |CONV|_, |COTV|_, |ICEN|_, |TPRO|_, |TTIM|_, |VPRO|_, or |VTIM|_ must be specified. Units: K.
 
 ====
 
