@@ -43,7 +43,7 @@ def worker((sim, index)):
     return res
 
 
-def main(filenames, convert, multi, version):
+def main(filenames, convert, multi, num_proc, version):
     """The main driver function of CanSen.
     
     :param filenames:
@@ -53,6 +53,8 @@ def main(filenames, convert, multi, version):
         input mechanism and quit.
     :param multi:
         Boolean indicating multiple cases to be run.
+    :param num_proc:
+        Number of processors to use for multiprocessing.
     :param version:
         Version string of CanSen.
     """
@@ -87,7 +89,11 @@ def main(filenames, convert, multi, version):
         input_files = utils.process_multi_input(filenames['input_filename'])
         
         # create pool based on number of processors
-        pool = Pool()
+        if num_proc:
+            pool = Pool(processes = num_proc)
+        else:
+            # use available number of processors by default
+            pool = Pool()
         
         jobs = []
         results = []
@@ -154,7 +160,10 @@ def cansen(argv):
         Convert the input mechanism to CTI format and quit. If 
         ``--convert`` is specified, the SENKIN input file is optional.
      -m, --multi:
-        Run multiple cases from the input file. Optional.
+        Run multiple cases from the input file. Optional. If ``-m`` is 
+        used, must specify number of processors to be used (e.g., 
+        ``-m 4``). If ``--multi`` is specified, CanSen uses the available 
+        number of processors by default.
      -h, --help:
         Print this help message and quit.
     """
@@ -176,7 +185,8 @@ def cansen(argv):
         filenames = ret[0]
         convert = ret[1]
         multi = ret[2]
-        main(filenames, convert, multi, __version__)
+        num_prod = ret[3]
+        main(filenames, convert, multi, num_proc, __version__)
 
     
 if __name__ == "__main__":

@@ -541,9 +541,13 @@ def cli_parser(argv):
         filenames['thermo_filename'] = None
     
     convert = '--convert' in options
-    multi = '--multi' in options or '-m' in options
     
-    return filenames, convert, multi
+    multi = '-m' in options or '--multi' in options
+    num_proc = None
+    if '-m' in options:
+        num_proc = options['-m']
+    
+    return filenames, convert, multi, num_proc
 
 def reactor_interpolate(interp_time, state1, state2):
     """Linearly interpolate the reactor states to the given input time.

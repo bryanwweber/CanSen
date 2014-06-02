@@ -71,8 +71,11 @@ options::
      --convert:
         Convert the input mechanism to CTI format and quit. If 
         ``--convert`` is specified, the SENKIN input file is optional.
-     --multi:
-        Run multiple cases from the input file. Optional.
+     -m, --multi:
+        Run multiple cases from the input file. Optional. If ``-m`` is 
+        used, must specify number of processors to be used (e.g., 
+        ``-m 4``). If ``--multi`` is specified, CanSen uses the available 
+        number of processors by default.
      -h, --help:
         Print this help message and quit.
 
@@ -80,11 +83,11 @@ Multiple Inputs
 ===============
 
 While the default operation of CanSen reads and runs a single input case, 
-using the ``--multi`` option enables multiple cases to be run independently 
-(and in parallel). In this mode, normal output is omitted, and only the 
-calculated ignition delay times (along with initial pressure, temperature, 
-and equivalence ratio) are printed to the output file. In addition, no 
-binary save output file is created.
+using the ``-m`` or ``--multi`` option enables multiple cases to be run 
+independently (and in parallel). In this mode, normal output is omitted, 
+and only the calculated ignition delay times (along with initial pressure, 
+temperature, and equivalence ratio) are printed to the output file. In 
+addition, no binary save output file is created.
 
 Input files should be formatted normally for each case, with an ``END`` 
 keyword indicating the end of one case. For example::
