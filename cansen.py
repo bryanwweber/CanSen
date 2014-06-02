@@ -5,7 +5,7 @@ from __future__ import print_function
 
 # Standard libraries
 import sys
-from multiprocessing import Process, Manager
+from multiprocessing import Process, Pool
 
 #Local imports
 import utils
@@ -13,15 +13,15 @@ from printer import Tee
 from run_cases import SimulationCase, MultiSimulationCase
 
 
-def worker(sim, index, results):
+def worker((sim, index)):
     """Worker for multiprocessing of cases.
     
     :param sim:
         MultiSimulationCase object to be run.
     :param index:
         Index of current case (for status message).
-    :param results:
-        Queue containing dict of simulation results.
+    :return res:
+        List of simulation results.
     """
     
     sim.run_simulation()
@@ -38,10 +38,9 @@ def worker(sim, index, results):
                sim.keywords['temperature'],
                sim.keywords['eqRatio']]
     
-    results[index] = res
     print('Done with ' + str(index))
     
-    return None
+    return res
 
 
 def main(filenames, convert, multi, version):
@@ -87,11 +86,11 @@ def main(filenames, convert, multi, version):
         # need to preprocess the input file to separate the various
         input_files = utils.process_multi_input(filenames['input_filename'])
         
-        # create dictionary to hold results
-        manager = Manager()
-        res_dict = manager.dict()
+        # create pool based on number of processors
+        pool = Pool()
         
         jobs = []
+        results = []
         
         # prepare all cases
         for i in range(len(input_files)):
@@ -100,17 +99,16 @@ def main(filenames, convert, multi, version):
             local_names['input_filename'] = input_files[i]
             sim = MultiSimulationCase(local_names)
             
-            # setup multiprocessing processes
-            job = Process(target = worker, args = (sim, i, res_dict))
-            jobs.append(job)
+            jobs.append([sim, i])
         
-        # start running jobs in parallel
-        for job in jobs:
-            job.start()
+        jobs = tuple(jobs)
+        results = pool.map(worker, jobs)
+        
+        # not adding more proceses
+        pool.close()
         
         # ensure all finished
-        for job in jobs:
-            job.join()
+        pool.join()
         
         # clean up
         utils.remove_files(input_files)
@@ -119,7 +117,7 @@ def main(filenames, convert, multi, version):
         print('# Ignition delay [s], Pressure [atm], Temperature [K], '
               'Equivalence ratio', file = out)
         
-        for res in res_dict.itervalues()
+        for res in results:
             if len(res) == 3:
                 line = '{:.8e} {:.2f} {:.1f}'.format(*res)
             elif len(res) == 4:
