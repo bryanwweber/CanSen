@@ -171,22 +171,13 @@ def cansen(argv):
     __version__ = '1.1.0'
     
     ret = utils.cli_parser(argv)
-    if ret == -3:
-        print(cansen.__doc__)
-        sys.exit(1)
-    elif ret == -2:
-        print('Error: No command line options were specified.', 
-            cansen.__doc__, sep='\n')
-        sys.exit(1)
-    elif ret == -1:
-        print(cansen.__doc__)
-        sys.exit(0)
-    else:
-        filenames = ret[0]
-        convert = ret[1]
-        multi = ret[2]
-        num_proc = ret[3]
-        main(filenames, convert, multi, num_proc, __version__)
+    
+    filenames = ret[0]
+    convert = ret[1]
+    multi = ret[2]
+    num_proc = ret[3]
+    
+    main(filenames, convert, multi, num_proc, __version__)
 
     
 if __name__ == "__main__":
