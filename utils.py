@@ -5,9 +5,11 @@ from __future__ import division
 # Standard libraries
 import sys
 import os
-import getopt
 from itertools import product
 from math import pi
+from tempfile import NamedTemporaryFile
+from argparse import ArgumentParser
+from multiprocessing import cpu_count
 
 # Related modules
 try:
@@ -42,6 +44,62 @@ def convert_mech(mech_filename, thermo_filename):
     print('Mechanism conversion successful, written to '
           '{}'.format(mech_filename))
     return mech_filename
+
+def process_multi_input(input_filename):
+    """Process a formatted input file into multiple cases.
+    
+    Processes a formatted input file that contains multiple cases into
+    separate temporary files, for individual reading of keywords.
+    
+    :param input_filename:
+        Filename of the SENKIN input file.
+    :return filenames:
+        List of temporary filenames.
+    """
+    
+    filenames = []
+    
+    temp_file = NamedTemporaryFile(delete = False)
+    
+    with open(input_filename) as input_file:
+        for line in input_file:
+            
+            if (line.startswith('!') or line.startswith('.') or 
+                line.startswith('/') or line.strip() == ''):
+                # skip comment or blank lines
+                continue
+            elif line.upper().startswith('END'):
+                temp_file.write(line)
+                
+                # store temporary file and create new
+                temp_file.seek(0)
+                filenames.append(temp_file.name)
+                
+                temp_file = NamedTemporaryFile(delete = False)
+                
+                continue
+            else:
+                # just print line
+                temp_file.write(line)
+    
+    # check if last file actually written to; if not, close
+    if os.stat(temp_file.name).st_size == 0:
+        temp_file.close()
+    
+    return filenames
+
+def remove_files(files):
+    """Delete files.
+    
+    :param files:
+        List of names of files to be removed
+    """
+    
+    for f in files:
+        os.remove(f)
+    
+    return None
+
 
 def read_input_file(input_filename):
     """Read a formatted input file and return a dictionary of keywords.
@@ -408,85 +466,100 @@ def read_input_file(input_filename):
             
     return keywords
 
+    
 def cli_parser(argv):
     """Parse command line interface input.
     
     :param argv:
         List of command line options.
     """
-    try:
-        opts, args = getopt.getopt(argv, "hi:o:c:d:x:",
-                                   ["help", "convert"])
-        options = {}
-        for o, a in opts:
-            options[o] = a
-        
-        if args:
-            raise getopt.GetoptError('Unknown command line option' + 
-                                     repr(' '.join(args))
-                                    )
-    except getopt.GetoptError as e:
-        print('You did not enter an option properly.')
-        print(e)
-        return -3
-    if not options:
-        return -2
-    if not options or '-h' in options or '--help' in options:
-        return -1
+    
+    parser = ArgumentParser(description = 'CanSen - the SENKIN-like wrapper '
+                                          'for Cantera written in Python.')
+    
+    parser.add_argument('-i', '--input', 
+                        type = str, 
+                        help = 'The simulation input file in SENKIN format.')
+    parser.add_argument('-o', '--output', 
+                        type = str, 
+                        default = 'output.out', 
+                        help = 'The text output file.')
+    parser.add_argument('-x', '--save', 
+                        type = str, 
+                        default = 'save.hdf', 
+                        help = 'The binary save output file.')
+    parser.add_argument('-c', '--chem', 
+                        type = str, 
+                        default = 'chem.xml', 
+                        help = 'The chemistry input file, in either CHEMKIN,'
+                               ' Cantera CTI or CTML format.')
+    parser.add_argument('-d', '--thermo', 
+                        type = str, 
+                        help = 'The thermodyanmic database. Optional if the'
+                               ' thermodyanmic database is specified in the'
+                               ' chemistry input file. Otherwise, required.')
+    parser.add_argument('--convert', 
+                        action = 'store_true',
+                        help = 'Convert the input mechanism to CTI format '
+                               'and quit. If ``--convert`` is specified, '
+                               'the SENKIN input file is optional.')
+    parser.add_argument('-m', '--multi', 
+                        type = int, 
+                        nargs = '?', 
+                        const = cpu_count(),
+                        default = False, 
+                        help = 'Run multiple cases from the input file. '
+                               'Optional. If ``-m`` is used, must specify '
+                               'number of processors to be used (e.g., '
+                               '``-m 4``). If ``--multi`` is specified, '
+                               'CanSen uses the available number of '
+                               'processors by default.')
+    
+    args = parser.parse_args(argv)
     
     filenames = {}
-    if '-i' in options:
-        input_filename = options['-i']
+    
+    if args.input:
+        input_filename = args.input
         if not os.path.isfile(input_filename):
-            print(
-                'Error: The specified input file '
-                '"{}" does not exist'.format(input_filename)
-                )
+            print('Error: The specified input file '
+                  '"{}" does not exist'.format(input_filename)
+                  )
             sys.exit(1)
         filenames['input_filename'] = input_filename
-    elif '-i' not in options and '--convert' not in options:
+    elif not args.input and not args.convert:
         print('Error: The input file must be specified')
         sys.exit(1)
     else:
         filenames['input_filename'] = None
-        
-    if '-o' in options:
-        filenames['output_filename'] = options['-o']
-    else:
-        filenames['output_filename'] = 'output.out'
+    
+    filenames['output_filename'] = args.output
+    filenames['save_filename'] = args.save
+    
+    if not os.path.isfile(args.chem):
+        print('Error: The specified chemistry file '
+              '"{}" does not exist'.format(args.chem)
+              )
+        sys.exit(1)
+    filenames['mech_filename'] = args.chem
+    
+    if args.thermo:
+        if not os.path.isfile(args.thermo):
+            print('Error: The specified thermodynamic database '
+                  '"{}" does not exist'.format(args.thermo))
+            sys.exit(1)
+    filenames['thermo_filename'] = args.thermo
+    
+    convert = args.convert
+    
+    num_proc = None
+    multi = False
+    if args.multi:
+        multi = True
+        num_proc = args.multi
+    
+    return filenames, convert, multi, num_proc
 
-    if '-c' in options:
-        mech_filename = options['-c']
-        if not os.path.isfile(mech_filename):
-            print(
-                'Error: The specified chemistry file '
-                '"{}" does not exist'.format(mech_filename)
-                )
-            sys.exit(1)
-        filenames['mech_filename'] = options['-c']
-    else:
-        filenames['mech_filename'] = 'chem.xml'
-    
-    if '-x' in options:
-        filenames['save_filename'] = options['-x']
-    else:
-        filenames['save_filename'] = 'save.hdf'
-    
-    if '-d' in options:
-        thermo_filename = options['-d']
-        if not os.path.isfile(thermo_filename):
-            print(
-                'Error: The specified thermodynamic database '
-                '"{}" does not exist'.format(thermo_filename)
-                )
-            sys.exit(1)
-        filenames['thermo_filename'] = thermo_filename
-    else:
-        filenames['thermo_filename'] = None
-    
-    convert = '--convert' in options
-    
-    return filenames, convert
 
 def reactor_interpolate(interp_time, state1, state2):
     """Linearly interpolate the reactor states to the given input time.

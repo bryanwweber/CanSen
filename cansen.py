@@ -6,13 +6,45 @@ from __future__ import division
 
 # Standard libraries
 import sys
+from multiprocessing import Process, Pool
 
 #Local imports
 import utils
 from printer import Tee
-from run_cases import SimulationCase
+from run_cases import SimulationCase, MultiSimulationCase
 
-def main(filenames, convert, version):
+
+def worker((sim, index)):
+    """Worker for multiprocessing of cases.
+    
+    :param sim:
+        MultiSimulationCase object to be run.
+    :param index:
+        Index of current case (for status message).
+    :return res:
+        List of simulation results.
+    """
+    
+    sim.run_simulation()
+    
+    # store results
+    if sim.keywords['eqRatio'] == None:
+        res = [sim.ignition_time,
+               sim.keywords['pressure'],
+               sim.keywords['temperature']]
+    else:
+        # store equivalence ratio if possible
+        res = [sim.ignition_time,
+               sim.keywords['pressure'],
+               sim.keywords['temperature'],
+               sim.keywords['eqRatio']]
+    
+    print('Done with ' + str(index))
+    
+    return res
+
+
+def main(filenames, convert, multi, num_proc, version):
     """The main driver function of CanSen.
     
     :param filenames:
@@ -20,17 +52,26 @@ def main(filenames, convert, version):
     :param convert:
         Boolean indicating that the user wishes only to convert the 
         input mechanism and quit.
+    :param multi:
+        Boolean indicating multiple cases to be run.
+    :param num_proc:
+        Number of processors to use for multiprocessing.
     :param version:
         Version string of CanSen.
     """
 
     # Open the text output file from the printer module
     output_filename = filenames['output_filename']
-    out = Tee(output_filename, 'w')
+    out = None
+    if multi:
+        out = open(output_filename, 'w')
+    else:
+        out = Tee(output_filename, 'w')
     
-    # Print version information to screen at the start of the problem
-    print("This is CanSen, the SENKIN-like wrapper for Cantera, written in "
-          "Python.\nVersion: {!s}\n".format(version))
+    if not multi:
+        # Print version information to screen at the start of the problem
+        print("This is CanSen, the SENKIN-like wrapper for Cantera, "
+              "written in Python.\nVersion: {!s}\n".format(version))
     
     # Convert the mechanism if it is in CHEMKIN format. If ``convert`` 
     # is True, exit the simulation.
@@ -42,14 +83,62 @@ def main(filenames, convert, version):
     if convert:
         print('User requested conversion only. Goodbye.')
         sys.exit(0)
-            
+    
     # Run the simulation
-    sim = SimulationCase(filenames)
-    sim.run_simulation()
+    if multi:
+        # need to preprocess the input file to separate the various
+        input_files = utils.process_multi_input(filenames['input_filename'])
+        
+        # create pool based on number of processors
+        if num_proc:
+            pool = Pool(processes = num_proc)
+        else:
+            # use available number of processors by default
+            pool = Pool()
+        
+        jobs = []
+        results = []
+        
+        # prepare all cases
+        for i in range(len(input_files)):
+            
+            local_names = filenames.copy()
+            local_names['input_filename'] = input_files[i]
+            sim = MultiSimulationCase(local_names)
+            
+            jobs.append([sim, i])
+        
+        jobs = tuple(jobs)
+        results = pool.map(worker, jobs)
+        
+        # not adding more proceses
+        pool.close()
+        
+        # ensure all finished
+        pool.join()
+        
+        # clean up
+        utils.remove_files(input_files)
+                
+        # write output
+        print('# Ignition delay [s], Pressure [atm], Temperature [K], '
+              'Equivalence ratio', file = out)
+        
+        for res in results:
+            if len(res) == 3:
+                line = '{:.8e} {:.2f} {:.1f}'.format(*res)
+            elif len(res) == 4:
+                line = '{:.8e} {:.2f} {:.1f} {:.2f}'.format(*res)
+            print(line, file = out)
+        
+    else:
+        sim = SimulationCase(filenames)
+        sim.run_simulation()
     
     # Clean up
     out.close()
-    
+
+
 def cansen(argv):
     """CanSen - the SENKIN-like wrapper for Cantera written in Python.
     
@@ -71,6 +160,11 @@ def cansen(argv):
      --convert:
         Convert the input mechanism to CTI format and quit. If 
         ``--convert`` is specified, the SENKIN input file is optional.
+     -m, --multi:
+        Run multiple cases from the input file. Optional. If ``-m`` is 
+        used, must specify number of processors to be used (e.g., 
+        ``-m 4``). If ``--multi`` is specified, CanSen uses the available 
+        number of processors by default.
      -h, --help:
         Print this help message and quit.
     """
@@ -78,22 +172,15 @@ def cansen(argv):
     __version__ = '1.1.0'
     
     ret = utils.cli_parser(argv)
-    if ret == -3:
-        print(cansen.__doc__)
-        sys.exit(1)
-    elif ret == -2:
-        print('Error: No command line options were specified.', 
-            cansen.__doc__, sep='\n')
-        sys.exit(1)
-    elif ret == -1:
-        print(cansen.__doc__)
-        sys.exit(0)
-    else:
-        filenames = ret[0]
-        convert = ret[1]
-        main(filenames, convert, __version__)
+    
+    filenames = ret[0]
+    convert = ret[1]
+    multi = ret[2]
+    num_proc = ret[3]
+    
+    main(filenames, convert, multi, num_proc, __version__)
+
     
 if __name__ == "__main__":
     cansen(sys.argv[1:])
-
 
