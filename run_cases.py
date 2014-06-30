@@ -61,8 +61,8 @@ class SimulationCase(object):
     def setup_case(self):
         """
         Sets up the case to be run. Initializes the ``ThermoPhase``,
-        ``Reactor``, and ReactorNet according to the values from the
-        input file.
+        ``Reactor``, and ``ReactorNet`` according to the values from
+        the input file.
         """
         self.gas = ct.Solution(self.mech_filename)
 
