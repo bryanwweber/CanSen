@@ -14,17 +14,17 @@ from printer import Tee
 from run_cases import SimulationCase, MultiSimulationCase
 
 
-def worker((sim, index)):
+def worker(sim_index_tup):
     """Worker for multiprocessing of cases.
 
-    :param sim:
-        MultiSimulationCase object to be run.
-    :param index:
-        Index of current case (for status message).
+    :param sim_index_tup:
+        Tuple containing the MultiSimulationCase object to be run and
+        the index of current case for status messages.
     :return res:
         List of simulation results.
     """
 
+    sim, index = sim_index_tup
     sim.run_simulation()
 
     # store results
