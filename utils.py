@@ -144,7 +144,7 @@ def read_input_file(input_filename):
             # Echo the input back to the output file.
             print(' '*10, line, end='')
             if (line.startswith('!') or line.startswith('.') or
-                    line.startswith('/')):
+                    line.startswith('/') or line.strip() == ""):
                 continue
             elif line.upper().startswith('CONV'):
                 if problem_type:
