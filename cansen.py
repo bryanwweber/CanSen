@@ -100,10 +100,10 @@ def main(filenames, convert, multi, num_proc, version):
         results = []
 
         # prepare all cases
-        for i in range(len(input_files)):
+        for i, temp_file in enumerate(input_files):
 
             local_names = filenames.copy()
-            local_names['input_filename'] = input_files[i]
+            local_names['input_filename'] = temp_file
             sim = MultiSimulationCase(local_names)
 
             jobs.append([sim, i])
