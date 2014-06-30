@@ -69,7 +69,7 @@ def process_multi_input(input_filename):
                 # skip comment or blank lines
                 continue
             elif line.upper().startswith('END'):
-                temp_file.write(line)
+                temp_file.write(bytes(line, 'UTF-8'))
 
                 # store temporary file and create new
                 temp_file.seek(0)
@@ -80,7 +80,7 @@ def process_multi_input(input_filename):
                 continue
             else:
                 # just print line
-                temp_file.write(line)
+                temp_file.write(bytes(line, 'UTF-8'))
 
     # check if last file actually written to; if not, close
     if os.stat(temp_file.name).st_size == 0:
