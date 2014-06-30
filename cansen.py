@@ -86,11 +86,11 @@ def main(filenames, convert, multi, num_proc, version):
 
     # Run the simulation
     if multi:
-        # need to preprocess the input file to separate the various
+        # Preprocess the input file to separate the various cases.
         input_files = utils.process_multi_input(filenames['input_filename'])
 
-        # create pool based on number of processors
-        if num_proc:
+        # Create a pool based on the number of processors
+        if num_proc is not None:
             pool = Pool(processes = num_proc)
         else:
             # use available number of processors by default
