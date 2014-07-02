@@ -21,6 +21,13 @@ except ImportError:
 # Local imports
 from printer import divider
 
+if sys.version < '3':
+    def b(x):
+        return x
+else:
+    def b(x):
+        return x.encode('utf-8')
+
 def convert_mech(mech_filename, thermo_filename):
     """Convert a mechanism and return a string with the filename.
 
@@ -69,7 +76,7 @@ def process_multi_input(input_filename):
                 # skip comment or blank lines
                 continue
             elif line.upper().startswith('END'):
-                temp_file.write(bytes(line, 'UTF-8'))
+                temp_file.write(b(line))
 
                 # store temporary file and create new
                 temp_file.seek(0)
@@ -80,7 +87,7 @@ def process_multi_input(input_filename):
                 continue
             else:
                 # just print line
-                temp_file.write(bytes(line, 'UTF-8'))
+                temp_file.write(b(line))
 
     # check if last file actually written to; if not, close
     if os.stat(temp_file.name).st_size == 0:
@@ -661,7 +668,7 @@ def equivalence_ratio(gas, eq_ratio, fuel, oxidizer, complete_products,
             oxid_elems[el] == 0) or (sum(cprod_elems[el].values()) == 0 and
            (fuel_elems[el] > 0 or oxid_elems[el] > 0))):
             print('Error: Must specify all elements in the fuel + oxidizer '
-                  'in the complete products')
+                  'in the complete products and vice-versa')
             sys.exit(1)
 
     # Compute the amount of oxidizer required to consume all the
