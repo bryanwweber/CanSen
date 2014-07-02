@@ -118,8 +118,51 @@ options:</p>
 --convert:
    Convert the input mechanism to CTI format and quit. If
    ``--convert`` is specified, the SENKIN input file is optional.
+-m, --multi:
+   Run multiple cases from the input file. Optional. If ``-m`` is
+   used, must specify number of processors to be used (e.g.,
+   ``-m 4``). If ``--multi`` is specified, CanSen uses the available
+   number of processors by default.
 -h, --help:
    Print this help message and quit.
+</pre></div>
+</div>
+</div>
+<div class="section" id="multiple-inputs">
+<h2>Multiple Inputs<a class="headerlink" href="#multiple-inputs" title="Permalink to this headline">¶</a></h2>
+<p>While the default operation of CanSen reads and runs a single input case,
+using the <tt class="docutils literal"><span class="pre">-m</span></tt> or <tt class="docutils literal"><span class="pre">--multi</span></tt> option enables multiple cases to be run
+independently (and in parallel). In this mode, normal output is omitted,
+and only the calculated ignition delay times (along with initial pressure,
+temperature, and equivalence ratio) are printed to the output file. In
+addition, no binary save output file is created.</p>
+<p>Input files should be formatted normally for each case, with an <tt class="docutils literal"><span class="pre">END</span></tt>
+keyword indicating the end of one case. For example:</p>
+<div class="highlight-python"><div class="highlight"><pre>CONV
+TEMP 1600.0
+PRES 1.0
+TIME 1.0E1
+EQUI 1.0
+FUEL CH4 1.0
+OXID O2 0.21
+OXID N2 0.79
+CPROD CO2
+CPROD H2O
+CPROD N2
+END
+
+CONP
+TEMP 1000.0
+PRES 10.0
+TIME 1.0E1
+EQUI 0.5
+FUEL CH4 1.0
+OXID O2 0.21
+OXID N2 0.79
+CPROD CO2
+CPROD H2O
+CPROD N2
+END
 </pre></div>
 </div>
 </div>
@@ -137,6 +180,7 @@ options:</p>
 <li><a class="reference internal" href="#windows">Windows</a></li>
 <li><a class="reference internal" href="#ubuntu">Ubuntu</a></li>
 <li><a class="reference internal" href="#options">Options</a></li>
+<li><a class="reference internal" href="#multiple-inputs">Multiple Inputs</a></li>
 </ul>
 </li>
 </ul>

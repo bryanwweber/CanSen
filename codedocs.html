@@ -65,18 +65,23 @@
 <dt>-o:</dt>
 <dd>Specify the text output file. Optional, default: <tt class="docutils literal"><span class="pre">output.out</span></tt></dd>
 <dt>-x:</dt>
-<dd>Specify the binary save output file. Optional, default: 
+<dd>Specify the binary save output file. Optional, default:
 <tt class="docutils literal"><span class="pre">save.hdf</span></tt></dd>
 <dt>-c:</dt>
 <dd>Specify the chemistry input file, in either CHEMKIN, Cantera
 CTI or CTML format. Optional, default: <tt class="docutils literal"><span class="pre">chem.xml</span></tt></dd>
 <dt>-d:</dt>
-<dd>Specify the thermodyanmic database. Optional if the 
-thermodyanmic database is specified in the chemistry input 
+<dd>Specify the thermodyanmic database. Optional if the
+thermodyanmic database is specified in the chemistry input
 file. Otherwise, required.</dd>
 <dt>&#8211;convert:</dt>
-<dd>Convert the input mechanism to CTI format and quit. If 
+<dd>Convert the input mechanism to CTI format and quit. If
 <tt class="docutils literal"><span class="pre">--convert</span></tt> is specified, the SENKIN input file is optional.</dd>
+<dt>-m, &#8211;multi:</dt>
+<dd>Run multiple cases from the input file. Optional. If <tt class="docutils literal"><span class="pre">-m</span></tt> is
+used, must specify number of processors to be used (e.g.,
+<tt class="docutils literal"><span class="pre">-m</span> <span class="pre">4</span></tt>). If <tt class="docutils literal"><span class="pre">--multi</span></tt> is specified, CanSen uses the available
+number of processors by default.</dd>
 <dt>-h, &#8211;help:</dt>
 <dd>Print this help message and quit.</dd>
 </dl>
@@ -86,7 +91,7 @@ file. Otherwise, required.</dd>
 
 <dl class="function">
 <dt id="cansen.main">
-<tt class="descclassname">cansen.</tt><tt class="descname">main</tt><big>(</big><em>filenames</em>, <em>convert</em>, <em>version</em><big>)</big><a class="reference internal" href="_modules/cansen.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cansen.main" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">cansen.</tt><tt class="descname">main</tt><big>(</big><em>filenames</em>, <em>convert</em>, <em>multi</em>, <em>num_proc</em>, <em>version</em><big>)</big><a class="reference internal" href="_modules/cansen.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cansen.main" title="Permalink to this definition">¶</a></dt>
 <dd><p>The main driver function of CanSen.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -94,11 +99,30 @@ file. Otherwise, required.</dd>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>filenames</strong> &#8211; Dictionary of filenames related to the simulation.</li>
-<li><strong>convert</strong> &#8211; Boolean indicating that the user wishes only to convert the 
+<li><strong>convert</strong> &#8211; Boolean indicating that the user wishes only to convert the
 input mechanism and quit.</li>
+<li><strong>multi</strong> &#8211; Boolean indicating multiple cases to be run.</li>
+<li><strong>num_proc</strong> &#8211; Number of processors to use for multiprocessing.</li>
 <li><strong>version</strong> &#8211; Version string of CanSen.</li>
 </ul>
 </td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="cansen.worker">
+<tt class="descclassname">cansen.</tt><tt class="descname">worker</tt><big>(</big><em>sim_index_tup</em><big>)</big><a class="reference internal" href="_modules/cansen.html#worker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cansen.worker" title="Permalink to this definition">¶</a></dt>
+<dd><p>Worker for multiprocessing of cases.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sim_index_tup</strong> &#8211; Tuple containing the MultiSimulationCase object to be run and
+the index of current case for status messages.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return res:</th><td class="field-body">List of simulation results.</td>
 </tr>
 </tbody>
 </table>
@@ -248,12 +272,41 @@ See <a class="reference internal" href="icengine.html"><em>Internal Combustion E
 <div class="section" id="module-run_cases">
 <span id="run-cases-module"></span><h2>run_cases module<a class="headerlink" href="#module-run_cases" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
+<dt id="run_cases.MultiSimulationCase">
+<em class="property">class </em><tt class="descclassname">run_cases.</tt><tt class="descname">MultiSimulationCase</tt><big>(</big><em>filenames</em><big>)</big><a class="reference internal" href="_modules/run_cases.html#MultiSimulationCase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#run_cases.MultiSimulationCase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#run_cases.SimulationCase" title="run_cases.SimulationCase"><tt class="xref py py-class docutils literal"><span class="pre">run_cases.SimulationCase</span></tt></a></p>
+<p>Class that sets up and runs a simulation case, for multiple.</p>
+<p>When multiple cases are run, no output is printed and no simulation
+data is saved; upon completion, the calculated ignition delay times
+are written to the output file.</p>
+<p>Initialize the simulation case.</p>
+<p>Read the SENKIN-format input file is read into the <tt class="docutils literal"><span class="pre">keywords</span></tt>
+dictionary.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filenames</strong> &#8211; Dictionary containing the relevant file names for this
+case.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="run_cases.MultiSimulationCase.run_case">
+<tt class="descname">run_case</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/run_cases.html#MultiSimulationCase.run_case"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#run_cases.MultiSimulationCase.run_case" title="Permalink to this definition">¶</a></dt>
+<dd><p>Actually run the case set up by <tt class="docutils literal"><span class="pre">setup_case</span></tt>. Runs the
+simulation by using <tt class="docutils literal"><span class="pre">ReactorNet.step(self.tend)</span></tt>.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="run_cases.SimulationCase">
 <em class="property">class </em><tt class="descclassname">run_cases.</tt><tt class="descname">SimulationCase</tt><big>(</big><em>filenames</em><big>)</big><a class="reference internal" href="_modules/run_cases.html#SimulationCase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#run_cases.SimulationCase" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <p>Class that sets up and runs a simulation case.</p>
 <p>Initialize the simulation case.</p>
-<p>Read the SENKIN-format input file is read into the <tt class="docutils literal"><span class="pre">keywords</span></tt> 
+<p>Read the SENKIN-format input file is read into the <tt class="docutils literal"><span class="pre">keywords</span></tt>
 dictionary.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -268,7 +321,7 @@ case.</td>
 <dt id="run_cases.SimulationCase.reactor_state_printer">
 <tt class="descname">reactor_state_printer</tt><big>(</big><em>state</em>, <em>end=False</em><big>)</big><a class="reference internal" href="_modules/run_cases.html#SimulationCase.reactor_state_printer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#run_cases.SimulationCase.reactor_state_printer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Produce pretty-printed output from the input reactor state.</p>
-<p>In this function, we have to explicitly pass in the reactor 
+<p>In this function, we have to explicitly pass in the reactor
 state instead of using <tt class="docutils literal"><span class="pre">self.reac</span></tt> because we might have
 interpolated to get to the proper time.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -288,25 +341,25 @@ interpolated to get to the proper time.</p>
 <dl class="method">
 <dt id="run_cases.SimulationCase.run_case">
 <tt class="descname">run_case</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/run_cases.html#SimulationCase.run_case"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#run_cases.SimulationCase.run_case" title="Permalink to this definition">¶</a></dt>
-<dd><p>Actually run the case set up by <tt class="docutils literal"><span class="pre">setup_case</span></tt>. Sets binary 
-output file format, then runs the simulation by using 
+<dd><p>Actually run the case set up by <tt class="docutils literal"><span class="pre">setup_case</span></tt>. Sets binary
+output file format, then runs the simulation by using
 <tt class="docutils literal"><span class="pre">ReactorNet.step(self.tend)</span></tt>.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="run_cases.SimulationCase.run_simulation">
 <tt class="descname">run_simulation</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/run_cases.html#SimulationCase.run_simulation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#run_cases.SimulationCase.run_simulation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Helper function that sequentially sets up the simulation case 
-and runs it. Useful for cases where nothing needs to be changed 
+<dd><p>Helper function that sequentially sets up the simulation case
+and runs it. Useful for cases where nothing needs to be changed
 between the setup and run. See <cite>setup_case</cite> and <cite>run_case</cite>.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="run_cases.SimulationCase.setup_case">
 <tt class="descname">setup_case</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/run_cases.html#SimulationCase.setup_case"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#run_cases.SimulationCase.setup_case" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sets up the case to be run. Initializes the <tt class="docutils literal"><span class="pre">ThermoPhase</span></tt>, 
-<tt class="docutils literal"><span class="pre">Reactor</span></tt>, and ReactorNet according to the values from the 
-input file.</p>
+<dd><p>Sets up the case to be run. Initializes the <tt class="docutils literal"><span class="pre">ThermoPhase</span></tt>,
+<tt class="docutils literal"><span class="pre">Reactor</span></tt>, and <tt class="docutils literal"><span class="pre">ReactorNet</span></tt> according to the values from
+the input file.</p>
 </dd></dl>
 
 </dd></dl>
@@ -428,9 +481,9 @@ the Cantera built-in script <cite>ck2cti</cite>.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>mech_filename</strong> &#8211; Filename of the input CHEMKIN format mechanism. The converted 
+<li><strong>mech_filename</strong> &#8211; Filename of the input CHEMKIN format mechanism. The converted
 CTI file will have the same name, but with <cite>.cti</cite> extension.</li>
-<li><strong>thermo_filename</strong> &#8211; Filename of the thermodynamic database. Optional if the 
+<li><strong>thermo_filename</strong> &#8211; Filename of the thermodynamic database. Optional if the
 thermodynamic database is present in the mechanism input.</li>
 </ul>
 </td>
@@ -443,9 +496,9 @@ thermodynamic database is present in the mechanism input.</li>
 <dt id="utils.equivalence_ratio">
 <tt class="descclassname">utils.</tt><tt class="descname">equivalence_ratio</tt><big>(</big><em>gas</em>, <em>eq_ratio</em>, <em>fuel</em>, <em>oxidizer</em>, <em>complete_products</em>, <em>additional_species</em><big>)</big><a class="reference internal" href="_modules/utils.html#equivalence_ratio"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.equivalence_ratio" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the mixture mole fractions from the equivalence ratio.</p>
-<p>Given the equivalence ratio, fuel mixture, oxidizer mixture, 
-the products of complete combustion, and any additional species for 
-the mixture, return a string containing the mole fractions of the 
+<p>Given the equivalence ratio, fuel mixture, oxidizer mixture,
+the products of complete combustion, and any additional species for
+the mixture, return a string containing the mole fractions of the
 species, suitable for setting the state of the input ThermoPhase.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -456,14 +509,33 @@ species, suitable for setting the state of the input ThermoPhase.</p>
 <li><strong>eq_ratio</strong> &#8211; Equivalence ratio</li>
 <li><strong>fuel</strong> &#8211; Dictionary of molecules in the fuel mixture and the fraction of
 each molecule in the fuel mixture</li>
-<li><strong>oxidizer</strong> &#8211; Dictionary of molecules in the oxidizer mixture and the 
+<li><strong>oxidizer</strong> &#8211; Dictionary of molecules in the oxidizer mixture and the
 fraction of each molecule in the oxidizer mixture.</li>
 <li><strong>complete_products</strong> &#8211; List of species in the products of complete combustion.</li>
-<li><strong>additional_species</strong> &#8211; Dictionary of molecules that will be added to the mixture. 
-The mole fractions given in this dictionary are as a fraction 
+<li><strong>additional_species</strong> &#8211; Dictionary of molecules that will be added to the mixture.
+The mole fractions given in this dictionary are as a fraction
 of the total mixture.</li>
 </ul>
 </td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="utils.process_multi_input">
+<tt class="descclassname">utils.</tt><tt class="descname">process_multi_input</tt><big>(</big><em>input_filename</em><big>)</big><a class="reference internal" href="_modules/utils.html#process_multi_input"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.process_multi_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process a formatted input file into multiple cases.</p>
+<p>Processes a formatted input file that contains multiple cases into
+separate temporary files, for individual reading of keywords.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>input_filename</strong> &#8211; Filename of the SENKIN input file.</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Return filenames:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">List of temporary filenames.</td>
 </tr>
 </tbody>
 </table>
@@ -497,6 +569,20 @@ of the total mixture.</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>input_filename</strong> &#8211; Filename of the SENKIN input file.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="utils.remove_files">
+<tt class="descclassname">utils.</tt><tt class="descname">remove_files</tt><big>(</big><em>files</em><big>)</big><a class="reference internal" href="_modules/utils.html#remove_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.remove_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete files.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>files</strong> &#8211; List of names of files to be removed</td>
 </tr>
 </tbody>
 </table>
