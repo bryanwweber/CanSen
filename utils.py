@@ -21,6 +21,7 @@ except ImportError:
 # Local imports
 from printer import divider
 
+# Python 2 compatibility for file output
 if sys.version < '3':
     def b(x):
         return x

@@ -28,7 +28,7 @@ def worker(sim_index_tup):
     sim.run_simulation()
 
     # store results
-    if sim.keywords['eqRatio'] == None:
+    if sim.keywords.get('eqRatio') is None:
         res = [sim.ignition_time,
                sim.keywords['pressure'],
                sim.keywords['temperature']]
