@@ -34,6 +34,7 @@ class VolumeProfile(object):
         # so that a unit area can be used to calculate the velocity.
         self.time = np.array(keywords['vproTime'])
         self.volume = np.array(keywords['vproVol'])/max(keywords['vproVol'])
+
         # The velocity is calculated by the forward difference. 
         # numpy.diff returns an array one element smaller than the 
         # input array, so we append a zero to match the length of the 
@@ -144,6 +145,7 @@ class ICEngineProfile(object):
             Input float, current simulation time
         """
         theta = self.start_crank_rad - self.omega * time
+
         # Technically, this is negative, but the way we install the 
         # wall between the reactor and the environment handles the 
         # sign.
