@@ -30,10 +30,11 @@ class VolumeProfile(object):
             Dictionary of keywords read from the input file
         """
         # The time and volume are stored as lists in the keywords
-        # dictionary. The volume is normalized by the maximum volume
-        # so that a unit area can be used to calculate the velocity.
+        # dictionary. The volume is normalized by the first volume
+        # element so that a unit area can be used to calculate the
+        # velocity.
         self.time = np.array(keywords['vproTime'])
-        self.volume = np.array(keywords['vproVol'])/max(keywords['vproVol'])
+        self.volume = np.array(keywords['vproVol'])/keywords['vproVol'][0]
 
         # The velocity is calculated by the forward difference.
         # numpy.diff returns an array one element smaller than the
