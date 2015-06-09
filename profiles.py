@@ -16,6 +16,7 @@ class VolumeProfile(object):
     by the `Func1 <http://cantera.github.io/docs/sphinx/html/cython/zerodim.html#cantera.Func1>`_
     interface of Cantera. Used with the input keyword :ref:`VPRO <VPRO>`
     """
+
     def __init__(self, keywords):
         """Set the initial values of the arrays from the input keywords.
 
@@ -29,6 +30,7 @@ class VolumeProfile(object):
         :param keywords:
             Dictionary of keywords read from the input file
         """
+
         # The time and volume are stored as lists in the keywords
         # dictionary. The volume is normalized by the first volume
         # element so that a unit area can be used to calculate the
@@ -72,6 +74,7 @@ class TemperatureProfile(object):
     are handled by the  `Func1 <http://cantera.github.io/docs/sphinx/html/cython/zerodim.html#cantera.Func1>`_
     interface of Cantera. Used with the input keyword :ref:`TPRO <TPRO>`
     """
+
     def __init__(self, keywords):
         """Set the initial values of the arrays from the input keywords.
 
@@ -80,6 +83,7 @@ class TemperatureProfile(object):
         is only called once when the class is initialized at the
         beginning of a problem so it is efficient.
         """
+
         self.time = np.array(keywords['TproTime'])
         self.temperature = np.array(keywords['TproTemp'])
 
@@ -92,6 +96,7 @@ class TemperatureProfile(object):
         :param t:
             Input float, current simulation time.
         """
+
         if t == 0:
             return self.temperature[0]
         if t < self.time[1]:
@@ -110,13 +115,15 @@ class TemperatureProfile(object):
         interp = temp0 + (temp1-temp0)*(t-tim0)/(tim1-tim0)
         return interp
 
+
 class ICEngineProfile(object):
     """
     Set the velocity of the wall according to the parameters of a
     reciprocating engine. The initialization and calling of this class
-    are handled by the  `Func1 <http://cantera.github.io/docs/sphinx/html/cython/zerodim.html#cantera.Func1>`_
+    are handled by the `Func1 <http://cantera.github.io/docs/sphinx/html/cython/zerodim.html#cantera.Func1>`_
     interface of Cantera. Used with the input keyword :ref:`ICEN <ICEN>`.
     """
+
     def __init__(self, keywords):
         """Set the initial values of the engine parameters.
 
@@ -128,8 +135,10 @@ class ICEngineProfile(object):
         rev_per_minute = keywords['rev_per_min']
         self.stroke_length = keywords['stroke_length']
 
-        self.omega = rev_per_minute * np.pi / 30 # Angular velocity, rad/s
-        self.start_crank_rad = start_crank_angle/180.0*np.pi # Start angle, rad
+        # Angular velocity, rad/s
+        self.omega = rev_per_minute*np.pi/30
+        # Start angle, rad
+        self.start_crank_rad = start_crank_angle/180.0*np.pi
 
     def __call__(self, time):
         """Return the velocity of the piston when called.
@@ -140,15 +149,16 @@ class ICEngineProfile(object):
         :param time:
             Input float, current simulation time
         """
+
         theta = self.start_crank_rad - self.omega * time
 
         # Technically, this is negative, but the way we install the
         # wall between the reactor and the environment handles the
         # sign.
-        velocity = (self.omega*self.stroke_length/2*np.sin(theta)*
-                    (1 + np.cos(theta)/np.sqrt(self.rod_radius_ratio**2 -
-                                               np.sin(theta)**2)))
-        return velocity
+        return (self.omega*self.stroke_length/2*np.sin(theta)*
+                (1 + np.cos(theta)/np.sqrt(self.rod_radius_ratio**2 -
+                                           np.sin(theta)**2)))
+
 
 class PressureProfile(object):
     """
