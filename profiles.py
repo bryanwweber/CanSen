@@ -52,23 +52,18 @@ class VolumeProfile(object):
         :param t:
             Input float, current simulation time.
         """
-        if t == 0:
-            return 0
-        if t < self.time[1]:
-            tim0 = self.time[0]
-            tim1 = self.time[1]
-            vel0 = self.velocity[0]
-            vel1 = self.velocity[1]
-        elif t >= self.time[1] and t <= self.time[-1]:
-            tim0 = self.time[self.time < t][-1]
-            tim1 = self.time[np.where(self.time == tim0)[0][0]+1]
-            vel0 = self.velocity[self.time < t][-1]
-            vel1 = self.velocity[np.where(self.time == tim0)[0][0]+1]
-        elif t > self.time[-1]:
+
+        if t < self.time[-1]:
+            # prev_time_point is the previous value in the time array
+            # after the current simulation time
+            prev_time_point = self.time[self.time <= t][-1]
+            # index is the index of the time array where
+            # prev_time_point occurs
+            index = np.where(self.time == prev_time_point)[0][0]
+            return self.velocity[index]
+        else:
             return 0
 
-        interp = vel0 + (vel1-vel0)*(t-tim0)/(tim1-tim0)
-        return interp
 
 class TemperatureProfile(object):
     """
