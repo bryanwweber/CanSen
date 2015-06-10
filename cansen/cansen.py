@@ -92,7 +92,7 @@ def main(filenames, convert, multi, num_proc, version):
 
         # Create a pool based on the number of processors
         if num_proc is not None:
-            pool = Pool(processes = num_proc)
+            pool = Pool(processes=num_proc)
         else:
             # use available number of processors by default
             pool = Pool()
@@ -123,14 +123,14 @@ def main(filenames, convert, multi, num_proc, version):
 
         # write output
         print('# Ignition delay [s], Pressure [atm], Temperature [K], '
-              'Equivalence ratio', file = out)
+              'Equivalence ratio', file=out)
 
         for res in results:
             if len(res) == 3:
                 line = '{:.8e} {:.2f} {:.1f}'.format(*res)
             elif len(res) == 4:
                 line = '{:.8e} {:.2f} {:.1f} {:.2f}'.format(*res)
-            print(line, file = out)
+            print(line, file=out)
 
     else:
         sim = SimulationCase(filenames)
