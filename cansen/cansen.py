@@ -8,10 +8,10 @@ from __future__ import division
 import sys
 from multiprocessing import Process, Pool
 
-#Local imports
-import utils
-from printer import Tee
-from run_cases import SimulationCase, MultiSimulationCase
+# Local imports
+from . import utils
+from .printer import Tee
+from .run_cases import SimulationCase, MultiSimulationCase
 
 
 def worker(sim_index_tup):
@@ -181,6 +181,9 @@ def cansen(argv):
     main(filenames, convert, multi, num_proc, __version__)
 
 
-if __name__ == "__main__":
+def script():
     cansen(sys.argv[1:])
 
+
+if __name__ == "__main__":
+    cansen(sys.argv[1:])

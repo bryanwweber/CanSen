@@ -19,7 +19,7 @@ except ImportError:
     sys.exit(1)
 
 # Local imports
-from printer import divider
+from .printer import divider
 
 # Python 2 compatibility for file output
 if sys.version < '3':

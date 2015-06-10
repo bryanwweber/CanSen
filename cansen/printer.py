@@ -1,7 +1,7 @@
 # Standard Libraries
 import sys
 
-# Create a string to use as a divider. Use a default column width of 
+# Create a string to use as a divider. Use a default column width of
 # 80 chars.
 divider = '*'*80
 
@@ -9,7 +9,7 @@ class Tee(object):
     """Write to screen and text output file"""
     def __init__(self, name, mode):
         """Initialize output.
-        
+
         :param name:
             Output file name.
         :param mode:

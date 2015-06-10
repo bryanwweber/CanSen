@@ -32,9 +32,9 @@ except ImportError:
     sys.exit(1)
 
 # Local imports
-from printer import divider
-import utils
-from profiles import (VolumeProfile, TemperatureProfile, PressureProfile,
+from .printer import divider
+from . import utils
+from .profiles import (VolumeProfile, TemperatureProfile, PressureProfile,
                       ICEngineProfile)
 
 class SimulationCase(object):
