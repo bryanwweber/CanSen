@@ -99,7 +99,7 @@ setup(
     # pip to create the appropriate form of executable for the target platform.
     entry_points={
         'console_scripts': [
-            'cansen=cansen.cansen:script',
+            'cansen=cansen.__main__:main',
         ],
     },
 )

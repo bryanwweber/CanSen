@@ -179,11 +179,3 @@ def cansen(argv):
     num_proc = ret[3]
 
     main(filenames, convert, multi, num_proc, __version__)
-
-
-def script():
-    cansen(sys.argv[1:])
-
-
-if __name__ == "__main__":
-    cansen(sys.argv[1:])
