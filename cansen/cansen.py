@@ -12,6 +12,7 @@ from multiprocessing import Process, Pool
 from . import utils
 from .printer import Tee
 from .run_cases import SimulationCase, MultiSimulationCase
+from ._version import __version__
 
 
 def worker(sim_index_tup):
@@ -168,8 +169,6 @@ def cansen(argv):
      -h, --help:
         Print this help message and quit.
     """
-    # Version number
-    __version__ = '1.1.0'
 
     ret = utils.cli_parser(argv)
 

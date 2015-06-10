@@ -10,6 +10,8 @@ from setuptools import setup, find_packages
 from codecs import open
 from os import path
 
+exec(open('cansen/_version.py').read())
+
 here = path.abspath(path.dirname(__file__))
 
 # Get the long description from the relevant file
@@ -22,7 +24,7 @@ setup(
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version='1.1.0',
+    version=__version__,
 
     description='CanSen',
     long_description=long_description,

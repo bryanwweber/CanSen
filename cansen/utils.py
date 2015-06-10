@@ -485,6 +485,10 @@ def cli_parser(argv):
     parser = ArgumentParser(description='CanSen - the SENKIN-like wrapper '
                                         'for Cantera written in Python.')
 
+    parser.add_argument('-V', '--version',
+                        action='store_true',
+                        help='Show the version of CanSen and quit')
+
     parser.add_argument('-i', '--input',
                         type=str,
                         help='The simulation input file in SENKIN format.')
@@ -526,6 +530,13 @@ def cli_parser(argv):
     args = parser.parse_args(argv)
 
     filenames = {}
+
+    if args.version:
+        from ._version import __version__
+        print('CanSen {version} from {path} ()'.format(
+            version=__version__,
+            path=os.path.abspath(os.path.dirname(__file__))))
+        sys.exit(0)
 
     if args.input:
         input_filename = args.input
