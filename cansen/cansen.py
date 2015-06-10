@@ -155,8 +155,8 @@ def cansen(argv):
         Specify the chemistry input file, in either CHEMKIN, Cantera
         CTI or CTML format. Optional, default: ``chem.xml``
      -d:
-        Specify the thermodyanmic database. Optional if the
-        thermodyanmic database is specified in the chemistry input
+        Specify the thermodynamic database. Optional if the
+        thermodynamic database is specified in the chemistry input
         file. Otherwise, required.
      --convert:
         Convert the input mechanism to CTI format and quit. If
