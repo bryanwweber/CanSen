@@ -63,6 +63,7 @@ def convert_mech(mech_filename, thermo_filename):
           '{}'.format(mech_filename))
     return mech_filename
 
+
 def process_multi_input(input_filename):
     """Process a formatted input file into multiple cases.
 
@@ -77,7 +78,7 @@ def process_multi_input(input_filename):
 
     filenames = []
 
-    temp_file = NamedTemporaryFile(delete = False)
+    temp_file = NamedTemporaryFile(delete=False)
 
     with open(input_filename) as input_file:
         for line in input_file:
@@ -93,7 +94,7 @@ def process_multi_input(input_filename):
                 temp_file.seek(0)
                 filenames.append(temp_file.name)
 
-                temp_file = NamedTemporaryFile(delete = False)
+                temp_file = NamedTemporaryFile(delete=False)
 
                 continue
             else:
@@ -105,6 +106,7 @@ def process_multi_input(input_filename):
         temp_file.close()
 
     return filenames
+
 
 def remove_files(files):
     """Delete files.
@@ -367,84 +369,84 @@ def read_input_file(input_filename):
         # Handle the various ways to calculate the stroke length
         if 'stroke_length' in keywords:
             print("Info: 'STROKE' was specified, and will be used for the "
-                "stroke length regardless of other parameters.")
+                  "stroke length regardless of other parameters.")
         elif all(key in keywords for key in ('swept_volume', 'cyl_bore')):
             print("Info: Using swept volume and cylinder bore to "
-                "calculate stroke length.")
+                  "calculate stroke length.")
             keywords['stroke_length'] = (keywords['swept_volume']*4 /
-                                        (pi*keywords['cyl_bore']**2))
+                                         (pi*keywords['cyl_bore']**2))
         elif all(key in keywords for key in ('comp_ratio',
                                              'clear_volume',
                                              'cyl_bore')):
             print("Info: Using compression ratio, clearance volume, and "
-                "cylinder bore to calculate stroke length.")
+                  "cylinder bore to calculate stroke length.")
             keywords['swept_volume'] = (keywords['clear_volume'] *
-                                       (keywords['comp_ratio'] - 1))
+                                        (keywords['comp_ratio'] - 1))
             keywords['stroke_length'] = (keywords['swept_volume']*4 /
-                                        (pi*keywords['cyl_bore']**2))
+                                         (pi*keywords['cyl_bore']**2))
         elif 'crank_radius' in keywords:
             print("Info: Using crank radius to compute the stroke length.")
             keywords['stroke_length'] = 2*keywords['crank_radius']
         else:
             print("Error: I could not compute the stroke length. Please "
-                "specify one of the following combinations:\n"
-                "1) STROKE\n2) VOLD + BORE\n3) CMPR + VOLC + BORE\n4) CRAD")
+                  "specify one of the following combinations:\n"
+                  "1) STROKE\n2) VOLD + BORE\n3) CMPR + VOLC + BORE\n4) CRAD")
             sys.exit(1)
 
         # Handle the various ways to calculate the initial volume
         if 'reactorVolume' in keywords:
             print("Info: The inital reactor volume was specified by the VOL "
-                "keyword and this value will be used regardless of other "
-                "settings.")
+                  "keyword and this value will be used regardless of other "
+                  "settings.")
         elif all(key in keywords for key in ('swept_volume', 'clear_volume',
                                              'comp_ratio')):
             print("Error: Only two of 'VOLD', 'VOLC', and 'CMPR' may be "
-                "specified.")
+                  "specified.")
             sys.exit(1)
         elif all(key in keywords for key in ('swept_volume', 'clear_volume')):
             print("Info: Computing initial reactor volume from the swept "
-                "volume and the clearance volume.")
+                  "volume and the clearance volume.")
             keywords['reactorVolume'] = (keywords['swept_volume'] +
                                          keywords['clear_volume'])
         elif all(key in keywords for key in ('comp_ratio', 'clear_volume')):
             print("Info: Computing initial reactor volume from the "
-                "compression ratio and clearance volume.")
+                  "compression ratio and clearance volume.")
             keywords['reactorVolume'] = (keywords['comp_ratio'] *
                                          keywords['clear_volume'])
         elif all(key in keywords for key in ('comp_ratio', 'swept_volume')):
             print("Info: Computing initial reactor volume from the "
-                "compression ratio and swept volume.")
+                  "compression ratio and swept volume.")
             keywords['reactorVolume'] = (keywords['swept_volume'] *
-                                        (1 + 1/(keywords['comp_ratio'] - 1)))
+                                         (1 + 1/(keywords['comp_ratio'] - 1)))
         elif all(key in keywords for key in ('clear_volume', 'cyl_bore')):
             print("Info: Computing initial reactor volume from the cylinder "
-                "bore, stroke length, and clearance volume.")
+                  "bore, stroke length, and clearance volume.")
             keywords['reactorVolume'] = (pi/4*keywords['cyl_bore']**2 *
-                                        keywords['stroke_length'] +
-                                        keywords['clear_volume'])
+                                         keywords['stroke_length'] +
+                                         keywords['clear_volume'])
         else:
             print("Error: I cannot compute the initial volume of the reactor. "
-                "Please specify one of the following combinations:\n"
-                "1) VOLD + VOLC\n2) CMPR + VOLC\n3) CMPR + VOLD\n"
-                "4) BORE + VOLC\n5) VOL")
+                  "Please specify one of the following combinations:\n"
+                  "1) VOLD + VOLC\n2) CMPR + VOLC\n3) CMPR + VOLD\n"
+                  "4) BORE + VOLC\n5) VOL")
             sys.exit(1)
 
         # Handle the ways to calculate the rod length to radius ratio
         if 'rod_radius_ratio' in keywords:
             print("Info: The connnecting rod length to crank radius ratio was "
-                "specified by the 'LOLR' keyword and this value will be "
-                "used regardless of other settings.")
+                  "specified by the 'LOLR' keyword and this value will be "
+                  "used regardless of other settings.")
         elif all(key in keywords for key in ('connect_rod_len',
                                              'crank_radius')):
             print("Info: Using given connecting rod length and crank radius "
-                "to compute the ratio.")
+                  "to compute the ratio.")
             keywords['rod_radius_ratio'] = (keywords['connect_rod_len'] /
                                             keywords['crank_radius'])
         else:
             print("Error: Unable to calculate the connecting rod length to "
-                "crank radius ratio. Please specify one of the following "
-                "options:\n"
-                "1) LOLR\n2) CRAD + RODL")
+                  "crank radius ratio. Please specify one of the following "
+                  "options:\n"
+                  "1) LOLR\n2) CRAD + RODL")
             sys.exit(1)
 
     # Set the default reactor volume, if it is not specified
@@ -457,7 +459,7 @@ def read_input_file(input_filename):
     # both are present, exit.
     if (reactants and
             (oxidizer or fuel or complete_products or additional_species or
-            ('eqRatio' in keywords))):
+             ('eqRatio' in keywords))):
         print('Error: REAC and EQUI cannot both be specified.')
         sys.exit(1)
     elif ('eqRatio' in keywords and not
@@ -474,7 +476,7 @@ def read_input_file(input_filename):
         keywords['additionalSpecies'] = additional_species
     else:
         print('Error: You must specify the reactants with either REAC or EQUI '
-            '+ FUEL + OXID + CPROD')
+              '+ FUEL + OXID + CPROD')
         sys.exit(1)
 
     # Set the default temperature threshold to determine ignition
@@ -608,7 +610,7 @@ def reactor_interpolate(interp_time, state1, state2):
         Array of the state information at the current time step.
     """
     interp_state = state1 + ((state2 - state1)*(interp_time - state1[0]) /
-                            (state2[0] - state1[0]))
+                             (state2[0] - state1[0]))
     return interp_state
 
 
@@ -661,9 +663,9 @@ def equivalence_ratio(gas, eq_ratio, fuel, oxidizer, complete_products,
 
         cprod_elems[el.upper()][sp] = int(gas.n_atoms(sp, el))
 
-    num_C_cprod = sum(cprod_elems.get('C', {0:0}).values())
-    num_H_cprod = sum(cprod_elems.get('H', {0:0}).values())
-    num_O_cprod = sum(cprod_elems.get('O', {0:0}).values())
+    num_C_cprod = sum(cprod_elems.get('C', {0: 0}).values())
+    num_H_cprod = sum(cprod_elems.get('H', {0: 0}).values())
+    num_O_cprod = sum(cprod_elems.get('O', {0: 0}).values())
 
     oxid_state = 4*num_C_cprod + num_H_cprod - 2*num_O_cprod
     if oxid_state != 0:
@@ -694,8 +696,8 @@ def equivalence_ratio(gas, eq_ratio, fuel, oxidizer, complete_products,
     # are present in the complete products and vice versa.
     for el in cprod_elems.keys():
         if ((sum(cprod_elems[el].values()) > 0 and fuel_elems[el] == 0 and
-            oxid_elems[el] == 0) or (sum(cprod_elems[el].values()) == 0 and
-           (fuel_elems[el] > 0 or oxid_elems[el] > 0))):
+             oxid_elems[el] == 0) or (sum(cprod_elems[el].values()) == 0 and
+            (fuel_elems[el] > 0 or oxid_elems[el] > 0))):
             print('Error: Must specify all elements in the fuel + oxidizer '
                   'in the complete products and vice-versa')
             sys.exit(1)
@@ -705,7 +707,7 @@ def equivalence_ratio(gas, eq_ratio, fuel, oxidizer, complete_products,
     if num_C_cprod > 0:
         spec = cprod_elems['C'].keys()
         ox = sum([cprod_elems['O'][sp]
-                for sp in spec if cprod_elems['C'][sp] > 0])
+                  for sp in spec if cprod_elems['C'][sp] > 0])
         C_multiplier = ox/num_C_cprod
     else:
         C_multiplier = 0
@@ -713,14 +715,14 @@ def equivalence_ratio(gas, eq_ratio, fuel, oxidizer, complete_products,
     if num_H_cprod > 0:
         spec = cprod_elems['H'].keys()
         ox = sum([cprod_elems['O'][sp]
-                for sp in spec if cprod_elems['H'][sp] > 0])
+                  for sp in spec if cprod_elems['H'][sp] > 0])
         H_multiplier = ox/num_H_cprod
     else:
         H_multiplier = 0
 
     # Compute how many O atoms are required to oxidize everybody
     num_O_req = (num_C_fuel * C_multiplier +
-                num_H_fuel * H_multiplier - num_O_fuel)
+                 num_H_fuel * H_multiplier - num_O_fuel)
     O_mult = num_O_req/num_O_oxid
 
     # Find the total number of moles in the fuel + oxidizer mixture
@@ -749,11 +751,11 @@ def equivalence_ratio(gas, eq_ratio, fuel, oxidizer, complete_products,
         reactants = ','.join([reactants, add_spec])
 
     for species, fuel_amt in fuel.items():
-        molefrac = fuel_amt * eq_ratio /total_reactant_moles * remain
+        molefrac = fuel_amt*eq_ratio/total_reactant_moles*remain
         add_spec = ':'.join([species, str(molefrac)])
         reactants = ','.join([reactants, add_spec])
 
-    #Take off the first character, which is a comma
+    # Take off the first character, which is a comma
     reactants = reactants[1:]
 
     return reactants
