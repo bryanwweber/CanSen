@@ -482,46 +482,46 @@ def cli_parser(argv):
         List of command line options.
     """
 
-    parser = ArgumentParser(description = 'CanSen - the SENKIN-like wrapper '
-                                          'for Cantera written in Python.')
+    parser = ArgumentParser(description='CanSen - the SENKIN-like wrapper '
+                                        'for Cantera written in Python.')
 
     parser.add_argument('-i', '--input',
-                        type = str,
-                        help = 'The simulation input file in SENKIN format.')
+                        type=str,
+                        help='The simulation input file in SENKIN format.')
     parser.add_argument('-o', '--output',
-                        type = str,
-                        default = 'output.out',
-                        help = 'The text output file.')
+                        type=str,
+                        default='output.out',
+                        help='The text output file.')
     parser.add_argument('-x', '--save',
-                        type = str,
-                        default = 'save.hdf',
-                        help = 'The binary save output file.')
+                        type=str,
+                        default='save.hdf',
+                        help='The binary save output file.')
     parser.add_argument('-c', '--chem',
-                        type = str,
-                        default = 'chem.xml',
-                        help = 'The chemistry input file, in either CHEMKIN,'
-                               ' Cantera CTI or CTML format.')
+                        type=str,
+                        default='chem.xml',
+                        help='The chemistry input file, in either CHEMKIN,'
+                             ' Cantera CTI or CTML format.')
     parser.add_argument('-d', '--thermo',
-                        type = str,
-                        help = 'The thermodyanmic database. Optional if the'
-                               ' thermodyanmic database is specified in the'
-                               ' chemistry input file. Otherwise, required.')
+                        type=str,
+                        help='The thermodyanmic database. Optional if the'
+                             ' thermodyanmic database is specified in the'
+                             ' chemistry input file. Otherwise, required.')
     parser.add_argument('--convert',
-                        action = 'store_true',
-                        help = 'Convert the input mechanism to CTI format '
-                               'and quit. If ``--convert`` is specified, '
-                               'the SENKIN input file is optional.')
+                        action='store_true',
+                        help='Convert the input mechanism to CTI format '
+                             'and quit. If ``--convert`` is specified, '
+                             'the SENKIN input file is optional.')
     parser.add_argument('-m', '--multi',
-                        type = int,
-                        nargs = '?',
-                        const = cpu_count(),
-                        default = False,
-                        help = 'Run multiple cases from the input file. '
-                               'Optional. If ``-m`` is used, must specify '
-                               'number of processors to be used (e.g., '
-                               '``-m 4``). If ``--multi`` is specified, '
-                               'CanSen uses the available number of '
-                               'processors by default.')
+                        type=int,
+                        nargs='?',
+                        const=cpu_count(),
+                        default=False,
+                        help='Run multiple cases from the input file. '
+                             'Optional. If ``-m`` is used, must specify '
+                             'number of processors to be used (e.g., '
+                             '``-m 4``). If ``--multi`` is specified, '
+                             'CanSen uses the available number of '
+                             'processors by default.')
 
     args = parser.parse_args(argv)
 
