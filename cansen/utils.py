@@ -16,10 +16,14 @@ try:
     from cantera import ck2cti
 except ImportError:
     print('Error: Cantera must be installed.')
-    sys.exit(1)
+    raise
 
 # Local imports
 from .printer import divider
+from .exceptions import (MultipleProblemError,
+                         UnsupportedKeyword,
+                         UndefinedKeywordError,
+                         )
 
 # Python 2 compatibility for file output
 if sys.version < '3':
@@ -39,7 +43,7 @@ class MyParser(ArgumentParser):
         sys.exit(2)
 
 
-def convert_mech(mech_filename, thermo_filename):
+def convert_mech(mech_filename, thermo_filename=None):
     """Convert a mechanism and return a string with the filename.
 
     Convert a CHEMKIN format mechanism to the Cantera CTI format using
@@ -52,6 +56,7 @@ def convert_mech(mech_filename, thermo_filename):
         Filename of the thermodynamic database. Optional if the
         thermodynamic database is present in the mechanism input.
     """
+
     arg = ['--input='+mech_filename]
     if thermo_filename is not None:
         arg.append('--thermo='+thermo_filename)
@@ -84,7 +89,7 @@ def process_multi_input(input_filename):
         for line in input_file:
 
             if (line.startswith('!') or line.startswith('.') or
-                line.startswith('/') or line.strip() == ''):
+                    line.startswith('/') or line.strip() == ''):
                 # skip comment or blank lines
                 continue
             elif line.upper().startswith('END'):
@@ -168,25 +173,19 @@ def read_input_file(input_filename):
                 continue
             elif line.upper().startswith('CONV'):
                 if problem_type:
-                    print('Error: More than one problem type keyword '
-                          'was specified.')
-                    sys.exit(1)
+                    raise MultipleProblemError(line, keywords['problemType'])
                 else:
                     keywords['problemType'] = 1
                     problem_type = True
             elif line.upper().startswith('CONP'):
                 if problem_type:
-                    print('Error: More than one problem type keyword '
-                          'was specified.')
-                    sys.exit(1)
+                    raise MultipleProblemError(line, keywords['problemType'])
                 else:
                     keywords['problemType'] = 2
                     problem_type = True
             elif line.upper().startswith('VPRO'):
                 if problem_type and keywords.get('problemType') != 3:
-                    print('Error: More than one problem type keyword '
-                          'was specified.')
-                    sys.exit(1)
+                    raise MultipleProblemError(line, keywords['problemType'])
                 elif problem_type and keywords.get('problemType') == 3:
                     vproTime.append(float(line.split()[1]))
                     vproVol.append(float(line.split()[2]))
@@ -197,41 +196,31 @@ def read_input_file(input_filename):
                     problem_type = True
             elif line.upper().startswith('CONT'):
                 if problem_type:
-                    print('Error: More than one problem type keyword '
-                          'was specified.')
-                    sys.exit(1)
+                    raise MultipleProblemError(line, keywords['problemType'])
                 else:
                     keywords['problemType'] = 4
                     problem_type = True
             elif line.upper().startswith('COTV'):
                 if problem_type:
-                    print('Error: More than one problem type keyword '
-                          'was specified.')
-                    sys.exit(1)
+                    raise MultipleProblemError(line, keywords['problemType'])
                 else:
                     keywords['problemType'] = 5
                     problem_type = True
             elif line.upper().startswith('VTIM'):
                 if problem_type:
-                    print('Error: More than one problem type keyword '
-                          'was specified.')
-                    sys.exit(1)
+                    raise MultipleProblemError(line, keywords['problemType'])
                 else:
                     keywords['problemType'] = 6
                     problem_type = True
             elif line.upper().startswith('TTIM'):
                 if problem_type:
-                    print('Error: More than one problem type keyword '
-                          'was specified.')
-                    sys.exit(1)
+                    raise MultipleProblemError(line, keywords['problemType'])
                 else:
                     keywords['problemType'] = 7
                     problem_type = True
             elif line.upper().startswith('TPRO'):
                 if problem_type and keywords.get('problemType') != 8:
-                    print('Error: More than one problem type keyword '
-                          'was specified.')
-                    sys.exit(1)
+                    raise MultipleProblemError(line, keywords['problemType'])
                 elif problem_type and keywords.get('problemType') == 8:
                     TproTime.append(float(line.split()[1]))
                     TproTemp.append(float(line.split()[2]))
@@ -242,9 +231,7 @@ def read_input_file(input_filename):
                     problem_type = True
             elif line.upper().startswith('ICEN'):
                 if problem_type:
-                    print('Error: more than one problem type keyword '
-                          'was specified.')
-                    sys.exit(1)
+                    raise MultipleProblemError(line, keywords['problemType'])
                 else:
                     keywords['problemType'] = 9
                     problem_type = True
@@ -322,14 +309,12 @@ def read_input_file(input_filename):
             elif line.upper().startswith('CRAD'):
                 keywords['crank_radius'] = float(line.split()[1])/1.0E2
             elif line.upper()[0:3] in unsupported_keys:
-                print('Keyword', line.upper()[0:3], 'is not supported yet',
-                      'and has been ignored')
+                UnsupportedKeyword(line)
                 continue
             elif line.upper().startswith('END'):
                 continue
             else:
-                print('Keyword not found', line)
-                sys.exit(1)
+                UndefinedKeywordError(line)
         print('\n', divider, '\n', sep='')
 
     # The endTime, temperature, pressure, and problemType are required
@@ -522,8 +507,8 @@ def cli_parser(argv):
                              ' Cantera CTI or CTML format.')
     parser.add_argument('-d', '--thermo',
                         type=str,
-                        help='The thermodyanmic database. Optional if the'
-                             ' thermodyanmic database is specified in the'
+                        help='The thermodynamic database. Optional if the'
+                             ' thermodynamic database is specified in the'
                              ' chemistry input file. Otherwise, required.')
     parser.add_argument('--convert',
                         action='store_true',
