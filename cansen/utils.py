@@ -29,6 +29,16 @@ else:
     def b(x):
         return x.encode('utf-8')
 
+
+class MyParser(ArgumentParser):
+    """Parser that redefines the error printing"""
+
+    def error(self, message):
+        sys.stderr.write('\ncansen: error: %s\n\n' % message)
+        self.print_help()
+        sys.exit(2)
+
+
 def convert_mech(mech_filename, thermo_filename):
     """Convert a mechanism and return a string with the filename.
 
@@ -482,8 +492,11 @@ def cli_parser(argv):
         List of command line options.
     """
 
-    parser = ArgumentParser(description='CanSen - the SENKIN-like wrapper '
-                                        'for Cantera written in Python.')
+    parser = MyParser(
+        prog='cansen',
+        description='CanSen - the SENKIN-like wrapper '
+                                        'for Cantera written in Python.'
+    )
 
     parser.add_argument('-V', '--version',
                         action='store_true',
@@ -526,6 +539,10 @@ def cli_parser(argv):
                              '``-m 4``). If ``--multi`` is specified, '
                              'CanSen uses the available number of '
                              'processors by default.')
+
+    if len(argv) == 0:
+        parser.print_help()
+        sys.exit(1)
 
     args = parser.parse_args(argv)
 
