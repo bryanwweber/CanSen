@@ -10,7 +10,8 @@ from setuptools import setup, find_packages
 from codecs import open
 from os import path
 
-exec(open('cansen/_version.py').read())
+with open('cansen/_version.py') as version_file:
+    exec(version_file.read())
 
 here = path.abspath(path.dirname(__file__))
 
