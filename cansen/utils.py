@@ -187,16 +187,16 @@ def read_input_file(input_filename):
                     keywords['problemType'] = 2
                     problem_type = True
             elif line.upper().startswith('VPRO'):
-                if problem_type and keywords.get('problemType') != 3:
-                    raise MultipleProblemError(line, keywords['problemType'])
-                elif problem_type and keywords.get('problemType') == 3:
-                    vproTime.append(float(line.split()[1]))
-                    vproVol.append(float(line.split()[2]))
-                else:
+                if not problem_type:
                     keywords['problemType'] = 3
                     vproTime = [float(line.split()[1])]
                     vproVol = [float(line.split()[2])]
                     problem_type = True
+                elif problem_type and keywords.get('problemType') != 3:
+                    raise MultipleProblemError(line, keywords['problemType'])
+                elif problem_type and keywords.get('problemType') == 3:
+                    vproTime.append(float(line.split()[1]))
+                    vproVol.append(float(line.split()[2]))
             elif line.upper().startswith('CONT'):
                 if problem_type:
                     raise MultipleProblemError(line, keywords['problemType'])
@@ -222,16 +222,16 @@ def read_input_file(input_filename):
                     keywords['problemType'] = 7
                     problem_type = True
             elif line.upper().startswith('TPRO'):
-                if problem_type and keywords.get('problemType') != 8:
-                    raise MultipleProblemError(line, keywords['problemType'])
-                elif problem_type and keywords.get('problemType') == 8:
-                    TproTime.append(float(line.split()[1]))
-                    TproTemp.append(float(line.split()[2]))
-                else:
+                if not problem_type:
                     keywords['problemType'] = 8
                     TproTime = [float(line.split()[1])]
                     TproTemp = [float(line.split()[2])]
                     problem_type = True
+                elif problem_type and keywords.get('problemType') != 8:
+                    raise MultipleProblemError(line, keywords['problemType'])
+                elif problem_type and keywords.get('problemType') == 8:
+                    TproTime.append(float(line.split()[1]))
+                    TproTemp.append(float(line.split()[2]))
             elif line.upper().startswith('ICEN'):
                 if problem_type:
                     raise MultipleProblemError(line, keywords['problemType'])
