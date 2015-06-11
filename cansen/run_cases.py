@@ -33,13 +33,17 @@ except ImportError:
 # Local imports
 from .printer import divider
 from . import utils
-from .profiles import (VolumeProfile, TemperatureProfile, PressureProfile,
-                      ICEngineProfile)
+from .profiles import (VolumeProfile,
+                       TemperatureProfile,
+                       PressureProfile,
+                       ICEngineProfile)
+
 
 class SimulationCase(object):
     """
     Class that sets up and runs a simulation case.
     """
+
     def __init__(self, filenames):
         """Initialize the simulation case.
 
@@ -63,6 +67,7 @@ class SimulationCase(object):
         ``Reactor``, and ``ReactorNet`` according to the values from
         the input file.
         """
+
         self.gas = ct.Solution(self.mech_filename)
 
         initial_temp = self.keywords['temperature']
@@ -198,7 +203,6 @@ class SimulationCase(object):
         else:
             self.netw.rtol = 1.0E-08
 
-
         if 'tempLimit' in self.keywords:
             self.temp_limit = self.keywords['tempLimit']
         else:
@@ -219,9 +223,9 @@ class SimulationCase(object):
         max_time_int = self.keywords.get('maxTimeStep')
 
         time_ints = [value for value in
-                        [print_time_int, save_time_int, max_time_int]
-                        if value is not None
-                    ]
+                     [print_time_int, save_time_int, max_time_int]
+                     if value is not None
+                     ]
 
         if time_ints:
             self.netw.set_max_time_step(min(time_ints))
@@ -243,7 +247,7 @@ class SimulationCase(object):
         # Store the species names in a slightly shorter variable name
         self.species_names = self.reac.thermo.species_names
 
-        #Initialize the ignition time, in case the end time is reached
+        # Initialize the ignition time, in case the end time is reached
         # before ignition occurs
         self.ignition_time = None
 
@@ -260,11 +264,11 @@ class SimulationCase(object):
         # steps into numpy arrays. The arrays are not vertically
         # appended so we should eliminate the hassle associated with
         # that.
-        table_def = {'time':tables.Float64Col(pos=0),
-                     'temperature':tables.Float64Col(pos=1),
-                     'pressure':tables.Float64Col(pos=2),
-                     'volume':tables.Float64Col(pos=3),
-                     'massfractions':tables.Float64Col(
+        table_def = {'time': tables.Float64Col(pos=0),
+                     'temperature': tables.Float64Col(pos=1),
+                     'pressure': tables.Float64Col(pos=2),
+                     'volume': tables.Float64Col(pos=3),
+                     'massfractions': tables.Float64Col(
                           shape=(self.reac.thermo.n_species), pos=4
                           ),
                      }
@@ -274,7 +278,7 @@ class SimulationCase(object):
                 )
 
         with tables.open_file(self.save_filename, mode='w',
-                title='CanSen Save File') as save_file:
+                              title='CanSen Save File') as save_file:
             table = save_file.create_table(save_file.root, 'reactor',
                                            table_def, 'Reactor State'
                                            )
@@ -286,8 +290,10 @@ class SimulationCase(object):
                 timestep['massfractions']) = self.reac.thermo.TPY
             timestep['volume'] = self.reac.volume
             if self.sensitivity:
-                timestep['sensitivity'] = np.zeros((self.n_vars,
-                                              self.netw.n_sensitivity_params))
+                timestep['sensitivity'] = np.zeros((
+                    self.n_vars,
+                    self.netw.n_sensitivity_params
+                    ))
             # Add the ``timestep`` to the ``table`` and write it to
             # disk.
             timestep.append()
@@ -305,7 +311,7 @@ class SimulationCase(object):
             print(('Total Gas Phase Species     = {0}\n'
                    'Total Gas Phase Reactions   = {1}'
                    ).format(self.reac.kinetics.n_species,
-                   self.reac.kinetics.n_reactions))
+                            self.reac.kinetics.n_reactions))
             if self.sensitivity:
                 print(('Total Sensitivity Reactions = {}'
                        ).format(self.netw.n_sensitivity_params))
@@ -416,7 +422,7 @@ class SimulationCase(object):
                 # If the temperature limit has been exceeded, we have
                 # ignition! Save the time this occurs at. In the
                 # future, the ignition time may be interpolated.
-                if self.reac.T >= self.temp_limit and ignition_found == False:
+                if self.reac.T >= self.temp_limit and ignition_found is False:
                     self.ignition_time = self.netw.time
                     ignition_found = True
                     if self.keywords.get('break_on_ignition', False):
@@ -435,7 +441,6 @@ class SimulationCase(object):
         """
         self.setup_case()
         self.run_case()
-
 
     def reactor_state_printer(self, state, end=False):
         """Produce pretty-printed output from the input reactor state.
@@ -471,10 +476,10 @@ class SimulationCase(object):
             pass
 
         print(("Reactor Temperature (K) = {0:>13.4f}\n"
-            "Reactor Pressure (Pa)   = {1:>13.4E}\n"
-            "Reactor Volume (m**3)   = {2:>13.4E}\n"
-            "Reactor Vdot (m**3/s)   = {3:>13.4E}"
-            ).format(temperature, pressure, volume, vdot))
+               "Reactor Pressure (Pa)   = {1:>13.4E}\n"
+               "Reactor Volume (m**3)   = {2:>13.4E}\n"
+               "Reactor Vdot (m**3/s)   = {3:>13.4E}"
+               ).format(temperature, pressure, volume, vdot))
         print('Gas Phase Mole Fractions:')
 
         # Here we calculate the number of columns of species mole fractions
@@ -503,11 +508,12 @@ class SimulationCase(object):
         # Create a list to store the values to be printed.
         outlist = []
         for species_name, mole_frac in zip(self.species_names, molefracs):
-            outlist.append('{0:>{1}s} = {2:{3}E}'.format(species_name,
-                                                        max_species_length,
-                                                        mole_frac,
-                                                        mole_frac_precision)
-                                                        )
+            outlist.append('{0:>{1}s} = {2:{3}E}'.format(
+                species_name,
+                max_species_length,
+                mole_frac,
+                mole_frac_precision)
+                )
         if sys.version_info.major == 3:
             grouped = zip_longest(*[iter(outlist)]*num_print_cols,
                                   fillvalue='')
@@ -519,6 +525,7 @@ class SimulationCase(object):
                 print(item, end='')
             print('\n', end='')
         print(divider, '\n')
+
 
 class MultiSimulationCase(SimulationCase):
     """Class that sets up and runs a simulation case, for multiple.
@@ -545,7 +552,6 @@ class MultiSimulationCase(SimulationCase):
 
         self.keywords = utils.read_input_file(self.input_filename)
 
-
     def run_case(self):
         """
         Actually run the case set up by ``setup_case``. Runs the
@@ -568,8 +574,7 @@ class MultiSimulationCase(SimulationCase):
             # If the temperature limit has been exceeded, we have
             # ignition! Save the time this occurs at. In the
             # future, the ignition time may be interpolated.
-            if self.reac.T >= self.temp_limit and ignition_found == False:
+            if self.reac.T >= self.temp_limit and ignition_found is False:
                 self.ignition_time = self.netw.time
                 ignition_found = True
                 break
-
