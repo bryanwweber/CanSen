@@ -12,39 +12,20 @@ The following are instructions for usage of CanSen.
 Windows
 =======
 
-CanSen can be run from the command line (``cmd.exe``) or from within
-`IPython`_. From the command line, change into the directory with the
-CanSen script, and run::
+CanSen can be run from the command line (``cmd.exe``).
+From the command line, change into the directory with your
+input files, and run::
 
-    py cansen.py [options]
-
-In IPython, type::
-
-    In [1]: %run cansen.py [options]
-
-.. _IPython: http://ipython.org/
+    cansen [options]
 
 Ubuntu
 ======
 
-CanSen can be run either as an executable, or as a script with Python (2 or 3)
-or `IPython`_. To run as an executable, change to the directory where
-CanSen is located, add the execute bit to cansen.py, and run::
+CanSen can be run as an executable.
+To run as an executable, change to the directory where
+your input file is located::
 
-    chmod +x cansen.py
-    ./cansen.py [options]
-
-To run as a script, change to the directory where CanSen is located and::
-
-    python3 cansen.py [options]
-
-    or
-
-    python cansen.py [options]
-
-Or, in IPython::
-
-    In [1]: %run cansen.py [options]
+    cansen [options]
 
 Options
 =======

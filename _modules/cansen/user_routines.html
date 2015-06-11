@@ -6,26 +6,26 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>user_routines &mdash; CanSen 1.2.0 documentation</title>
+    <title>cansen.user_routines &mdash; CanSen 1.2.0 documentation</title>
     
-    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
+        URL_ROOT:    '../../',
         VERSION:     '1.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
       };
     </script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
-    <link rel="top" title="CanSen 1.2.0 documentation" href="../index.html" />
-    <link rel="up" title="Module code" href="index.html" />
+    <link rel="top" title="CanSen 1.2.0 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" />
    
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
@@ -36,13 +36,13 @@
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
+          <a href="../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="../py-modindex.html" title="Python Module Index"
+          <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">CanSen</a> &raquo;</li>
-          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Module code</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../../index.html">CanSen</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -51,8 +51,8 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <h1>Source code for user_routines</h1><div class="highlight"><pre>
-<div class="viewcode-block" id="VolumeFunctionTime"><a class="viewcode-back" href="../codedocs.html#user_routines.VolumeFunctionTime">[docs]</a><span class="k">class</span> <span class="nc">VolumeFunctionTime</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+  <h1>Source code for cansen.user_routines</h1><div class="highlight"><pre>
+<div class="viewcode-block" id="VolumeFunctionTime"><a class="viewcode-back" href="../../codedocs.html#cansen.user_routines.VolumeFunctionTime">[docs]</a><span class="k">class</span> <span class="nc">VolumeFunctionTime</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculate the volume of the reactor as a user specified function</span>
 <span class="sd">    of time.</span>
@@ -80,7 +80,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span>
 
-<div class="viewcode-block" id="VolumeFunctionTime.__call__"><a class="viewcode-back" href="../codedocs.html#user_routines.VolumeFunctionTime.__call__">[docs]</a>    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time</span><span class="p">):</span>
+<div class="viewcode-block" id="VolumeFunctionTime.__call__"><a class="viewcode-back" href="../../codedocs.html#cansen.user_routines.VolumeFunctionTime.__call__">[docs]</a>    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return the velocity of the piston at the given time.</span>
 
 <span class="sd">        The call function should be where the implementation of the</span>
@@ -101,7 +101,7 @@
         <span class="k">return</span> <span class="mi">0</span>
 
 </div></div>
-<div class="viewcode-block" id="TemperatureFunctionTime"><a class="viewcode-back" href="../codedocs.html#user_routines.TemperatureFunctionTime">[docs]</a><span class="k">class</span> <span class="nc">TemperatureFunctionTime</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="TemperatureFunctionTime"><a class="viewcode-back" href="../../codedocs.html#cansen.user_routines.TemperatureFunctionTime">[docs]</a><span class="k">class</span> <span class="nc">TemperatureFunctionTime</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculate the temperature of the reactor as a user specified</span>
 <span class="sd">    function of time.</span>
@@ -128,7 +128,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span>
 
-<div class="viewcode-block" id="TemperatureFunctionTime.__call__"><a class="viewcode-back" href="../codedocs.html#user_routines.TemperatureFunctionTime.__call__">[docs]</a>    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time</span><span class="p">):</span>
+<div class="viewcode-block" id="TemperatureFunctionTime.__call__"><a class="viewcode-back" href="../../codedocs.html#cansen.user_routines.TemperatureFunctionTime.__call__">[docs]</a>    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return the temperature of the piston at the given time.</span>
 
 <span class="sd">        The call function should be where the implementation of the</span>
@@ -153,7 +153,7 @@
         <div class="sphinxsidebarwrapper">
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
-    <form class="search" action="../search.html" method="get">
+    <form class="search" action="../../search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />

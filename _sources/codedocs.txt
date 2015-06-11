@@ -7,31 +7,36 @@ Code Documentation
 cansen module
 =============
 
-.. automodule:: cansen
+.. automodule:: cansen.cansen
+
+exceptions module
+=================
+
+.. automodule:: cansen.exceptions
 
 printer module
 ==============
 
-.. automodule:: printer
-    
+.. automodule:: cansen.printer
+
 profiles module
 ===============
 
-.. automodule:: profiles
+.. automodule:: cansen.profiles
     :special-members: __call__
 
 run_cases module
 ================
 
-.. automodule:: run_cases
-    
+.. automodule:: cansen.run_cases
+
 user_routines module
 ====================
 
-.. automodule:: user_routines
+.. automodule:: cansen.user_routines
     :special-members: __call__
-    
+
 utils module
 ============
 
-.. automodule:: utils
+.. automodule:: cansen.utils

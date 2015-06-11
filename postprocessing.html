@@ -6,15 +6,15 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Postprocessing &mdash; CanSen 1.1.0 documentation</title>
+    <title>Postprocessing &mdash; CanSen 1.2.0 documentation</title>
     
-    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.1.0',
+        VERSION:     '1.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,12 +24,16 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
-    <link rel="top" title="CanSen 1.1.0 documentation" href="index.html" />
+    <link rel="top" title="CanSen 1.2.0 documentation" href="index.html" />
     <link rel="next" title="Code Documentation" href="codedocs.html" />
-    <link rel="prev" title="Internal Combustion Engine Model" href="icengine.html" /> 
+    <link rel="prev" title="Internal Combustion Engine Model" href="icengine.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
   </head>
-  <body>
-    <div class="related">
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -44,14 +48,14 @@
         <li class="right" >
           <a href="icengine.html" title="Internal Combustion Engine Model"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">CanSen</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">CanSen</a> &raquo;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="postprocessing">
 <span id="sec-postprocessing"></span><h1>Postprocessing<a class="headerlink" href="#postprocessing" title="Permalink to this headline">¶</a></h1>
@@ -65,8 +69,8 @@ this tutorial will remain the same for all of the interfaces.</p>
 <p>There are several Python interfaces for HDF5, but the one we will be
 using is called PyTables. The documentation for PyTables can be found
 on <a class="reference external" href="http://pytables.github.io/usersguide/index.html">their GitHub</a> page.</p>
-<p>Note that on the following lines, the <tt class="docutils literal"><span class="pre">&gt;&gt;&gt;</span></tt> indicates that you should
-type the text at a Python prompt, not including the <tt class="docutils literal"><span class="pre">&gt;&gt;&gt;</span></tt>. First, we
+<p>Note that on the following lines, the <code class="docutils literal"><span class="pre">&gt;&gt;&gt;</span></code> indicates that you should
+type the text at a Python prompt, not including the <code class="docutils literal"><span class="pre">&gt;&gt;&gt;</span></code>. First, we
 will import the necessary libraries:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">tables</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">cantera</span> <span class="kn">as</span> <span class="nn">ct</span>
@@ -96,19 +100,19 @@ directory, then the Group, then the Table, like so:</p>
 </div>
 <p>To access the information in the Table, it should be stored in a
 variable for quick access. The name of the Group in the save
-files from CanSen is <tt class="docutils literal"><span class="pre">reactor</span></tt>.</p>
+files from CanSen is <code class="docutils literal"><span class="pre">reactor</span></code>.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">table</span> <span class="o">=</span> <span class="n">save_file</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">reactor</span>
 </pre></div>
 </div>
 <p>The Table can now be used like any other class instance. In
 particular, the Table class defines a number of useful functions
-and attributes, such as <tt class="docutils literal"><span class="pre">nrows</span></tt>, which prints the number of
+and attributes, such as <code class="docutils literal"><span class="pre">nrows</span></code>, which prints the number of
 rows in the Table.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">table</span><span class="o">.</span><span class="n">nrows</span>
 </pre></div>
 </div>
 <p>PyTables provides a method to iterate over the rows in a table
-automatically, called <tt class="docutils literal"><span class="pre">iterrows</span></tt>. Here we introduce one way to
+automatically, called <code class="docutils literal"><span class="pre">iterrows</span></code>. Here we introduce one way to
 access information in a particular Column in the Table, by using
 natural name indexing. In this case, we print the value of the
 time at each time step.</p>
@@ -125,18 +129,18 @@ equivalent to the above:</p>
 <p>The information stored by CanSen is written into case-sensitive
 columns named:</p>
 <ol class="arabic simple" start="0">
-<li><tt class="docutils literal"><span class="pre">time</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">temperature</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">pressure</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">volume</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">massfractions</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">sensitivity</span></tt></li>
+<li><code class="docutils literal"><span class="pre">time</span></code></li>
+<li><code class="docutils literal"><span class="pre">temperature</span></code></li>
+<li><code class="docutils literal"><span class="pre">pressure</span></code></li>
+<li><code class="docutils literal"><span class="pre">volume</span></code></li>
+<li><code class="docutils literal"><span class="pre">massfractions</span></code></li>
+<li><code class="docutils literal"><span class="pre">sensitivity</span></code></li>
 </ol>
 <p>Columns 0-3 have a single value in each row. Column 4
-(<tt class="docutils literal"><span class="pre">massfractions</span></tt>) contains a vector with length of the number of
+(<code class="docutils literal"><span class="pre">massfractions</span></code>) contains a vector with length of the number of
 species in the mechanism. Column 5 is optional and included only
 if the user requested sensitivity analysis during the simulation.
-The dimensions of Column 5 are <tt class="docutils literal"><span class="pre">(n_vars,</span> <span class="pre">n_sensitivity_params)</span></tt>.</p>
+The dimensions of Column 5 are <code class="docutils literal"><span class="pre">(n_vars,</span> <span class="pre">n_sensitivity_params)</span></code>.</p>
 <p>In addition to the method of iterating through Rows, entire
 Columns can be accessed and stored in variables. First, all of
 the Columns can be stored in a variable.</p>
@@ -144,7 +148,7 @@ the Columns can be stored in a variable.</p>
 </pre></div>
 </div>
 <p>In this method, different Columns are accessed by their numerical
-index. The first index to <tt class="docutils literal"><span class="pre">all_cols</span></tt> gives the row and the
+index. The first index to <code class="docutils literal"><span class="pre">all_cols</span></code> gives the row and the
 second index gives the column number. Remembering that Python is
 zero-based, to access the mass fractions on the 4th time step, do</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">mass_fracs_4</span> <span class="o">=</span> <span class="n">all_cols</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">4</span><span class="p">]</span>
@@ -155,7 +159,7 @@ done by the natural naming scheme.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">all_mass_fracs</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">cols</span><span class="o">.</span><span class="n">massfractions</span>
 </pre></div>
 </div>
-<p>This stores an instance of the Column class in <tt class="docutils literal"><span class="pre">all_mass_fracs</span></tt>.
+<p>This stores an instance of the Column class in <code class="docutils literal"><span class="pre">all_mass_fracs</span></code>.
 It may be more useful to store the data in a particular column in
 a variable. To do that, get a slice of the column by using the
 index and the colon operator. For instance, to store all of the
@@ -195,7 +199,7 @@ about Cantera can be found at
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
   <p class="topless"><a href="icengine.html"
@@ -203,12 +207,14 @@ about Cantera can be found at
   <h4>Next topic</h4>
   <p class="topless"><a href="codedocs.html"
                         title="next chapter">Code Documentation</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="_sources/postprocessing.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/postprocessing.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
@@ -225,27 +231,20 @@ about Cantera can be found at
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="codedocs.html" title="Code Documentation"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="icengine.html" title="Internal Combustion Engine Model"
-             >previous</a> |</li>
-        <li><a href="index.html">CanSen</a> &raquo;</li> 
-      </ul>
-    </div>
     <div class="footer">
-        &copy; Copyright 2014, Bryan W. Weber.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      &copy;2015, Bryan W. Weber.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.4</a>
+      
+      |
+      <a href="_sources/postprocessing.txt"
+          rel="nofollow">Page source</a></li>
     </div>
+
+    
+
+    
   </body>
 </html>
