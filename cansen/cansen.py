@@ -6,7 +6,7 @@ from __future__ import division
 
 # Standard libraries
 import sys
-from multiprocessing import Process, Pool
+from multiprocessing import Pool
 
 # Local imports
 from . import utils
