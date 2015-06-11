@@ -1,12 +1,11 @@
 # Standard libraries
-import sys
 
 # Related modules
 try:
     import numpy as np
 except ImportError:
     print('NumPy must be installed')
-    sys.exit(1)
+    raise
 
 
 class VolumeProfile(object):

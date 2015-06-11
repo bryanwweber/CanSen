@@ -38,3 +38,18 @@ class UndefinedKeywordError(KeywordError):
 
     def __str__(self):
         return repr('Error: Keyword not defined.\n{}'.format(self.keywords))
+
+
+class MissingReqdKeywordError(KeywordError):
+    """Raised for missing required keywords."""
+
+    def __str__(self):
+        return repr('Error: Required keyword {} is missing.'.format(
+            self.keywords))
+
+
+class MissingKeyword(Warning):
+    """Raised when an optional keyword is missing."""
+
+    def __str__(self):
+        return repr('Warning: {}'.format(self.args[0]))

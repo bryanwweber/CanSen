@@ -20,9 +20,12 @@ except ImportError:
 
 # Local imports
 from .printer import divider
-from .exceptions import (MultipleProblemError,
+from .exceptions import (KeywordError,
+                         MultipleProblemError,
                          UnsupportedKeyword,
                          UndefinedKeywordError,
+                         MissingReqdKeywordError,
+                         MissingKeyword,
                          )
 
 # Python 2 compatibility for file output
@@ -309,32 +312,31 @@ def read_input_file(input_filename):
             elif line.upper().startswith('CRAD'):
                 keywords['crank_radius'] = float(line.split()[1])/1.0E2
             elif line.upper()[0:3] in unsupported_keys:
-                UnsupportedKeyword(line)
+                raise UnsupportedKeyword(line)
                 continue
             elif line.upper().startswith('END'):
                 continue
             else:
-                UndefinedKeywordError(line)
+                raise UndefinedKeywordError(line)
         print('\n', divider, '\n', sep='')
 
     # The endTime, temperature, pressure, and problemType are required
     # input. Exit if any of them are not found.
     if 'endTime' not in keywords:
-        print('Error: End time must be specified with keyword TIME')
-        sys.exit(1)
+        raise MissingReqdKeywordError('TIME')
 
     if 'temperature' not in keywords:
-        print('Error: Temperature must be specified with keyword TEMP')
-        sys.exit(1)
+        raise MissingReqdKeywordError('TEMP')
 
     if 'pressure' not in keywords:
-        print('Error: Pressure must be specified with keyword PRES')
-        sys.exit(1)
+        raise MissingReqdKeywordError('PRES')
 
     if 'problemType' not in keywords:
-        print('Error: Problem type must be specified with the problem type '
-              'keywords')
-        sys.exit(1)
+        raise MissingReqdKeywordError(
+            'CONP', 'CONV', 'VPRO',
+            'CONT', 'ICEN', 'TPRO',
+            'COTV', 'TTIM', 'VTIM',
+        )
     elif keywords.get('problemType') == 3:
         keywords['vproTime'] = vproTime
         keywords['vproVol'] = vproVol
@@ -348,8 +350,7 @@ def read_input_file(input_filename):
         # volume
 
         if 'rev_per_min' not in keywords:
-            print("Error: 'RPM' must be specified.")
-            sys.exit(1)
+            raise MissingReqdKeywordError('RPM')
 
         # Handle the various ways to calculate the stroke length
         if 'stroke_length' in keywords:
@@ -373,10 +374,10 @@ def read_input_file(input_filename):
             print("Info: Using crank radius to compute the stroke length.")
             keywords['stroke_length'] = 2*keywords['crank_radius']
         else:
-            print("Error: I could not compute the stroke length. Please "
-                  "specify one of the following combinations:\n"
-                  "1) STROKE\n2) VOLD + BORE\n3) CMPR + VOLC + BORE\n4) CRAD")
-            sys.exit(1)
+            raise MissingReqdKeywordError(
+                'STROKE', 'VOLD', 'BORE',
+                'CMPR', 'VOLC', 'CRAD',
+            )
 
         # Handle the various ways to calculate the initial volume
         if 'reactorVolume' in keywords:
@@ -385,9 +386,8 @@ def read_input_file(input_filename):
                   "settings.")
         elif all(key in keywords for key in ('swept_volume', 'clear_volume',
                                              'comp_ratio')):
-            print("Error: Only two of 'VOLD', 'VOLC', and 'CMPR' may be "
-                  "specified.")
-            sys.exit(1)
+            raise KeywordError("Only two of 'VOLD', 'VOLC', and 'CMPR' may be "
+                               "specified.")
         elif all(key in keywords for key in ('swept_volume', 'clear_volume')):
             print("Info: Computing initial reactor volume from the swept "
                   "volume and the clearance volume.")
@@ -410,15 +410,12 @@ def read_input_file(input_filename):
                                          keywords['stroke_length'] +
                                          keywords['clear_volume'])
         else:
-            print("Error: I cannot compute the initial volume of the reactor. "
-                  "Please specify one of the following combinations:\n"
-                  "1) VOLD + VOLC\n2) CMPR + VOLC\n3) CMPR + VOLD\n"
-                  "4) BORE + VOLC\n5) VOL")
-            sys.exit(1)
+            raise MissingReqdKeywordError('VOLD', 'VOLC', 'CMPR', 'BORE',
+                                          'VOL')
 
         # Handle the ways to calculate the rod length to radius ratio
         if 'rod_radius_ratio' in keywords:
-            print("Info: The connnecting rod length to crank radius ratio was "
+            print("Info: The connecting rod length to crank radius ratio was "
                   "specified by the 'LOLR' keyword and this value will be "
                   "used regardless of other settings.")
         elif all(key in keywords for key in ('connect_rod_len',
@@ -428,16 +425,13 @@ def read_input_file(input_filename):
             keywords['rod_radius_ratio'] = (keywords['connect_rod_len'] /
                                             keywords['crank_radius'])
         else:
-            print("Error: Unable to calculate the connecting rod length to "
-                  "crank radius ratio. Please specify one of the following "
-                  "options:\n"
-                  "1) LOLR\n2) CRAD + RODL")
-            sys.exit(1)
+            raise MissingReqdKeywordError('LOLR', 'CRAD', 'RODL')
 
     # Set the default reactor volume, if it is not specified
     if 'reactorVolume' not in keywords:
         keywords['reactorVolume'] = 1.0E-6
-        print('Warning: No reactor volume specified, assuming 1.0 cm**3.')
+        raise MissingKeyword('No reactor volume specified, assuming '
+                             '1.0 cm**3.')
 
     # The reactants can be specified by REAC or EQUI + FUEL + OXID +
     # CPROD. One or the other of these must be present; if neither or
@@ -445,13 +439,11 @@ def read_input_file(input_filename):
     if (reactants and
             (oxidizer or fuel or complete_products or additional_species or
              ('eqRatio' in keywords))):
-        print('Error: REAC and EQUI cannot both be specified.')
-        sys.exit(1)
+        raise KeywordError('REAC and EQUI cannot both be specified.')
     elif ('eqRatio' in keywords and not
             (oxidizer and fuel and complete_products)):
-        print('Error: If EQUI is specified, all of FUEL, OXID and CPROD must '
-              'be as well.')
-        sys.exit(1)
+        raise KeywordError('If EQUI is specified, all of FUEL, OXID and '
+                           'CPROD must be as well.')
     elif reactants:
         keywords['reactants'] = reactants
     elif 'eqRatio' in keywords:
@@ -460,9 +452,7 @@ def read_input_file(input_filename):
         keywords['completeProducts'] = complete_products
         keywords['additionalSpecies'] = additional_species
     else:
-        print('Error: You must specify the reactants with either REAC or EQUI '
-              '+ FUEL + OXID + CPROD')
-        sys.exit(1)
+        raise MissingReqdKeywordError('REAC', 'EQUI')
 
     # Set the default temperature threshold to determine ignition
     # delay.

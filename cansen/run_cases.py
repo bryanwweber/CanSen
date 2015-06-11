@@ -17,19 +17,18 @@ try:
     import cantera as ct
 except ImportError:
     print("Cantera must be installed")
-    sys.exit(1)
-
+    raise
 try:
     import numpy as np
 except ImportError:
     print('NumPy must be installed')
-    sys.exit(1)
+    raise
 
 try:
     import tables
 except ImportError:
     print('PyTables must be installed')
-    sys.exit(1)
+    raise
 
 # Local imports
 from .printer import divider
