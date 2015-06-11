@@ -12,9 +12,9 @@ keywords['ATLS'] = ("Absolute tolerance of the accuracy of the sensitivity "
                     "coefficients. Optional keyword, default: 1E-06\n\n"
                     "Example::\n\n    ATLS 1E-06")
 keywords['ATOL'] = ("Absolute tolerance of the accuracy of the solution. "
-                    "Should be set smaller than the smallest meaningful species "
-                    "mass fraction. Optional keyword, default: 1E-20\n\n"
-                    "Example::\n\n    ATOL 1E-20")
+                    "Should be set smaller than the smallest meaningful "
+                    "species mass fraction. Optional keyword, default: "
+                    "1E-20\n\nExample::\n\n    ATOL 1E-20")
 keywords['CONP'] = ("Solve a constant pressure reactor with the energy "
                     "equation on. One of |CONP|_, |CONT|_, |CONV|_, |COTV|_, "
                     "|ICEN|_, |TPRO|_, |TTIM|_, |VPRO|_, or |VTIM|_ must be "
@@ -48,8 +48,8 @@ keywords['DTIGN'] = ("Temperature threshold used to determine the ignition "
                      "|TEMP|_ plus this value. Will be ignored for cases with "
                      "the energy equation turned off. If both |DTIGN|_ and "
                      "|TLIM|_ are specified, |TLIM|_ will override |DTIGN|_. "
-                     "See |TLIM|_. Optional keyword, default: 400. Units: K.\n\n"
-                     "Example::\n\n    DTIGN 400")
+                     "See |TLIM|_. Optional keyword, default: 400. Units: K."
+                     "\n\nExample::\n\n    DTIGN 400")
 keywords['DTSV'] = ("Time interval for saving to the binary save file. Values "
                     "are stored at the nearest time step to the save time "
                     "interval. Optional keyword, by default, all time points "
@@ -156,19 +156,21 @@ keywords['TTIM'] = ("Warning: |TTIM|_ is broken in CanSen v1.1 due to "
                     "incompatibilites with Cantera 2.1. "
                     "Specify the reactor temperature as a user-provided "
                     "function of time. To use this keyword, the user must "
-                    "edit the :class:`~user_routines.TemperatureFunctionTime` class in the "
-                    ":mod:`user_routines` file. Any parameters to be read "
-                    "from external files should be loaded in the "
-                    ":meth:`~user_routines.TemperatureFunctionTime.__init__` method so that "
-                    "they are not read on every time step. The parameters "
-                    "should be stored in the ``self`` instance of the class "
-                    "so that they can be accessed in the "
-                    ":meth:`~user_routines.TemperatureFunctionTime.__call__` method. The "
-                    ":meth:`~user_routines.TemperatureFunctionTime.__call__` method should "
-                    "contain the actual calculation and return of the "
-                    "temperature given the input ``time``.One of |CONP|_, "
-                    "|CONT|_, |CONV|_, |COTV|_, |ICEN|_, |TPRO|_, |TTIM|_, "
-                    "|VPRO|_, or |VTIM|_ must be specified. Units: K.")
+                    "edit the :class:`~user_routines.TemperatureFunctionTime` "
+                    "class in the :mod:`user_routines` file. Any parameters "
+                    "to be read from external files should be loaded in the "
+                    ":meth:`~user_routines.TemperatureFunctionTime.__init__` "
+                    "method so that they are not read on every time step. The "
+                    "parameters should be stored in the ``self`` instance of "
+                    "the class so that they can be accessed in the "
+                    ":meth:`~user_routines.TemperatureFunctionTime.__call__` "
+                    "method. The "
+                    ":meth:`~user_routines.TemperatureFunctionTime.__call__` "
+                    "method should contain the actual calculation and return "
+                    "of the temperature given the input ``time``. One of "
+                    "|CONP|_, |CONT|_, |CONV|_, |COTV|_, |ICEN|_, |TPRO|_, "
+                    "|TTIM|_, |VPRO|_, or |VTIM|_ must be specified. Units: K."
+                    )
 keywords['VOL'] = ("Initial volume of the reactor. Optional keyword, default: "
                    "1E6 cm**3. Units: cm**3.\n\n"
                    "Example::\n\n    VOL 1.0")
@@ -184,32 +186,33 @@ keywords['VPRO'] = ("Specify the reactor volume as a function of time. "
                     "Example::\n\n    VPRO 0.0 1E-5\n    VPRO 0.1 1E-6")
 keywords['VTIM'] = ("Specify the reactor volume as a user-provided "
                     "function of time. To use this keyword, the user must "
-                    "edit the :class:`~user_routines.VolumeFunctionTime` class in the "
-                    ":mod:`user_routines` file. Any parameters to be read "
-                    "from external files should be loaded in the "
-                    ":meth:`~user_routines.VolumeFunctionTime.__init__` method so that "
-                    "they are not read on every time step. The parameters "
-                    "should be stored in the ``self`` instance of the class "
-                    "so that they can be accessed in the "
-                    ":meth:`~user_routines.VolumeFunctionTime.__call__` method. The "
-                    ":meth:`~user_routines.VolumeFunctionTime.__call__` method should "
-                    "contain the actual calculation and must return the "
-                    "velocity of the wall given the input ``time``. One of "
-                    "|CONP|_, |CONT|_, |CONV|_, |COTV|_, |ICEN|_, |TPRO|_, "
-                    "|TTIM|_, |VPRO|_, or |VTIM|_ must be specified. Units: "
-                    "m/s.")
-keywords['ICEN'] = ("Specify the internal combustion engine model be used. See "
-                    ":doc:`the documentation for the model </icengine>` for "
-                    "information on the derivation. See also |BORE|_, |CMPR|_, "
-                    "|CRAD|_, |DEG0|_, |LOLR|_, |RODL|_, |RPM|_, |STROKE|_, "
-                    "|VOLD|_, and |VOLC|_. One of |CONP|_, |CONT|_, |CONV|_, "
-                    "|COTV|_, |ICEN|_, |TPRO|_, |TTIM|_, |VPRO|_, or |VTIM|_ "
-                    "must be specified.")
-keywords['CMPR'] = ("Specify the compression ratio for the internal combustion "
-                    "engine model. Defined as the maximum total volume in the "
-                    "cylinder divided by the clearance volume. See the "
-                    ":ref:`documentation <compression-ratio>`. See also: "
-                    "|VOLC|_, |VOLD|_.\n\nExample::\n\n    CMPR 10.0")
+                    "edit the :class:`~user_routines.VolumeFunctionTime` "
+                    "class in the :mod:`user_routines` file. Any parameters "
+                    "to be read from external files should be loaded in the "
+                    ":meth:`~user_routines.VolumeFunctionTime.__init__` "
+                    "method so that they are not read on every time step. The "
+                    "parameters should be stored in the ``self`` instance of "
+                    "the class so that they can be accessed in the "
+                    ":meth:`~user_routines.VolumeFunctionTime.__call__` "
+                    "method. The "
+                    ":meth:`~user_routines.VolumeFunctionTime.__call__` "
+                    "method should contain the actual calculation and must "
+                    "return the velocity of the wall given the input "
+                    "``time``. One of |CONP|_, |CONT|_, |CONV|_, |COTV|_, "
+                    "|ICEN|_, |TPRO|_, |TTIM|_, |VPRO|_, or |VTIM|_ must be "
+                    "specified. Units: m/s.")
+keywords['ICEN'] = ("Specify the internal combustion engine model be used. "
+                    "See :doc:`the documentation for the model </icengine>` "
+                    "for information on the derivation. See also |BORE|_, "
+                    "|CMPR|_, |CRAD|_, |DEG0|_, |LOLR|_, |RODL|_, |RPM|_, "
+                    "|STROKE|_, |VOLD|_, and |VOLC|_. One of |CONP|_, "
+                    "|CONT|_, |CONV|_, |COTV|_, |ICEN|_, |TPRO|_, |TTIM|_, "
+                    "|VPRO|_, or |VTIM|_ must be specified.")
+keywords['CMPR'] = ("Specify the compression ratio for the internal "
+                    "combustion engine model. Defined as the maximum total "
+                    "volume in the cylinder divided by the clearance volume. "
+                    "See the :ref:`documentation <compression-ratio>`. See "
+                    "also: |VOLC|_, |VOLD|_.\n\nExample::\n\n    CMPR 10.0")
 keywords['DEG0'] = ("Specify the initial crank angle of the simulation. "
                     "Units: degrees. Default: 180 deg.\n\nExample::\n\n    "
                     "DEG0 180")
@@ -234,41 +237,53 @@ keywords['RODL'] = ("CanSen specific keyword. Specify the connecting rod "
                     "    RODL 5.0")
 keywords['CRAD'] = ("CanSen specific keyword. Specify the crank radius. "
                     "Units: cm.\n\nExample::\n\n    CRAD 3.5")
-                    
+
 sorted_keys = sorted(keywords.keys())
-print(sorted_keys)
+# print(sorted_keys)
 out_list = []
 for key in sorted_keys:
     out_list.append('|' + key + '|_ ')
-    
-grouped = zip_longest(*[iter(out_list)]*10, fillvalue = '')
-    
+
+grouped = zip_longest(*[iter(out_list)]*10, fillvalue='')
+
 preamble = """.. _sec-keywords:
 
 =========================
 Supported Input Keywords
 =========================
 
-The following is a list of the currently supported keywords in the 
-input file. Keywords that include "CanSen specific keyword" 
-should be placed after the 'END' keyword to maintain SENKIN compatibility, 
+The following is a list of the currently supported keywords in the
+input file. Keywords that include "CanSen specific keyword"
+should be placed after the 'END' keyword to maintain SENKIN compatibility,
 although CanSen has no preference for the order.
 """
 
-with open('keywords.rst','wb') as out_file:
+with open('keywords.rst', 'wb') as out_file:
     out_file.write(preamble.encode('utf-8'))
     out_file.write('\n\n'.encode('utf-8'))
     for items in grouped:
         out_file.write('| '.encode('utf-8'))
-        for item in items:
-            out_file.write(item.encode('utf-8'))
+        if items[-1]:
+            for item in items[:-1]:
+                out_file.write(item.encode('utf-8'))
+            out_file.write(items[-1].rstrip().encode('utf-8'))
+        else:
+            for i, item in enumerate(items):
+                if items[i]:
+                    out_file.write(item.rstrip().encode('utf-8'))
+                else:
+                    out_file.write(item.encode('utf-8'))
         out_file.write('\n'.encode('utf-8'))
     out_file.write('\n====\n\n'.encode('utf-8'))
     for key in sorted_keys[:-1]:
-        out_file.write(bytes('.. |' + key + '| replace:: ``' + key + '``\n','utf-8'))
-        out_file.write(bytes('.. _' + key + ':\n\n','utf-8'))
-        out_file.write(bytes('``' + key + '``: ' + keywords[key] + '\n\n====\n\n','utf-8'))
+        out_file.write(bytes('.. |' + key + '| replace:: ``' + key + '``\n',
+                             'utf-8'))
+        out_file.write(bytes('.. _' + key + ':\n\n', 'utf-8'))
+        out_file.write(bytes('``' + key + '``: ' + keywords[key] +
+                             '\n\n====\n\n', 'utf-8'))
     key = sorted_keys[-1]
-    out_file.write(bytes('.. |' + key + '| replace:: ``' + key + '``\n','utf-8'))
-    out_file.write(bytes('.. _' + key + ':\n\n','utf-8'))
-    out_file.write(bytes('``' + key + '``: ' + keywords[key] + '\n\n','utf-8'))
+    out_file.write(bytes('.. |' + key + '| replace:: ``' + key + '``\n',
+                         'utf-8'))
+    out_file.write(bytes('.. _' + key + ':\n\n', 'utf-8'))
+    out_file.write(bytes('``' + key + '``: ' + keywords[key] + '\n\n',
+                         'utf-8'))

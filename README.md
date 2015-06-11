@@ -11,15 +11,15 @@ Documentation can be found at <http://bryanwweber.github.io/CanSen>
 Notice
 ======
 
-I have tested this software to the best of my abilities. Any user uses this 
-software with the express understanding that there may be bugs, non-working 
-features, and other gremlins that prevent a user from using the software to 
-their specification. If you find problems, please report them in the issue 
+I have tested this software to the best of my abilities. Any user uses this
+software with the express understanding that there may be bugs, non-working
+features, and other gremlins that prevent a user from using the software to
+their specification. If you find problems, please report them in the issue
 tracker.
 
 ALL USERS ARE ENCOURAGED TO CHECK THEIR RESULTS WITH AN INDEPENDENT PROGRAM!
-Researchers especially are encouraged *not* to treat this software as a black 
-box. Always remember: Garbage in equals garbage out. 
+Researchers especially are encouraged *not* to treat this software as a black
+box. Always remember: Garbage in equals garbage out.
 
 License
 =======

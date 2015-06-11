@@ -13,7 +13,7 @@ printer module
 ==============
 
 .. automodule:: printer
-    
+
 profiles module
 ===============
 
@@ -24,13 +24,13 @@ run_cases module
 ================
 
 .. automodule:: run_cases
-    
+
 user_routines module
 ====================
 
 .. automodule:: user_routines
     :special-members: __call__
-    
+
 utils module
 ============
 
