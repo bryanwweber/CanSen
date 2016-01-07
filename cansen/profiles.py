@@ -47,9 +47,6 @@ class VolumeProfile(object):
     def __call__(self, t):
         """Return the velocity when called during a time step.
 
-        Using linear interpolation, determine the velocity at a given
-        input time ``t``.
-
         :param t:
             Input float, current simulation time.
         """
