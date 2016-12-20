@@ -17,11 +17,10 @@ build:
 requirements:
   build:
     - python >=3.4,{{PY_VER}}*
-    - numpy >=1.8,{{NPY_VER}}*
 
   run:
     - python {{PY_VER}}*
-    - numpy {{NPY_VER}}*
+    - numpy >=1.8
     - pytables
     - cantera
 
