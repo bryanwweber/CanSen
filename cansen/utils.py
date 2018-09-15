@@ -1,7 +1,3 @@
-# Python 2 compatibility
-from __future__ import print_function
-from __future__ import division
-
 # Standard libraries
 import sys
 import os
@@ -11,12 +7,8 @@ from tempfile import NamedTemporaryFile
 from argparse import ArgumentParser
 from multiprocessing import cpu_count
 
-# Related modules
-try:
-    from cantera import ck2cti
-except ImportError:
-    print('Error: Cantera must be installed.')
-    raise
+# Third-party modules
+from cantera import ck2cti
 
 # Local imports
 from .printer import divider
@@ -27,14 +19,6 @@ from .exceptions import (KeywordError,
                          MissingReqdKeywordError,
                          MissingKeyword,
                          )
-
-# Python 2 compatibility for file output
-if sys.version < '3':
-    def b(x):
-        return x
-else:
-    def b(x):
-        return x.encode('utf-8')
 
 
 class MyParser(ArgumentParser):
@@ -96,7 +80,7 @@ def process_multi_input(input_filename):
                 # skip comment or blank lines
                 continue
             elif line.upper().startswith('END'):
-                temp_file.write(b(line))
+                temp_file.write(line)
 
                 # store temporary file and create new
                 temp_file.seek(0)
@@ -107,7 +91,7 @@ def process_multi_input(input_filename):
                 continue
             else:
                 # just print line
-                temp_file.write(b(line))
+                temp_file.write(line)
 
     # check if last file actually written to; if not, close
     if os.stat(temp_file.name).st_size == 0:
@@ -471,8 +455,7 @@ def cli_parser(argv):
 
     parser = MyParser(
         prog='cansen',
-        description='CanSen - the SENKIN-like wrapper '
-                                        'for Cantera written in Python.'
+        description='CanSen - the SENKIN-like wrapper for Cantera written in Python.'
     )
 
     parser.add_argument('-V', '--version',

@@ -1,11 +1,7 @@
 # Standard libraries
 
-# Related modules
-try:
-    import numpy as np
-except ImportError:
-    print('NumPy must be installed')
-    raise
+# Third-party modules
+import numpy as np
 
 
 class VolumeProfile(object):

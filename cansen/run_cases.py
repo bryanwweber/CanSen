@@ -1,41 +1,17 @@
-# Python 2 compatibility
-from __future__ import print_function
-from __future__ import division
-
 # Standard libraries
-import sys
 import math
+from itertools import zip_longest
 
-# More Python 2 compatibility
-if sys.version_info.major == 3:
-    from itertools import zip_longest
-elif sys.version_info.major == 2:
-    from itertools import izip_longest
-
-# Related modules
-try:
-    import cantera as ct
-except ImportError:
-    print("Cantera must be installed")
-    raise
-try:
-    import numpy as np
-except ImportError:
-    print('NumPy must be installed')
-    raise
-
-try:
-    import tables
-except ImportError:
-    print('PyTables must be installed')
-    raise
+# Third-party modules
+import cantera as ct
+import numpy as np
+import tables
 
 # Local imports
 from .printer import divider
 from . import utils
 from .profiles import (VolumeProfile,
                        TemperatureProfile,
-                       PressureProfile,
                        ICEngineProfile)
 
 
@@ -514,12 +490,7 @@ class SimulationCase(object):
                 mole_frac,
                 mole_frac_precision)
                 )
-        if sys.version_info.major == 3:
-            grouped = zip_longest(*[iter(outlist)]*num_print_cols,
-                                  fillvalue='')
-        elif sys.version_info.major == 2:
-            grouped = izip_longest(*[iter(outlist)]*num_print_cols,
-                                   fillvalue='')
+        grouped = zip_longest(*[iter(outlist)]*num_print_cols, fillvalue='')
         for items in grouped:
             for item in items:
                 print(item, end='')

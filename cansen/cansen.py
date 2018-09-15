@@ -1,9 +1,3 @@
-#! /usr/bin/env python3
-
-# Python 2 compatibility
-from __future__ import print_function
-from __future__ import division
-
 # Standard libraries
 import sys
 from multiprocessing import Pool

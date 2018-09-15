@@ -1,22 +1,8 @@
-#! /usr/bin/python3
-
-# Python 2 compatibility
-from __future__ import print_function
-
 # Standard Libraries
 
-# Related modules
-try:
-    import tables
-except ImportError:
-    print('Error: PyTables must be installed')
-    raise
-
-try:
-    import cantera as ct
-except ImportError:
-    print('Error: Cantera must be installed')
-    raise
+# Third-party modules
+import tables
+import cantera as ct
 
 # Use a ``with`` statmement to ensure that the file is closed when the
 # code completes, even if there is an error.
