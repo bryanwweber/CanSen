@@ -39,9 +39,9 @@ class SimulationCase(object):
 
     def setup_case(self):
         """
-        Sets up the case to be run. Initializes the ``ThermoPhase``,
-        ``Reactor``, and ``ReactorNet`` according to the values from
-        the input file.
+        Sets up the case to be run. Initializes the :py:class:`~cantera.ThermoPhase`,
+        :py:class:`~cantera.Reactor`, and :py:class:`~cantera.ReactorNet` according
+        to the values from the input file.
         """
 
         self.gas = ct.Solution(self.mech_filename)
@@ -229,9 +229,9 @@ class SimulationCase(object):
 
     def run_case(self):
         """
-        Actually run the case set up by ``setup_case``. Sets binary
+        Actually run the case set up by `setup_case`. Sets binary
         output file format, then runs the simulation by using
-        ``ReactorNet.step(self.tend)``.
+        :py:`~cantera.ReactorNet.step`.
         """
         # Use the table format of hdf instead of the array format. This
         # way, each variable can be saved in its own column and
@@ -306,7 +306,7 @@ class SimulationCase(object):
                     self.gas.TP = self.temp_func(self.netw.time), None
 
                 # Take the step towards the end time.
-                self.netw.step(self.tend)
+                self.netw.step()
 
                 # Set an array with the information from the current
                 # time step for printing.

@@ -579,10 +579,10 @@ def equivalence_ratio(gas, eq_ratio, fuel, oxidizer, complete_products,
     Given the equivalence ratio, fuel mixture, oxidizer mixture,
     the products of complete combustion, and any additional species for
     the mixture, return a string containing the mole fractions of the
-    species, suitable for setting the state of the input ThermoPhase.
+    species, suitable for setting the state of the input :py:class:`~cantera.ThermoPhase`.
 
     :param gas:
-        Cantera ThermoPhase object containing the desired species.
+        Cantera :py:class:`~cantera.ThermoPhase` object containing the desired species.
     :param eq_ratio:
         Equivalence ratio
     :param fuel:
