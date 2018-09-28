@@ -9,20 +9,22 @@ source:
 
 build:
   number: 0
-  script: python setup.py install --single-version-externally-managed --record=record.txt
+  script: "{{ PYTHON }} -m pip install . --no-deps --ignore-installed --no-cache-dir -vvv"
   entry_points:
     - cansen = cansen.__main__:main
-
+  noarch: python
 
 requirements:
-  build:
-    - python >=3.4,{{PY_VER}}*
+  host:
+    - pip
+    - python
+    - setuptools
 
   run:
-    - python {{PY_VER}}*
-    - numpy >=1.8
-    - pytables
-    - cantera
+    - python >=3.4
+    - numpy >=1.8.1,<2.0
+    - pytables >=3.1.1,<4.0
+    - cantera >=2.2,<3.0
 
 test:
   imports:

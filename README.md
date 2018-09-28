@@ -1,15 +1,12 @@
-CANSEN
-=================
+# CANSEN
 
 SENKIN-like wrapper for Cantera
 
-Documentation
-=============
+# Documentation
 
-Documentation can be found at <http://bryanwweber.github.io/CanSen>
+Documentation can be found at <https://bryanwweber.github.io/CanSen>
 
-Notice
-======
+# Notice
 
 I have tested this software to the best of my abilities. Any user uses this
 software with the express understanding that there may be bugs, non-working
@@ -21,8 +18,7 @@ ALL USERS ARE ENCOURAGED TO CHECK THEIR RESULTS WITH AN INDEPENDENT PROGRAM!
 Researchers especially are encouraged *not* to treat this software as a black
 box. Always remember: Garbage in equals garbage out.
 
-License
-=======
+# License
 
 Also available in [LICENSE.txt](https://github.com/bryanwweber/CanSen/blob/master/LICENSE.txt)
 

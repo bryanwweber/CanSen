@@ -1,18 +1,14 @@
 # Standard libraries
 
-# Related modules
-try:
-    import numpy as np
-except ImportError:
-    print('NumPy must be installed')
-    raise
+# Third-party modules
+import numpy as np
 
 
 class VolumeProfile(object):
     """
     Set the velocity of the piston by using a user specified volume
     profile. The initialization and calling of this class are handled
-    by the `Func1 <http://cantera.github.io/docs/sphinx/html/cython/zerodim.html#cantera.Func1>`_
+    by the :py:class:`~cantera.Func1`
     interface of Cantera. Used with the input keyword :ref:`VPRO <VPRO>`
     """
 
@@ -67,7 +63,7 @@ class TemperatureProfile(object):
     """
     Set the temperature of the reactor by using a user specified
     temperature profile. The initialization and calling of this class
-    are handled by the  `Func1 <http://cantera.github.io/docs/sphinx/html/cython/zerodim.html#cantera.Func1>`_
+    are handled by the :py:class:`~cantera.Func1`
     interface of Cantera. Used with the input keyword :ref:`TPRO <TPRO>`
     """
 
@@ -116,7 +112,7 @@ class ICEngineProfile(object):
     """
     Set the velocity of the wall according to the parameters of a
     reciprocating engine. The initialization and calling of this class
-    are handled by the `Func1 <http://cantera.github.io/docs/sphinx/html/cython/zerodim.html#cantera.Func1>`_
+    are handled by the :py:class:`~cantera.Func1`
     interface of Cantera. Used with the input keyword :ref:`ICEN <ICEN>`.
     """
 
@@ -151,7 +147,7 @@ class ICEngineProfile(object):
         # Technically, this is negative, but the way we install the
         # wall between the reactor and the environment handles the
         # sign.
-        return (self.omega*self.stroke_length/2*np.sin(theta)*
+        return (self.omega*self.stroke_length/2*np.sin(theta) *
                 (1 + np.cos(theta)/np.sqrt(self.rod_radius_ratio**2 -
                                            np.sin(theta)**2)))
 
