@@ -45,7 +45,7 @@ setup(
     install_requires=[
         'cantera>=2.2,<3.0',
         'numpy>=1.8.1,<2.0',
-        'pytables>=3.1.1,<4.0',
+        'tables>=3.1.1,<4.0',
     ],
     python_requires='~=3.4',
     package_data={
