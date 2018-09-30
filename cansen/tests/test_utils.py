@@ -91,6 +91,20 @@ def test_equivalence_ratio_fuel_oxid_gt_one(phi):
 
 
 @pytest.mark.parametrize('phi', [0.5, 1.0, 1.1, 3.5])
+def test_equivalence_ratio_fuel_oxid_lt_one(phi):
+    """Test the equivalence ratio function when fuel and oxidizers sum to more than 1.0."""
+    gas = ct.Solution('gri30.xml')
+    fuel = {'CH4': 0.25, 'C2H6': 0.25}
+    oxidizer = {'O2': 0.1, 'N2': 0.7}
+    complete_prod = ['CO2', 'H2O', 'N2']
+    reactants = equivalence_ratio(gas, phi, fuel, oxidizer, complete_prod, {})
+    gas.TPX = None, None, reactants
+    mole_frac = gas.mole_fraction_dict().copy()
+    gas.set_equivalence_ratio(phi, fuel, oxidizer)
+    assert mole_frac == pytest.approx(gas.mole_fraction_dict())
+
+
+@pytest.mark.parametrize('phi', [0.5, 1.0, 1.1, 3.5])
 def test_equivalence_ratio_no_C(phi):
     """Test the equivalence ratio when there's no C in the fuel."""
     gas = ct.Solution('gri30.xml')

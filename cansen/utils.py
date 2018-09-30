@@ -57,7 +57,6 @@ def process_multi_input(input_filename):
     :return filenames:
         List of temporary filenames.
     """
-
     filenames = []
 
     temp_file = NamedTemporaryFile(delete=False)
@@ -582,16 +581,11 @@ def equivalence_ratio(gas, eq_ratio, fuel, oxidizer, complete_products,
     fuel_elems = {}
     oxid_elems = {}
 
-    # Check sum of fuel and oxidizer values; normalize if greater than 1
     fuel_sum = sum(fuel.values())
-    if fuel_sum > 1.0:
-        for sp, x in fuel.items():
-            fuel[sp] = x/fuel_sum
+    fuel = {sp: x/fuel_sum for sp, x in fuel.items()}
 
     oxid_sum = sum(oxidizer.values())
-    if oxid_sum > 1.0:
-        for sp, x in oxidizer.items():
-            oxidizer[sp] = x/oxid_sum
+    oxidizer = {sp: x/oxid_sum for sp, x in oxidizer.items()}
 
     # Check oxidation state of complete products
     for sp, el in product(complete_products, gas.element_names):
