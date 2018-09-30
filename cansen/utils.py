@@ -21,15 +21,6 @@ from .exceptions import (KeywordError,
                          )
 
 
-class MyParser(ArgumentParser):
-    """Parser that redefines the error printing"""
-
-    def error(self, message):
-        sys.stderr.write('\ncansen: error: %s\n\n' % message)
-        self.print_help()
-        sys.exit(2)
-
-
 def convert_mech(mech_filename, thermo_filename=None):
     """Convert a mechanism and return a string with the filename.
 
@@ -438,8 +429,7 @@ def cli_parser(argv):
     :param argv:
         List of command line options.
     """
-
-    parser = MyParser(
+    parser = ArgumentParser(
         prog='cansen',
         description='CanSen - the SENKIN-like wrapper for Cantera written in Python.'
     )
