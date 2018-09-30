@@ -556,6 +556,9 @@ def equivalence_ratio(gas, eq_ratio, fuel, oxidizer, complete_products,
     the products of complete combustion, and any additional species for
     the mixture, return a string containing the mole fractions of the
     species, suitable for setting the state of the input :py:class:`~cantera.ThermoPhase`.
+    Note that we can't use the :py:method:`~cantera.ThermoPhase.set_equivalence_ratio`
+    because we need to handle the cases of complete products that aren't CO2 and H2O
+    and because we can specify additional species in the mixture.
 
     :param gas:
         Cantera :py:class:`~cantera.ThermoPhase` object containing the desired species.
