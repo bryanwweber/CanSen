@@ -1,11 +1,11 @@
 # Standard libraries
 import sys
 import os
-from itertools import product
 from math import pi
 from tempfile import NamedTemporaryFile
 from argparse import ArgumentParser
 from multiprocessing import cpu_count
+from warnings import warn
 
 # Third-party modules
 from cantera import ck2cti
@@ -18,6 +18,7 @@ from .exceptions import (KeywordError,
                          UndefinedKeywordError,
                          MissingReqdKeywordError,
                          MissingKeyword,
+                         CanSenError,
                          )
 
 
@@ -576,7 +577,6 @@ def equivalence_ratio(gas, eq_ratio, fuel, oxidizer, complete_products,
         The mole fractions given in this dictionary are as a fraction
         of the total mixture.
     """
-    reactants = ''
     cprod_elems = {}
     fuel_elems = {}
     oxid_elems = {}
@@ -587,67 +587,54 @@ def equivalence_ratio(gas, eq_ratio, fuel, oxidizer, complete_products,
     oxid_sum = sum(oxidizer.values())
     oxidizer = {sp: x/oxid_sum for sp, x in oxidizer.items()}
 
+    for el in gas.element_names:
+        cprod_tot = sum([int(gas.n_atoms(sp, el)) for sp in complete_products])
+        fuel_tot = sum([gas.n_atoms(sp, el) * fuel[sp] for sp in fuel.keys()])
+        oxid_tot = sum([gas.n_atoms(sp, el) * oxidizer[sp] for sp in oxidizer.keys()])
+
+        # Check that all of the elements specified in the fuel and oxidizer
+        # are present in the complete products and vice versa.
+        if ((cprod_tot > 0 and fuel_tot == 0 and oxid_tot == 0) or
+           (cprod_tot == 0 and (fuel_tot > 0 or oxid_tot > 0))):
+            raise CanSenError('Must specify all elements in the fuel + oxidizer '
+                              'in the complete products and vice-versa')
+
+        cprod_elems[el.upper()] = cprod_tot
+        fuel_elems[el.upper()] = fuel_tot
+        oxid_elems[el.upper()] = oxid_tot
+
+    num_C_cprod = cprod_elems.get('C', 0)
+    num_H_cprod = cprod_elems.get('H', 0)
+    num_O_cprod = cprod_elems.get('O', 0)
+
     # Check oxidation state of complete products
-    for sp, el in product(complete_products, gas.element_names):
-        if el.upper() not in cprod_elems:
-            cprod_elems[el.upper()] = {}
-
-        cprod_elems[el.upper()][sp] = int(gas.n_atoms(sp, el))
-
-    num_C_cprod = sum(cprod_elems.get('C', {0: 0}).values())
-    num_H_cprod = sum(cprod_elems.get('H', {0: 0}).values())
-    num_O_cprod = sum(cprod_elems.get('O', {0: 0}).values())
-
     oxid_state = 4*num_C_cprod + num_H_cprod - 2*num_O_cprod
     if oxid_state != 0:
-        print("Warning: One or more products of incomplete combustion "
-              "were specified.")
-
-    # Find the number of H, C, and O atoms in the fuel molecules.
-    for sp, el in product(fuel.keys(), gas.element_names):
-        if el not in fuel_elems:
-            fuel_elems[el.upper()] = 0
-
-        fuel_elems[el.upper()] += gas.n_atoms(sp, el) * fuel[sp]
+        warn("One or more products of incomplete combustion were specified.")
 
     num_C_fuel = fuel_elems.get('C', 0)
     num_H_fuel = fuel_elems.get('H', 0)
     num_O_fuel = fuel_elems.get('O', 0)
 
-    # Find the number of H, C, and O atoms in the oxidizer molecules.
-    for sp, el in product(oxidizer.keys(), gas.element_names):
-        if el not in oxid_elems:
-            oxid_elems[el.upper()] = 0
-
-        oxid_elems[el.upper()] += gas.n_atoms(sp, el) * oxidizer[sp]
-
     num_O_oxid = oxid_elems.get('O', 0)
-
-    # Check that all of the elements specified in the fuel and oxidizer
-    # are present in the complete products and vice versa.
-    for el in cprod_elems.keys():
-        if ((sum(cprod_elems[el].values()) > 0 and fuel_elems[el] == 0 and
-             oxid_elems[el] == 0) or (sum(cprod_elems[el].values()) == 0 and
-            (fuel_elems[el] > 0 or oxid_elems[el] > 0))):
-            print('Error: Must specify all elements in the fuel + oxidizer '
-                  'in the complete products and vice-versa')
-            sys.exit(1)
 
     # Compute the amount of oxidizer required to consume all the
     # carbon and hydrogen in the complete products
+    C_ox = 0
+    H_ox = 0
+    for species in complete_products:
+        if gas.n_atoms(species, 'C') > 0:
+            C_ox += int(gas.n_atoms(species, 'O'))
+        if gas.n_atoms(species, 'H') > 0:
+            H_ox += int(gas.n_atoms(species, 'O'))
+
     if num_C_cprod > 0:
-        spec = cprod_elems['C'].keys()
-        ox = sum([cprod_elems['O'][sp]
-                  for sp in spec if cprod_elems['C'][sp] > 0])
-        C_multiplier = ox/num_C_cprod
+        C_multiplier = C_ox/num_C_cprod
     else:
         C_multiplier = 0
 
     if num_H_cprod > 0:
-        spec = cprod_elems['H'].keys()
-        ox = sum([cprod_elems['O'][sp]
-                  for sp in spec if cprod_elems['H'][sp] > 0])
-        H_multiplier = ox/num_H_cprod
+        H_multiplier = H_ox/num_H_cprod
     else:
         H_multiplier = 0
 
@@ -665,28 +652,22 @@ def equivalence_ratio(gas, eq_ratio, fuel, oxidizer, complete_products,
     if additional_species:
         total_additional_species = sum(additional_species.values())
         if total_additional_species >= 1.0:
-            print('Error: Additional species must sum to less than 1')
+            raise CanSenError('Additional species must sum to less than 1')
         remain = 1.0 - total_additional_species
-        for species, molefrac in additional_species.items():
-            add_spec = ':'.join([species, str(molefrac)])
-            reactants = ','.join([reactants, add_spec])
+        reactants = additional_species.copy()
     else:
         remain = 1.0
+        reactants = {}
 
     # Compute the mole fractions of the fuel and oxidizer components
     # given that a certain portion of the mixture will have been taken
     # up by the additional species, if any.
     for species, ox_amt in oxidizer.items():
         molefrac = ox_amt * O_mult/total_reactant_moles * remain
-        add_spec = ':'.join([species, str(molefrac)])
-        reactants = ','.join([reactants, add_spec])
+        reactants[species] = molefrac
 
     for species, fuel_amt in fuel.items():
-        molefrac = fuel_amt*eq_ratio/total_reactant_moles*remain
-        add_spec = ':'.join([species, str(molefrac)])
-        reactants = ','.join([reactants, add_spec])
-
-    # Take off the first character, which is a comma
-    reactants = reactants[1:]
+        molefrac = fuel_amt*eq_ratio/total_reactant_moles * remain
+        reactants[species] = molefrac
 
     return reactants

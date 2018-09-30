@@ -3,6 +3,7 @@
 
 class CanSenError(Exception):
     """Base class for errors in CanSen."""
+
     pass
 
 
