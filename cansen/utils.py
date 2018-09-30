@@ -34,23 +34,22 @@ def convert_mech(mech_filename, thermo_filename=None):
     """Convert a mechanism and return a string with the filename.
 
     Convert a CHEMKIN format mechanism to the Cantera CTI format using
-    the Cantera built-in script `ck2cti`.
+    the Cantera built-in script ``ck2cti``.
 
     :param mech_filename:
         Filename of the input CHEMKIN format mechanism. The converted
-        CTI file will have the same name, but with `.cti` extension.
+        CTI file will have the same name, but with ``.cti`` extension.
     :param thermo_filename:
         Filename of the thermodynamic database. Optional if the
         thermodynamic database is present in the mechanism input.
     """
-
-    arg = ['--input='+mech_filename]
+    arg = ['--input=' + mech_filename]
     if thermo_filename is not None:
-        arg.append('--thermo='+thermo_filename)
+        arg.append('--thermo=' + thermo_filename)
 
     # Convert the mechanism
     ck2cti.main(arg)
-    mech_filename = mech_filename[:-4]+'.cti'
+    mech_filename = mech_filename[:-4] + '.cti'
     print('Mechanism conversion successful, written to '
           '{}'.format(mech_filename))
     return mech_filename

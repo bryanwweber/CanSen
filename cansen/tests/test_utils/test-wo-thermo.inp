@@ -1,0 +1,9 @@
+ELEMENTS
+O
+END
+SPECIES
+O       O2
+END
+REACTIONS
+2O+M<=>O2+M                              1.200E+17   -1.000        .00
+END
