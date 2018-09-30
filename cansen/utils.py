@@ -99,19 +99,6 @@ def process_multi_input(input_filename):
     return filenames
 
 
-def remove_files(files):
-    """Delete files.
-
-    :param files:
-        List of names of files to be removed
-    """
-
-    for f in files:
-        os.remove(f)
-
-    return None
-
-
 def read_input_file(input_filename):
     """Read a formatted input file and return a dictionary of keywords.
 
