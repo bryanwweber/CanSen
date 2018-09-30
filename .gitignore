@@ -91,6 +91,9 @@ ipch/
 *.vsp
 *.vspx
 
+# Visual Studio Code
+.vscode/
+
 # Guidance Automation Toolkit
 *.gpState
 
@@ -207,6 +210,7 @@ pip-log.txt
 # Unit test / coverage reports
 .coverage
 .tox
+htmlcov/
 
 #Translations
 *.mo
