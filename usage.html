@@ -1,75 +1,55 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Usage &mdash; CanSen 1.2.0 documentation</title>
-    
+    <title>Usage &#8212; CanSen 1.2.0 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '1.2.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.9.0/dist/katex.min.css" />
+    <link rel="stylesheet" type="text/css" href="_static/katex-math.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
-    <link rel="top" title="CanSen 1.2.0 documentation" href="index.html" />
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.9.0/dist/katex.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.9.0/dist/contrib/auto-render.min.js"></script>
+    <script type="text/javascript" src="_static/katex_autorenderer.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Supported Input Keywords" href="keywords.html" />
     <link rel="prev" title="CanSen Installation Guide" href="installation.html" />
    
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-  </head>
-  <body role="document">
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="keywords.html" title="Supported Input Keywords"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="installation.html" title="CanSen Installation Guide"
-             accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">CanSen</a> &raquo;</li> 
-      </ul>
-    </div>  
+  </head><body>
+  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
+          
+
           <div class="body" role="main">
             
   <div class="section" id="usage">
 <span id="sec-usage"></span><h1>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
-<ul class="simple">
-</ul>
 </div>
 <p>The following are instructions for usage of CanSen.</p>
 <div class="section" id="windows">
 <h2>Windows<a class="headerlink" href="#windows" title="Permalink to this headline">¶</a></h2>
-<p>CanSen can be run from the command line (<code class="docutils literal"><span class="pre">cmd.exe</span></code>).
+<p>CanSen can be run from the command line (<code class="docutils literal notranslate"><span class="pre">cmd.exe</span></code>).
 From the command line, change into the directory with your
 input files, and run:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">cansen</span> <span class="p">[</span><span class="n">options</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cansen</span> <span class="p">[</span><span class="n">options</span><span class="p">]</span>
 </pre></div>
 </div>
 </div>
@@ -78,17 +58,17 @@ input files, and run:</p>
 <p>CanSen can be run as an executable.
 To run as an executable, change to the directory where
 your input file is located:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">cansen</span> <span class="p">[</span><span class="n">options</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cansen</span> <span class="p">[</span><span class="n">options</span><span class="p">]</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="options">
 <h2>Options<a class="headerlink" href="#options" title="Permalink to this headline">¶</a></h2>
-<p>All of the previous commands have shown <code class="docutils literal"><span class="pre">[options]</span></code> to indicate where
+<p>All of the previous commands have shown <code class="docutils literal notranslate"><span class="pre">[options]</span></code> to indicate where
 command line options should be specified. The following options are
-available, and can also be seen by using the <code class="docutils literal"><span class="pre">-h</span></code> or <code class="docutils literal"><span class="pre">--help</span></code>
+available, and can also be seen by using the <code class="docutils literal notranslate"><span class="pre">-h</span></code> or <code class="docutils literal notranslate"><span class="pre">--help</span></code>
 options:</p>
-<div class="highlight-python"><div class="highlight"><pre>-i:
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>-i:
    Specify the simulation input file in SENKIN format. Required.
 -o:
    Specify the text output file. Optional, default: ``output.out``
@@ -118,38 +98,38 @@ options:</p>
 <div class="section" id="multiple-inputs">
 <h2>Multiple Inputs<a class="headerlink" href="#multiple-inputs" title="Permalink to this headline">¶</a></h2>
 <p>While the default operation of CanSen reads and runs a single input case,
-using the <code class="docutils literal"><span class="pre">-m</span></code> or <code class="docutils literal"><span class="pre">--multi</span></code> option enables multiple cases to be run
+using the <code class="docutils literal notranslate"><span class="pre">-m</span></code> or <code class="docutils literal notranslate"><span class="pre">--multi</span></code> option enables multiple cases to be run
 independently (and in parallel). In this mode, normal output is omitted,
 and only the calculated ignition delay times (along with initial pressure,
 temperature, and equivalence ratio) are printed to the output file. In
 addition, no binary save output file is created.</p>
-<p>Input files should be formatted normally for each case, with an <code class="docutils literal"><span class="pre">END</span></code>
+<p>Input files should be formatted normally for each case, with an <code class="docutils literal notranslate"><span class="pre">END</span></code>
 keyword indicating the end of one case. For example:</p>
-<div class="highlight-python"><div class="highlight"><pre>CONV
-TEMP 1600.0
-PRES 1.0
-TIME 1.0E1
-EQUI 1.0
-FUEL CH4 1.0
-OXID O2 0.21
-OXID N2 0.79
-CPROD CO2
-CPROD H2O
-CPROD N2
-END
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CONV</span>
+<span class="n">TEMP</span> <span class="mf">1600.0</span>
+<span class="n">PRES</span> <span class="mf">1.0</span>
+<span class="n">TIME</span> <span class="mf">1.0E1</span>
+<span class="n">EQUI</span> <span class="mf">1.0</span>
+<span class="n">FUEL</span> <span class="n">CH4</span> <span class="mf">1.0</span>
+<span class="n">OXID</span> <span class="n">O2</span> <span class="mf">0.21</span>
+<span class="n">OXID</span> <span class="n">N2</span> <span class="mf">0.79</span>
+<span class="n">CPROD</span> <span class="n">CO2</span>
+<span class="n">CPROD</span> <span class="n">H2O</span>
+<span class="n">CPROD</span> <span class="n">N2</span>
+<span class="n">END</span>
 
-CONP
-TEMP 1000.0
-PRES 10.0
-TIME 1.0E1
-EQUI 0.5
-FUEL CH4 1.0
-OXID O2 0.21
-OXID N2 0.79
-CPROD CO2
-CPROD H2O
-CPROD N2
-END
+<span class="n">CONP</span>
+<span class="n">TEMP</span> <span class="mf">1000.0</span>
+<span class="n">PRES</span> <span class="mf">10.0</span>
+<span class="n">TIME</span> <span class="mf">1.0E1</span>
+<span class="n">EQUI</span> <span class="mf">0.5</span>
+<span class="n">FUEL</span> <span class="n">CH4</span> <span class="mf">1.0</span>
+<span class="n">OXID</span> <span class="n">O2</span> <span class="mf">0.21</span>
+<span class="n">OXID</span> <span class="n">N2</span> <span class="mf">0.79</span>
+<span class="n">CPROD</span> <span class="n">CO2</span>
+<span class="n">CPROD</span> <span class="n">H2O</span>
+<span class="n">CPROD</span> <span class="n">N2</span>
+<span class="n">END</span>
 </pre></div>
 </div>
 </div>
@@ -157,45 +137,62 @@ END
 
 
           </div>
+          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Usage</a><ul>
-<li><a class="reference internal" href="#windows">Windows</a></li>
-<li><a class="reference internal" href="#ubuntu">Ubuntu</a></li>
-<li><a class="reference internal" href="#options">Options</a></li>
-<li><a class="reference internal" href="#multiple-inputs">Multiple Inputs</a></li>
+<h1 class="logo"><a href="index.html">CanSen</a></h1>
+
+
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=bryanwweber&repo=CanSen&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">CanSen Installation Guide</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#windows">Windows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ubuntu">Ubuntu</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#options">Options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#multiple-inputs">Multiple Inputs</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="keywords.html">Supported Input Keywords</a></li>
+<li class="toctree-l1"><a class="reference internal" href="icengine.html">Internal Combustion Engine Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="postprocessing.html">Postprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="codedocs.html">Code Documentation</a></li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="installation.html"
-                        title="previous chapter">CanSen Installation Guide</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="keywords.html"
-                        title="next chapter">Supported Input Keywords</a></p>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="_sources/usage.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="installation.html" title="previous chapter">CanSen Installation Guide</a></li>
+      <li>Next: <a href="keywords.html" title="next chapter">Supported Input Keywords</a></li>
+  </ul></li>
+</ul>
+</div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -203,17 +200,21 @@ END
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2015, Bryan W. Weber.
+      &copy;2018, Bryan W. Weber.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.4</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
       
       |
-      <a href="_sources/usage.txt"
-          rel="nofollow">Page source</a></li>
+      <a href="_sources/usage.rst.txt"
+          rel="nofollow">Page source</a>
     </div>
 
+    
+    <a href="https://github.com/bryanwweber/CanSen" class="github">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
+    </a>
     
 
     

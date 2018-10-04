@@ -1,56 +1,41 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Code Documentation &mdash; CanSen 1.2.0 documentation</title>
-    
+    <title>Code Documentation &#8212; CanSen 1.2.0 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '1.2.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.9.0/dist/katex.min.css" />
+    <link rel="stylesheet" type="text/css" href="_static/katex-math.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
-    <link rel="top" title="CanSen 1.2.0 documentation" href="index.html" />
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.9.0/dist/katex.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.9.0/dist/contrib/auto-render.min.js"></script>
+    <script type="text/javascript" src="_static/katex_autorenderer.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
     <link rel="prev" title="Postprocessing" href="postprocessing.html" />
    
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-  </head>
-  <body role="document">
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="postprocessing.html" title="Postprocessing"
-             accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">CanSen</a> &raquo;</li> 
-      </ul>
-    </div>  
+  </head><body>
+  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
+          
+
           <div class="body" role="main">
             
   <div class="section" id="code-documentation">
@@ -65,7 +50,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sim_index_tup</strong> &#8211; Tuple containing the MultiSimulationCase object to be run and
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sim_index_tup</strong> – Tuple containing the MultiSimulationCase object to be run and
 the index of current case for status messages.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return res:</th><td class="field-body">List of simulation results.</td>
@@ -83,12 +68,12 @@ the index of current case for status messages.</td>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>filenames</strong> &#8211; Dictionary of filenames related to the simulation.</li>
-<li><strong>convert</strong> &#8211; Boolean indicating that the user wishes only to convert the
+<li><strong>filenames</strong> – Dictionary of filenames related to the simulation.</li>
+<li><strong>convert</strong> – Boolean indicating that the user wishes only to convert the
 input mechanism and quit.</li>
-<li><strong>multi</strong> &#8211; Boolean indicating multiple cases to be run.</li>
-<li><strong>num_proc</strong> &#8211; Number of processors to use for multiprocessing.</li>
-<li><strong>version</strong> &#8211; Version string of CanSen.</li>
+<li><strong>multi</strong> – Boolean indicating multiple cases to be run.</li>
+<li><strong>num_proc</strong> – Number of processors to use for multiprocessing.</li>
+<li><strong>version</strong> – Version string of CanSen.</li>
 </ul>
 </td>
 </tr>
@@ -106,26 +91,26 @@ input mechanism and quit.</li>
 <dt>-i:</dt>
 <dd>Specify the simulation input file in SENKIN format. Required.</dd>
 <dt>-o:</dt>
-<dd>Specify the text output file. Optional, default: <code class="docutils literal"><span class="pre">output.out</span></code></dd>
+<dd>Specify the text output file. Optional, default: <code class="docutils literal notranslate"><span class="pre">output.out</span></code></dd>
 <dt>-x:</dt>
 <dd>Specify the binary save output file. Optional, default:
-<code class="docutils literal"><span class="pre">save.hdf</span></code></dd>
+<code class="docutils literal notranslate"><span class="pre">save.hdf</span></code></dd>
 <dt>-c:</dt>
 <dd>Specify the chemistry input file, in either CHEMKIN, Cantera
-CTI or CTML format. Optional, default: <code class="docutils literal"><span class="pre">chem.xml</span></code></dd>
+CTI or CTML format. Optional, default: <code class="docutils literal notranslate"><span class="pre">chem.xml</span></code></dd>
 <dt>-d:</dt>
 <dd>Specify the thermodynamic database. Optional if the
 thermodynamic database is specified in the chemistry input
 file. Otherwise, required.</dd>
-<dt>&#8211;convert:</dt>
+<dt>–convert:</dt>
 <dd>Convert the input mechanism to CTI format and quit. If
-<code class="docutils literal"><span class="pre">--convert</span></code> is specified, the SENKIN input file is optional.</dd>
-<dt>-m, &#8211;multi:</dt>
-<dd>Run multiple cases from the input file. Optional. If <code class="docutils literal"><span class="pre">-m</span></code> is
+<code class="docutils literal notranslate"><span class="pre">--convert</span></code> is specified, the SENKIN input file is optional.</dd>
+<dt>-m, –multi:</dt>
+<dd>Run multiple cases from the input file. Optional. If <code class="docutils literal notranslate"><span class="pre">-m</span></code> is
 used, must specify number of processors to be used (e.g.,
-<code class="docutils literal"><span class="pre">-m</span> <span class="pre">4</span></code>). If <code class="docutils literal"><span class="pre">--multi</span></code> is specified, CanSen uses the available
+<code class="docutils literal notranslate"><span class="pre">-m</span> <span class="pre">4</span></code>). If <code class="docutils literal notranslate"><span class="pre">--multi</span></code> is specified, CanSen uses the available
 number of processors by default.</dd>
-<dt>-h, &#8211;help:</dt>
+<dt>-h, –help:</dt>
 <dd>Print this help message and quit.</dd>
 </dl>
 </dd>
@@ -139,49 +124,49 @@ number of processors by default.</dd>
 <dl class="exception">
 <dt id="cansen.exceptions.CanSenError">
 <em class="property">exception </em><code class="descclassname">cansen.exceptions.</code><code class="descname">CanSenError</code><a class="reference internal" href="_modules/cansen/exceptions.html#CanSenError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cansen.exceptions.CanSenError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">Exception</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.7/library/exceptions.html#Exception" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
 <p>Base class for errors in CanSen.</p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="cansen.exceptions.KeywordError">
 <em class="property">exception </em><code class="descclassname">cansen.exceptions.</code><code class="descname">KeywordError</code><span class="sig-paren">(</span><em>*keywords</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cansen/exceptions.html#KeywordError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cansen.exceptions.KeywordError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#cansen.exceptions.CanSenError" title="cansen.exceptions.CanSenError"><code class="xref py py-class docutils literal"><span class="pre">cansen.exceptions.CanSenError</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#cansen.exceptions.CanSenError" title="cansen.exceptions.CanSenError"><code class="xref py py-class docutils literal notranslate"><span class="pre">cansen.exceptions.CanSenError</span></code></a></p>
 <p>Raised for errors in keyword parsing.</p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="cansen.exceptions.MultipleProblemError">
 <em class="property">exception </em><code class="descclassname">cansen.exceptions.</code><code class="descname">MultipleProblemError</code><span class="sig-paren">(</span><em>*keywords</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cansen/exceptions.html#MultipleProblemError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cansen.exceptions.MultipleProblemError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#cansen.exceptions.KeywordError" title="cansen.exceptions.KeywordError"><code class="xref py py-class docutils literal"><span class="pre">cansen.exceptions.KeywordError</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#cansen.exceptions.KeywordError" title="cansen.exceptions.KeywordError"><code class="xref py py-class docutils literal notranslate"><span class="pre">cansen.exceptions.KeywordError</span></code></a></p>
 <p>Raised error when multiple problem types are specified.</p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="cansen.exceptions.UnsupportedKeyword">
 <em class="property">exception </em><code class="descclassname">cansen.exceptions.</code><code class="descname">UnsupportedKeyword</code><span class="sig-paren">(</span><em>*keywords</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cansen/exceptions.html#UnsupportedKeyword"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cansen.exceptions.UnsupportedKeyword" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">Warning</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.7/library/exceptions.html#Warning" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Warning</span></code></a></p>
 <p>Raised error when a keyword is unsupported.</p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="cansen.exceptions.UndefinedKeywordError">
 <em class="property">exception </em><code class="descclassname">cansen.exceptions.</code><code class="descname">UndefinedKeywordError</code><span class="sig-paren">(</span><em>*keywords</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cansen/exceptions.html#UndefinedKeywordError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cansen.exceptions.UndefinedKeywordError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#cansen.exceptions.KeywordError" title="cansen.exceptions.KeywordError"><code class="xref py py-class docutils literal"><span class="pre">cansen.exceptions.KeywordError</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#cansen.exceptions.KeywordError" title="cansen.exceptions.KeywordError"><code class="xref py py-class docutils literal notranslate"><span class="pre">cansen.exceptions.KeywordError</span></code></a></p>
 <p>Raised for undefined keywords.</p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="cansen.exceptions.MissingReqdKeywordError">
 <em class="property">exception </em><code class="descclassname">cansen.exceptions.</code><code class="descname">MissingReqdKeywordError</code><span class="sig-paren">(</span><em>*keywords</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cansen/exceptions.html#MissingReqdKeywordError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cansen.exceptions.MissingReqdKeywordError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#cansen.exceptions.KeywordError" title="cansen.exceptions.KeywordError"><code class="xref py py-class docutils literal"><span class="pre">cansen.exceptions.KeywordError</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#cansen.exceptions.KeywordError" title="cansen.exceptions.KeywordError"><code class="xref py py-class docutils literal notranslate"><span class="pre">cansen.exceptions.KeywordError</span></code></a></p>
 <p>Raised for missing required keywords.</p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="cansen.exceptions.MissingKeyword">
 <em class="property">exception </em><code class="descclassname">cansen.exceptions.</code><code class="descname">MissingKeyword</code><a class="reference internal" href="_modules/cansen/exceptions.html#MissingKeyword"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cansen.exceptions.MissingKeyword" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">Warning</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.7/library/exceptions.html#Warning" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Warning</span></code></a></p>
 <p>Raised when an optional keyword is missing.</p>
 </dd></dl>
 
@@ -191,7 +176,7 @@ number of processors by default.</dd>
 <dl class="class">
 <dt id="cansen.printer.Tee">
 <em class="property">class </em><code class="descclassname">cansen.printer.</code><code class="descname">Tee</code><span class="sig-paren">(</span><em>name</em>, <em>mode</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cansen/printer.html#Tee"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cansen.printer.Tee" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.7/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Write to screen and text output file</p>
 <p>Initialize output.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -199,8 +184,8 @@ number of processors by default.</dd>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>name</strong> &#8211; Output file name.</li>
-<li><strong>mode</strong> &#8211; Read/Write mode of the output file.</li>
+<li><strong>name</strong> – Output file name.</li>
+<li><strong>mode</strong> – Read/Write mode of the output file.</li>
 </ul>
 </td>
 </tr>
@@ -220,23 +205,23 @@ number of processors by default.</dd>
 <dl class="class">
 <dt id="cansen.profiles.VolumeProfile">
 <em class="property">class </em><code class="descclassname">cansen.profiles.</code><code class="descname">VolumeProfile</code><span class="sig-paren">(</span><em>keywords</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cansen/profiles.html#VolumeProfile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cansen.profiles.VolumeProfile" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.7/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Set the velocity of the piston by using a user specified volume
 profile. The initialization and calling of this class are handled
-by the <a class="reference external" href="http://cantera.github.io/docs/sphinx/html/cython/zerodim.html#cantera.Func1">Func1</a>
-interface of Cantera. Used with the input keyword <a class="reference internal" href="keywords.html#vpro"><span>VPRO</span></a></p>
+by the <a class="reference external" href="https://cantera.org/documentation/docs-2.4/sphinx/html/cython/zerodim.html#cantera.Func1" title="(in Cantera v2.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Func1</span></code></a>
+interface of Cantera. Used with the input keyword <a class="reference internal" href="keywords.html#vpro"><span class="std std-ref">VPRO</span></a></p>
 <p>Set the initial values of the arrays from the input keywords.</p>
 <p>The time and volume are read from the input file and stored in
-the <code class="docutils literal"><span class="pre">keywords</span></code> dictionary. The velocity is calculated by
+the <code class="docutils literal notranslate"><span class="pre">keywords</span></code> dictionary. The velocity is calculated by
 assuming a unit area and using the forward difference,
-calculated by <code class="docutils literal"><span class="pre">numpy.diff</span></code>. This function is only called
+calculated by <code class="docutils literal notranslate"><span class="pre">numpy.diff</span></code>. This function is only called
 once when the class is initialized at the beginning of a
 problem so it is efficient.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>keywords</strong> &#8211; Dictionary of keywords read from the input file</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>keywords</strong> – Dictionary of keywords read from the input file</td>
 </tr>
 </tbody>
 </table>
@@ -244,13 +229,11 @@ problem so it is efficient.</p>
 <dt id="cansen.profiles.VolumeProfile.__call__">
 <code class="descname">__call__</code><span class="sig-paren">(</span><em>t</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cansen/profiles.html#VolumeProfile.__call__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cansen.profiles.VolumeProfile.__call__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the velocity when called during a time step.</p>
-<p>Using linear interpolation, determine the velocity at a given
-input time <code class="docutils literal"><span class="pre">t</span></code>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>t</strong> &#8211; Input float, current simulation time.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>t</strong> – Input float, current simulation time.</td>
 </tr>
 </tbody>
 </table>
@@ -261,14 +244,14 @@ input time <code class="docutils literal"><span class="pre">t</span></code>.</p>
 <dl class="class">
 <dt id="cansen.profiles.TemperatureProfile">
 <em class="property">class </em><code class="descclassname">cansen.profiles.</code><code class="descname">TemperatureProfile</code><span class="sig-paren">(</span><em>keywords</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cansen/profiles.html#TemperatureProfile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cansen.profiles.TemperatureProfile" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.7/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Set the temperature of the reactor by using a user specified
 temperature profile. The initialization and calling of this class
-are handled by the  <a class="reference external" href="http://cantera.github.io/docs/sphinx/html/cython/zerodim.html#cantera.Func1">Func1</a>
-interface of Cantera. Used with the input keyword <a class="reference internal" href="keywords.html#tpro"><span>TPRO</span></a></p>
+are handled by the <a class="reference external" href="https://cantera.org/documentation/docs-2.4/sphinx/html/cython/zerodim.html#cantera.Func1" title="(in Cantera v2.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Func1</span></code></a>
+interface of Cantera. Used with the input keyword <a class="reference internal" href="keywords.html#tpro"><span class="std std-ref">TPRO</span></a></p>
 <p>Set the initial values of the arrays from the input keywords.</p>
 <p>The time and temperature are read from the input file and
-stored in the <code class="docutils literal"><span class="pre">keywords</span></code> dictionary as lists. This function
+stored in the <code class="docutils literal notranslate"><span class="pre">keywords</span></code> dictionary as lists. This function
 is only called once when the class is initialized at the
 beginning of a problem so it is efficient.</p>
 <dl class="method">
@@ -276,12 +259,12 @@ beginning of a problem so it is efficient.</p>
 <code class="descname">__call__</code><span class="sig-paren">(</span><em>t</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cansen/profiles.html#TemperatureProfile.__call__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cansen.profiles.TemperatureProfile.__call__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the temperature when called during a time step.</p>
 <p>Using linear interpolation, determine the temperature at a
-given input time <code class="docutils literal"><span class="pre">t</span></code>.</p>
+given input time <code class="docutils literal notranslate"><span class="pre">t</span></code>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>t</strong> &#8211; Input float, current simulation time.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>t</strong> – Input float, current simulation time.</td>
 </tr>
 </tbody>
 </table>
@@ -292,25 +275,25 @@ given input time <code class="docutils literal"><span class="pre">t</span></code
 <dl class="class">
 <dt id="cansen.profiles.ICEngineProfile">
 <em class="property">class </em><code class="descclassname">cansen.profiles.</code><code class="descname">ICEngineProfile</code><span class="sig-paren">(</span><em>keywords</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cansen/profiles.html#ICEngineProfile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cansen.profiles.ICEngineProfile" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.7/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Set the velocity of the wall according to the parameters of a
 reciprocating engine. The initialization and calling of this class
-are handled by the <a class="reference external" href="http://cantera.github.io/docs/sphinx/html/cython/zerodim.html#cantera.Func1">Func1</a>
-interface of Cantera. Used with the input keyword <a class="reference internal" href="keywords.html#icen"><span>ICEN</span></a>.</p>
+are handled by the <a class="reference external" href="https://cantera.org/documentation/docs-2.4/sphinx/html/cython/zerodim.html#cantera.Func1" title="(in Cantera v2.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Func1</span></code></a>
+interface of Cantera. Used with the input keyword <a class="reference internal" href="keywords.html#icen"><span class="std std-ref">ICEN</span></a>.</p>
 <p>Set the initial values of the engine parameters.</p>
 <p>The parameters are read from the input file into the
-<code class="docutils literal"><span class="pre">keywords</span></code> dictionary.</p>
+<code class="docutils literal notranslate"><span class="pre">keywords</span></code> dictionary.</p>
 <dl class="method">
 <dt id="cansen.profiles.ICEngineProfile.__call__">
 <code class="descname">__call__</code><span class="sig-paren">(</span><em>time</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cansen/profiles.html#ICEngineProfile.__call__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cansen.profiles.ICEngineProfile.__call__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the velocity of the piston when called.</p>
 <p>The function for the velocity is given by Heywood.
-See <a class="reference internal" href="icengine.html"><em>Internal Combustion Engine Model</em></a>.</p>
+See <a class="reference internal" href="icengine.html"><span class="doc">Internal Combustion Engine Model</span></a>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>time</strong> &#8211; Input float, current simulation time</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>time</strong> – Input float, current simulation time</td>
 </tr>
 </tbody>
 </table>
@@ -321,7 +304,7 @@ See <a class="reference internal" href="icengine.html"><em>Internal Combustion E
 <dl class="class">
 <dt id="cansen.profiles.PressureProfile">
 <em class="property">class </em><code class="descclassname">cansen.profiles.</code><code class="descname">PressureProfile</code><a class="reference internal" href="_modules/cansen/profiles.html#PressureProfile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cansen.profiles.PressureProfile" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.7/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Dummy class for the pressure profile, to be implemented in CanSen v2.0</p>
 </dd></dl>
 
@@ -331,16 +314,16 @@ See <a class="reference internal" href="icengine.html"><em>Internal Combustion E
 <dl class="class">
 <dt id="cansen.run_cases.SimulationCase">
 <em class="property">class </em><code class="descclassname">cansen.run_cases.</code><code class="descname">SimulationCase</code><span class="sig-paren">(</span><em>filenames</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cansen/run_cases.html#SimulationCase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cansen.run_cases.SimulationCase" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.7/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Class that sets up and runs a simulation case.</p>
 <p>Initialize the simulation case.</p>
-<p>Read the SENKIN-format input file is read into the <code class="docutils literal"><span class="pre">keywords</span></code>
+<p>Read the SENKIN-format input file is read into the <code class="docutils literal notranslate"><span class="pre">keywords</span></code>
 dictionary.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filenames</strong> &#8211; Dictionary containing the relevant file names for this
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filenames</strong> – Dictionary containing the relevant file names for this
 case.</td>
 </tr>
 </tbody>
@@ -348,17 +331,17 @@ case.</td>
 <dl class="method">
 <dt id="cansen.run_cases.SimulationCase.setup_case">
 <code class="descname">setup_case</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cansen/run_cases.html#SimulationCase.setup_case"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cansen.run_cases.SimulationCase.setup_case" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sets up the case to be run. Initializes the <code class="docutils literal"><span class="pre">ThermoPhase</span></code>,
-<code class="docutils literal"><span class="pre">Reactor</span></code>, and <code class="docutils literal"><span class="pre">ReactorNet</span></code> according to the values from
-the input file.</p>
+<dd><p>Sets up the case to be run. Initializes the <a class="reference external" href="https://cantera.org/documentation/docs-2.4/sphinx/html/cython/thermo.html#cantera.ThermoPhase" title="(in Cantera v2.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ThermoPhase</span></code></a>,
+<a class="reference external" href="https://cantera.org/documentation/docs-2.4/sphinx/html/cython/zerodim.html#cantera.Reactor" title="(in Cantera v2.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Reactor</span></code></a>, and <a class="reference external" href="https://cantera.org/documentation/docs-2.4/sphinx/html/cython/zerodim.html#cantera.ReactorNet" title="(in Cantera v2.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ReactorNet</span></code></a> according
+to the values from the input file.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="cansen.run_cases.SimulationCase.run_case">
 <code class="descname">run_case</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cansen/run_cases.html#SimulationCase.run_case"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cansen.run_cases.SimulationCase.run_case" title="Permalink to this definition">¶</a></dt>
-<dd><p>Actually run the case set up by <code class="docutils literal"><span class="pre">setup_case</span></code>. Sets binary
+<dd><p>Actually run the case set up by <cite>setup_case</cite>. Sets binary
 output file format, then runs the simulation by using
-<code class="docutils literal"><span class="pre">ReactorNet.step(self.tend)</span></code>.</p>
+<a href="#id1"><span class="problematic" id="id2">:py:`~cantera.ReactorNet.step`</span></a>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -374,15 +357,15 @@ between the setup and run. See <cite>setup_case</cite> and <cite>run_case</cite>
 <code class="descname">reactor_state_printer</code><span class="sig-paren">(</span><em>state</em>, <em>end=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cansen/run_cases.html#SimulationCase.reactor_state_printer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cansen.run_cases.SimulationCase.reactor_state_printer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Produce pretty-printed output from the input reactor state.</p>
 <p>In this function, we have to explicitly pass in the reactor
-state instead of using <code class="docutils literal"><span class="pre">self.reac</span></code> because we might have
+state instead of using <code class="docutils literal notranslate"><span class="pre">self.reac</span></code> because we might have
 interpolated to get to the proper time.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>state</strong> &#8211; Vector of reactor state information.</li>
-<li><strong>end</strong> &#8211; Boolean to tell the printer this is the final print operation.</li>
+<li><strong>state</strong> – Vector of reactor state information.</li>
+<li><strong>end</strong> – Boolean to tell the printer this is the final print operation.</li>
 </ul>
 </td>
 </tr>
@@ -395,19 +378,19 @@ interpolated to get to the proper time.</p>
 <dl class="class">
 <dt id="cansen.run_cases.MultiSimulationCase">
 <em class="property">class </em><code class="descclassname">cansen.run_cases.</code><code class="descname">MultiSimulationCase</code><span class="sig-paren">(</span><em>filenames</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cansen/run_cases.html#MultiSimulationCase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cansen.run_cases.MultiSimulationCase" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#cansen.run_cases.SimulationCase" title="cansen.run_cases.SimulationCase"><code class="xref py py-class docutils literal"><span class="pre">cansen.run_cases.SimulationCase</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#cansen.run_cases.SimulationCase" title="cansen.run_cases.SimulationCase"><code class="xref py py-class docutils literal notranslate"><span class="pre">cansen.run_cases.SimulationCase</span></code></a></p>
 <p>Class that sets up and runs a simulation case, for multiple.</p>
 <p>When multiple cases are run, no output is printed and no simulation
 data is saved; upon completion, the calculated ignition delay times
 are written to the output file.</p>
 <p>Initialize the simulation case.</p>
-<p>Read the SENKIN-format input file is read into the <code class="docutils literal"><span class="pre">keywords</span></code>
+<p>Read the SENKIN-format input file is read into the <code class="docutils literal notranslate"><span class="pre">keywords</span></code>
 dictionary.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filenames</strong> &#8211; Dictionary containing the relevant file names for this
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filenames</strong> – Dictionary containing the relevant file names for this
 case.</td>
 </tr>
 </tbody>
@@ -415,8 +398,8 @@ case.</td>
 <dl class="method">
 <dt id="cansen.run_cases.MultiSimulationCase.run_case">
 <code class="descname">run_case</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cansen/run_cases.html#MultiSimulationCase.run_case"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cansen.run_cases.MultiSimulationCase.run_case" title="Permalink to this definition">¶</a></dt>
-<dd><p>Actually run the case set up by <code class="docutils literal"><span class="pre">setup_case</span></code>. Runs the
-simulation by using <code class="docutils literal"><span class="pre">ReactorNet.step(self.tend)</span></code>.</p>
+<dd><p>Actually run the case set up by <code class="docutils literal notranslate"><span class="pre">setup_case</span></code>. Runs the
+simulation by using <code class="docutils literal notranslate"><span class="pre">ReactorNet.step(self.tend)</span></code>.</p>
 </dd></dl>
 
 </dd></dl>
@@ -427,24 +410,24 @@ simulation by using <code class="docutils literal"><span class="pre">ReactorNet.
 <dl class="class">
 <dt id="cansen.user_routines.VolumeFunctionTime">
 <em class="property">class </em><code class="descclassname">cansen.user_routines.</code><code class="descname">VolumeFunctionTime</code><a class="reference internal" href="_modules/cansen/user_routines.html#VolumeFunctionTime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cansen.user_routines.VolumeFunctionTime" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.7/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Calculate the volume of the reactor as a user specified function
 of time.</p>
 <p>Set up the function to be calculated.</p>
 <p>The init function should be used to import any parameters for
 the volume as a function of time from external files. Do not
 calculate the volume as a function of time here. Store all of
-the parameters in the <code class="docutils literal"><span class="pre">self</span></code> instance. The reason for this is
-to avoid running the <code class="docutils literal"><span class="pre">__init__</span></code> function on every time step.
+the parameters in the <code class="docutils literal notranslate"><span class="pre">self</span></code> instance. The reason for this is
+to avoid running the <code class="docutils literal notranslate"><span class="pre">__init__</span></code> function on every time step.
 See the example below.</p>
 <p>Example to load polynomial parameters from a file:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c"># Read the file into the list ``self.params``. The lines of</span>
-<span class="c"># the file are read as strings.</span>
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;file.txt&#39;</span><span class="p">,</span><span class="s">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">input_file</span><span class="p">:</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Read the file into the list ``self.params``. The lines of</span>
+<span class="c1"># the file are read as strings.</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;file.txt&#39;</span><span class="p">,</span><span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">input_file</span><span class="p">:</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="n">input_file</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
-<span class="c"># Convert the strings to floats.</span>
+<span class="c1"># Convert the strings to floats.</span>
 <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">param</span><span class="p">)</span> <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">]</span>
-<span class="bp">self</span><span class="o">.</span><span class="n">area</span> <span class="o">=</span> <span class="mi">1</span> <span class="c"># m**2</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">area</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1"># m**2</span>
 </pre></div>
 </div>
 <dl class="method">
@@ -454,14 +437,14 @@ See the example below.</p>
 <p>The call function should be where the implementation of the
 volume as a function of time is done. Cantera expects the
 velocity to be returned - v = dV/dt * 1/A. Get all of the
-needed parameters that were stored in the <code class="docutils literal"><span class="pre">self</span></code> instance.
+needed parameters that were stored in the <code class="docutils literal notranslate"><span class="pre">self</span></code> instance.
 See the example below.</p>
 <p>Example to use the previously stored polynomial parameters:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">volume</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">time</span> <span class="o">+</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">time</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">*</span><span class="n">time</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="c"># m**3</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">volume</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">time</span> <span class="o">+</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">time</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">*</span><span class="n">time</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="c1"># m**3</span>
 <span class="n">dvoldt</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">time</span> <span class="o">+</span>
-    <span class="mi">3</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">*</span><span class="n">time</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="c"># m**3/s</span>
-<span class="n">velocity</span> <span class="o">=</span> <span class="n">dvoldt</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">area</span> <span class="c"># m/s</span>
+    <span class="mi">3</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">*</span><span class="n">time</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># m**3/s</span>
+<span class="n">velocity</span> <span class="o">=</span> <span class="n">dvoldt</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">area</span> <span class="c1"># m/s</span>
 <span class="k">return</span> <span class="n">velocity</span>
 </pre></div>
 </div>
@@ -472,22 +455,22 @@ See the example below.</p>
 <dl class="class">
 <dt id="cansen.user_routines.TemperatureFunctionTime">
 <em class="property">class </em><code class="descclassname">cansen.user_routines.</code><code class="descname">TemperatureFunctionTime</code><a class="reference internal" href="_modules/cansen/user_routines.html#TemperatureFunctionTime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cansen.user_routines.TemperatureFunctionTime" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.7/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Calculate the temperature of the reactor as a user specified
 function of time.</p>
 <p>Set up the function to be calculated.</p>
 <p>The init function should be used to import any parameters for
 the temperature as a function of time from external files. Do not
 calculate the temperature as a function of time here. Store all of
-the parameters in the <code class="docutils literal"><span class="pre">self</span></code> instance. The reason for this is
-to avoid running the <code class="docutils literal"><span class="pre">__init__</span></code> function on every time step.
+the parameters in the <code class="docutils literal notranslate"><span class="pre">self</span></code> instance. The reason for this is
+to avoid running the <code class="docutils literal notranslate"><span class="pre">__init__</span></code> function on every time step.
 See the example below.</p>
 <p>Example to load polynomial parameters from a file:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c"># Read the file into the list ``self.params``. The lines of</span>
-<span class="c"># the file are read as strings.</span>
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;file.txt&#39;</span><span class="p">,</span><span class="s">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">input_file</span><span class="p">:</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Read the file into the list ``self.params``. The lines of</span>
+<span class="c1"># the file are read as strings.</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;file.txt&#39;</span><span class="p">,</span><span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">input_file</span><span class="p">:</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="n">input_file</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
-<span class="c"># Convert the strings to floats.</span>
+<span class="c1"># Convert the strings to floats.</span>
 <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">param</span><span class="p">)</span> <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">]</span>
 </pre></div>
 </div>
@@ -497,12 +480,12 @@ See the example below.</p>
 <dd><p>Return the temperature of the piston at the given time.</p>
 <p>The call function should be where the implementation of the
 temperature as a function of time is done. Get all of the
-needed parameters that were stored in the <code class="docutils literal"><span class="pre">self</span></code> instance.
-See the example below. Note: <code class="docutils literal"><span class="pre">None</span></code> is not a valid return
+needed parameters that were stored in the <code class="docutils literal notranslate"><span class="pre">self</span></code> instance.
+See the example below. Note: <code class="docutils literal notranslate"><span class="pre">None</span></code> is not a valid return
 value, so this function does not work as written.</p>
 <p>Example to use the previously stored polynomial parameters:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">temperature</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">time</span> <span class="o">+</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">time</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">*</span><span class="n">time</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="c"># K</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">temperature</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">time</span> <span class="o">+</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">time</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">*</span><span class="n">time</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="c1"># K</span>
 <span class="k">return</span> <span class="n">temperature</span>
 </pre></div>
 </div>
@@ -515,9 +498,18 @@ value, so this function does not work as written.</p>
 <span id="utils-module"></span><h2>utils module<a class="headerlink" href="#module-cansen.utils" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="cansen.utils.MyParser">
-<em class="property">class </em><code class="descclassname">cansen.utils.</code><code class="descname">MyParser</code><span class="sig-paren">(</span><em>prog=None</em>, <em>usage=None</em>, <em>description=None</em>, <em>epilog=None</em>, <em>parents=[]</em>, <em>formatter_class=&lt;class 'argparse.HelpFormatter'&gt;</em>, <em>prefix_chars='-'</em>, <em>fromfile_prefix_chars=None</em>, <em>argument_default=None</em>, <em>conflict_handler='error'</em>, <em>add_help=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cansen/utils.html#MyParser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cansen.utils.MyParser" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">argparse.ArgumentParser</span></code></p>
+<em class="property">class </em><code class="descclassname">cansen.utils.</code><code class="descname">MyParser</code><span class="sig-paren">(</span><em>prog=None</em>, <em>usage=None</em>, <em>description=None</em>, <em>epilog=None</em>, <em>parents=[]</em>, <em>formatter_class=&lt;class 'argparse.HelpFormatter'&gt;</em>, <em>prefix_chars='-'</em>, <em>fromfile_prefix_chars=None</em>, <em>argument_default=None</em>, <em>conflict_handler='error'</em>, <em>add_help=True</em>, <em>allow_abbrev=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cansen/utils.html#MyParser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cansen.utils.MyParser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.7/library/argparse.html#argparse.ArgumentParser" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">argparse.ArgumentParser</span></code></a></p>
 <p>Parser that redefines the error printing</p>
+<dl class="method">
+<dt id="cansen.utils.MyParser.error">
+<code class="descname">error</code><span class="sig-paren">(</span><em>message: string</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cansen/utils.html#MyParser.error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cansen.utils.MyParser.error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints a usage message incorporating the message to stderr and
+exits.</p>
+<p>If you override this in a subclass, it should not return – it
+should either exit or raise an exception.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="function">
@@ -531,9 +523,9 @@ the Cantera built-in script <cite>ck2cti</cite>.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>mech_filename</strong> &#8211; Filename of the input CHEMKIN format mechanism. The converted
+<li><strong>mech_filename</strong> – Filename of the input CHEMKIN format mechanism. The converted
 CTI file will have the same name, but with <cite>.cti</cite> extension.</li>
-<li><strong>thermo_filename</strong> &#8211; Filename of the thermodynamic database. Optional if the
+<li><strong>thermo_filename</strong> – Filename of the thermodynamic database. Optional if the
 thermodynamic database is present in the mechanism input.</li>
 </ul>
 </td>
@@ -552,10 +544,10 @@ separate temporary files, for individual reading of keywords.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>input_filename</strong> &#8211; Filename of the SENKIN input file.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>input_filename</strong> – Filename of the SENKIN input file.</td>
 </tr>
 <tr class="field-even field"><th class="field-name" colspan="2">Return filenames:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body">List of temporary filenames.</td>
+<tr class="field-even field"><td>&#160;</td><td class="field-body">List of temporary filenames.</td>
 </tr>
 </tbody>
 </table>
@@ -569,7 +561,7 @@ separate temporary files, for individual reading of keywords.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>files</strong> &#8211; List of names of files to be removed</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>files</strong> – List of names of files to be removed</td>
 </tr>
 </tbody>
 </table>
@@ -583,7 +575,7 @@ separate temporary files, for individual reading of keywords.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>input_filename</strong> &#8211; Filename of the SENKIN input file.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>input_filename</strong> – Filename of the SENKIN input file.</td>
 </tr>
 </tbody>
 </table>
@@ -597,7 +589,7 @@ separate temporary files, for individual reading of keywords.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>argv</strong> &#8211; List of command line options.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>argv</strong> – List of command line options.</td>
 </tr>
 </tbody>
 </table>
@@ -612,9 +604,9 @@ separate temporary files, for individual reading of keywords.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>interp_time</strong> &#8211; Time at which the interpolated values should be calculated</li>
-<li><strong>state1</strong> &#8211; Array of the state information at the previous time step.</li>
-<li><strong>state2</strong> &#8211; Array of the state information at the current time step.</li>
+<li><strong>interp_time</strong> – Time at which the interpolated values should be calculated</li>
+<li><strong>state1</strong> – Array of the state information at the previous time step.</li>
+<li><strong>state2</strong> – Array of the state information at the current time step.</li>
 </ul>
 </td>
 </tr>
@@ -629,20 +621,20 @@ separate temporary files, for individual reading of keywords.</p>
 <p>Given the equivalence ratio, fuel mixture, oxidizer mixture,
 the products of complete combustion, and any additional species for
 the mixture, return a string containing the mole fractions of the
-species, suitable for setting the state of the input ThermoPhase.</p>
+species, suitable for setting the state of the input <a class="reference external" href="https://cantera.org/documentation/docs-2.4/sphinx/html/cython/thermo.html#cantera.ThermoPhase" title="(in Cantera v2.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ThermoPhase</span></code></a>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>gas</strong> &#8211; Cantera ThermoPhase object containing the desired species.</li>
-<li><strong>eq_ratio</strong> &#8211; Equivalence ratio</li>
-<li><strong>fuel</strong> &#8211; Dictionary of molecules in the fuel mixture and the fraction of
+<li><strong>gas</strong> – Cantera <a class="reference external" href="https://cantera.org/documentation/docs-2.4/sphinx/html/cython/thermo.html#cantera.ThermoPhase" title="(in Cantera v2.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ThermoPhase</span></code></a> object containing the desired species.</li>
+<li><strong>eq_ratio</strong> – Equivalence ratio</li>
+<li><strong>fuel</strong> – Dictionary of molecules in the fuel mixture and the fraction of
 each molecule in the fuel mixture</li>
-<li><strong>oxidizer</strong> &#8211; Dictionary of molecules in the oxidizer mixture and the
+<li><strong>oxidizer</strong> – Dictionary of molecules in the oxidizer mixture and the
 fraction of each molecule in the oxidizer mixture.</li>
-<li><strong>complete_products</strong> &#8211; List of species in the products of complete combustion.</li>
-<li><strong>additional_species</strong> &#8211; Dictionary of molecules that will be added to the mixture.
+<li><strong>complete_products</strong> – List of species in the products of complete combustion.</li>
+<li><strong>additional_species</strong> – Dictionary of molecules that will be added to the mixture.
 The mole fractions given in this dictionary are as a fraction
 of the total mixture.</li>
 </ul>
@@ -657,45 +649,64 @@ of the total mixture.</li>
 
 
           </div>
+          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Code Documentation</a><ul>
-<li><a class="reference internal" href="#module-cansen.cansen">cansen module</a></li>
-<li><a class="reference internal" href="#module-cansen.exceptions">exceptions module</a></li>
-<li><a class="reference internal" href="#module-cansen.printer">printer module</a></li>
-<li><a class="reference internal" href="#module-cansen.profiles">profiles module</a></li>
-<li><a class="reference internal" href="#module-cansen.run_cases">run_cases module</a></li>
-<li><a class="reference internal" href="#module-cansen.user_routines">user_routines module</a></li>
-<li><a class="reference internal" href="#module-cansen.utils">utils module</a></li>
+<h1 class="logo"><a href="index.html">CanSen</a></h1>
+
+
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=bryanwweber&repo=CanSen&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">CanSen Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="keywords.html">Supported Input Keywords</a></li>
+<li class="toctree-l1"><a class="reference internal" href="icengine.html">Internal Combustion Engine Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="postprocessing.html">Postprocessing</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Code Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-cansen.cansen">cansen module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-cansen.exceptions">exceptions module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-cansen.printer">printer module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-cansen.profiles">profiles module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-cansen.run_cases">run_cases module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-cansen.user_routines">user_routines module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-cansen.utils">utils module</a></li>
 </ul>
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="postprocessing.html"
-                        title="previous chapter">Postprocessing</a></p>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="_sources/codedocs.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="postprocessing.html" title="previous chapter">Postprocessing</a></li>
+  </ul></li>
+</ul>
+</div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -703,17 +714,21 @@ of the total mixture.</li>
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2015, Bryan W. Weber.
+      &copy;2018, Bryan W. Weber.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.4</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
       
       |
-      <a href="_sources/codedocs.txt"
-          rel="nofollow">Page source</a></li>
+      <a href="_sources/codedocs.rst.txt"
+          rel="nofollow">Page source</a>
     </div>
 
+    
+    <a href="https://github.com/bryanwweber/CanSen" class="github">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
+    </a>
     
 
     

@@ -1,60 +1,42 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Postprocessing &mdash; CanSen 1.2.0 documentation</title>
-    
+    <title>Postprocessing &#8212; CanSen 1.2.0 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '1.2.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.9.0/dist/katex.min.css" />
+    <link rel="stylesheet" type="text/css" href="_static/katex-math.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
-    <link rel="top" title="CanSen 1.2.0 documentation" href="index.html" />
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.9.0/dist/katex.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.9.0/dist/contrib/auto-render.min.js"></script>
+    <script type="text/javascript" src="_static/katex_autorenderer.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Code Documentation" href="codedocs.html" />
     <link rel="prev" title="Internal Combustion Engine Model" href="icengine.html" />
    
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-  </head>
-  <body role="document">
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="codedocs.html" title="Code Documentation"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="icengine.html" title="Internal Combustion Engine Model"
-             accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">CanSen</a> &raquo;</li> 
-      </ul>
-    </div>  
+  </head><body>
+  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
+          
+
           <div class="body" role="main">
             
   <div class="section" id="postprocessing">
@@ -69,18 +51,18 @@ this tutorial will remain the same for all of the interfaces.</p>
 <p>There are several Python interfaces for HDF5, but the one we will be
 using is called PyTables. The documentation for PyTables can be found
 on <a class="reference external" href="http://pytables.github.io/usersguide/index.html">their GitHub</a> page.</p>
-<p>Note that on the following lines, the <code class="docutils literal"><span class="pre">&gt;&gt;&gt;</span></code> indicates that you should
-type the text at a Python prompt, not including the <code class="docutils literal"><span class="pre">&gt;&gt;&gt;</span></code>. First, we
+<p>Note that on the following lines, the <code class="docutils literal notranslate"><span class="pre">&gt;&gt;&gt;</span></code> indicates that you should
+type the text at a Python prompt, not including the <code class="docutils literal notranslate"><span class="pre">&gt;&gt;&gt;</span></code>. First, we
 will import the necessary libraries:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">tables</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">cantera</span> <span class="kn">as</span> <span class="nn">ct</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">tables</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">cantera</span> <span class="k">as</span> <span class="nn">ct</span>
 </pre></div>
 </div>
-<p>If either of these don&#8217;t work, make sure that PyTables and Cantera are
+<p>If either of these don’t work, make sure that PyTables and Cantera are
 both properly installed.</p>
 <p>To print information about the save file, just type the name of
 its variable</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">save_file</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">save_file</span>
 </pre></div>
 </div>
 <p>The data is saved in the save file with the Table format. Each
@@ -93,94 +75,94 @@ in each row).</p>
 time step is stored in a Group, which is stored in the Root. It
 can be thought of as nested directories, with the Root as the top
 directory, then the Group, then the Table, like so:</p>
-<div class="highlight-python"><div class="highlight"><pre>Root
-    |-Group
-          |-Table
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Root</span>
+    <span class="o">|-</span><span class="n">Group</span>
+          <span class="o">|-</span><span class="n">Table</span>
 </pre></div>
 </div>
 <p>To access the information in the Table, it should be stored in a
 variable for quick access. The name of the Group in the save
-files from CanSen is <code class="docutils literal"><span class="pre">reactor</span></code>.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">table</span> <span class="o">=</span> <span class="n">save_file</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">reactor</span>
+files from CanSen is <code class="docutils literal notranslate"><span class="pre">reactor</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">table</span> <span class="o">=</span> <span class="n">save_file</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">reactor</span>
 </pre></div>
 </div>
 <p>The Table can now be used like any other class instance. In
 particular, the Table class defines a number of useful functions
-and attributes, such as <code class="docutils literal"><span class="pre">nrows</span></code>, which prints the number of
+and attributes, such as <code class="docutils literal notranslate"><span class="pre">nrows</span></code>, which prints the number of
 rows in the Table.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">table</span><span class="o">.</span><span class="n">nrows</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">table</span><span class="o">.</span><span class="n">nrows</span>
 </pre></div>
 </div>
 <p>PyTables provides a method to iterate over the rows in a table
-automatically, called <code class="docutils literal"><span class="pre">iterrows</span></code>. Here we introduce one way to
+automatically, called <code class="docutils literal notranslate"><span class="pre">iterrows</span></code>. Here we introduce one way to
 access information in a particular Column in the Table, by using
 natural name indexing. In this case, we print the value of the
 time at each time step.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">table</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">table</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
 <span class="go">        print(row[&#39;time&#39;])</span>
 </pre></div>
 </div>
 <p>Note that numerical indexing is also supported. The following is
 equivalent to the above:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">table</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">table</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
 <span class="go">        print(row[0])</span>
 </pre></div>
 </div>
 <p>The information stored by CanSen is written into case-sensitive
 columns named:</p>
 <ol class="arabic simple" start="0">
-<li><code class="docutils literal"><span class="pre">time</span></code></li>
-<li><code class="docutils literal"><span class="pre">temperature</span></code></li>
-<li><code class="docutils literal"><span class="pre">pressure</span></code></li>
-<li><code class="docutils literal"><span class="pre">volume</span></code></li>
-<li><code class="docutils literal"><span class="pre">massfractions</span></code></li>
-<li><code class="docutils literal"><span class="pre">sensitivity</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">time</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">temperature</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">pressure</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">volume</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">massfractions</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">sensitivity</span></code></li>
 </ol>
 <p>Columns 0-3 have a single value in each row. Column 4
-(<code class="docutils literal"><span class="pre">massfractions</span></code>) contains a vector with length of the number of
+(<code class="docutils literal notranslate"><span class="pre">massfractions</span></code>) contains a vector with length of the number of
 species in the mechanism. Column 5 is optional and included only
 if the user requested sensitivity analysis during the simulation.
-The dimensions of Column 5 are <code class="docutils literal"><span class="pre">(n_vars,</span> <span class="pre">n_sensitivity_params)</span></code>.</p>
+The dimensions of Column 5 are <code class="docutils literal notranslate"><span class="pre">(n_vars,</span> <span class="pre">n_sensitivity_params)</span></code>.</p>
 <p>In addition to the method of iterating through Rows, entire
 Columns can be accessed and stored in variables. First, all of
 the Columns can be stored in a variable.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">all_cols</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">cols</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">all_cols</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">cols</span>
 </pre></div>
 </div>
 <p>In this method, different Columns are accessed by their numerical
-index. The first index to <code class="docutils literal"><span class="pre">all_cols</span></code> gives the row and the
+index. The first index to <code class="docutils literal notranslate"><span class="pre">all_cols</span></code> gives the row and the
 second index gives the column number. Remembering that Python is
 zero-based, to access the mass fractions on the 4th time step, do</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">mass_fracs_4</span> <span class="o">=</span> <span class="n">all_cols</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">4</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mass_fracs_4</span> <span class="o">=</span> <span class="n">all_cols</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">4</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>Individual Columns can be stored in variables as well. This is
 done by the natural naming scheme.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">all_mass_fracs</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">cols</span><span class="o">.</span><span class="n">massfractions</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">all_mass_fracs</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">cols</span><span class="o">.</span><span class="n">massfractions</span>
 </pre></div>
 </div>
-<p>This stores an instance of the Column class in <code class="docutils literal"><span class="pre">all_mass_fracs</span></code>.
+<p>This stores an instance of the Column class in <code class="docutils literal notranslate"><span class="pre">all_mass_fracs</span></code>.
 It may be more useful to store the data in a particular column in
 a variable. To do that, get a slice of the column by using the
 index and the colon operator. For instance, to store all of the
 mass fraction data in a variable</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">all_mass_fracs</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">cols</span><span class="o">.</span><span class="n">massfractions</span><span class="p">[:]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">all_mass_fracs</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">cols</span><span class="o">.</span><span class="n">massfractions</span><span class="p">[:]</span>
 </pre></div>
 </div>
 <p>Or, to store the fifth through tenth time steps</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">mass_fracs_5_10</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">cols</span><span class="o">.</span><span class="n">massfractions</span><span class="p">[</span><span class="mi">4</span><span class="p">:</span><span class="mi">9</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mass_fracs_5_10</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">cols</span><span class="o">.</span><span class="n">massfractions</span><span class="p">[</span><span class="mi">4</span><span class="p">:</span><span class="mi">9</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>Or, to store every other time step from the sixth through the
 20th</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">mass_fracs_alt</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">cols</span><span class="o">.</span><span class="n">massfractions</span><span class="p">[</span><span class="mi">5</span><span class="p">:</span><span class="mi">19</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mass_fracs_alt</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">cols</span><span class="o">.</span><span class="n">massfractions</span><span class="p">[</span><span class="mi">5</span><span class="p">:</span><span class="mi">19</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>Once the data has been extracted from the save file, we need to
 actually be able to do something with it. Fortunately, Cantera
 offers a simple way to do this, by initializing a Solution to the
 desired conditions.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">gas</span> <span class="o">=</span> <span class="n">ct</span><span class="o">.</span><span class="n">Solution</span><span class="p">(</span><span class="s">&#39;mech.xml&#39;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">gas</span> <span class="o">=</span> <span class="n">ct</span><span class="o">.</span><span class="n">Solution</span><span class="p">(</span><span class="s1">&#39;mech.xml&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">table</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
 <span class="go">        gas.TPY = row[&#39;temperature&#39;], row[&#39;pressure&#39;], row[&#39;massfractions&#39;]</span>
 <span class="go">        print(gas.creation_rates)</span>
@@ -197,34 +179,56 @@ about Cantera can be found at
 
 
           </div>
+          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="icengine.html"
-                        title="previous chapter">Internal Combustion Engine Model</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="codedocs.html"
-                        title="next chapter">Code Documentation</a></p>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="_sources/postprocessing.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
+<h1 class="logo"><a href="index.html">CanSen</a></h1>
+
+
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=bryanwweber&repo=CanSen&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">CanSen Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="keywords.html">Supported Input Keywords</a></li>
+<li class="toctree-l1"><a class="reference internal" href="icengine.html">Internal Combustion Engine Model</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Postprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="codedocs.html">Code Documentation</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="icengine.html" title="previous chapter">Internal Combustion Engine Model</a></li>
+      <li>Next: <a href="codedocs.html" title="next chapter">Code Documentation</a></li>
+  </ul></li>
+</ul>
+</div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -232,17 +236,21 @@ about Cantera can be found at
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2015, Bryan W. Weber.
+      &copy;2018, Bryan W. Weber.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.4</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
       
       |
-      <a href="_sources/postprocessing.txt"
-          rel="nofollow">Page source</a></li>
+      <a href="_sources/postprocessing.rst.txt"
+          rel="nofollow">Page source</a>
     </div>
 
+    
+    <a href="https://github.com/bryanwweber/CanSen" class="github">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
+    </a>
     
 
     
