@@ -533,21 +533,6 @@ def cli_parser(argv):
     return filenames, convert, multi, num_proc
 
 
-def reactor_interpolate(interp_time, state1, state2):
-    """Linearly interpolate the reactor states to the given input time.
-
-    :param interp_time:
-        Time at which the interpolated values should be calculated
-    :param state1:
-        Array of the state information at the previous time step.
-    :param state2:
-        Array of the state information at the current time step.
-    """
-    interp_state = state1 + ((state2 - state1)*(interp_time - state1[0]) /
-                             (state2[0] - state1[0]))
-    return interp_state
-
-
 def equivalence_ratio(gas, eq_ratio, fuel, oxidizer, complete_products,
                       additional_species):
     """Calculate the mixture mole fractions from the equivalence ratio.
@@ -556,7 +541,7 @@ def equivalence_ratio(gas, eq_ratio, fuel, oxidizer, complete_products,
     the products of complete combustion, and any additional species for
     the mixture, return a string containing the mole fractions of the
     species, suitable for setting the state of the input :py:class:`~cantera.ThermoPhase`.
-    Note that we can't use the :py:method:`~cantera.ThermoPhase.set_equivalence_ratio`
+    Note that we can't use the :py:function:`~cantera.ThermoPhase.set_equivalence_ratio`
     because we need to handle the cases of complete products that aren't CO2 and H2O
     and because we can specify additional species in the mixture.
 

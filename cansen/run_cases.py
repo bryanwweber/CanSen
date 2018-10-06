@@ -10,9 +10,7 @@ import tables
 # Local imports
 from .printer import divider
 from . import utils
-from .profiles import (VolumeProfile,
-                       TemperatureProfile,
-                       ICEngineProfile)
+from .profiles import (VolumeProfile, TemperatureProfile, ICEngineProfile)
 
 
 class SimulationCase(object):
@@ -324,9 +322,9 @@ class SimulationCase(object):
                 # the solver should be taking relatively small time
                 # steps near ignition.
                 if self.netw.time > self.tend:
-                    interp_state = utils.reactor_interpolate(self.tend,
-                                                             prev_time,
-                                                             cur_time)
+                    interp_state = prev_time
+                    interp_state += ((cur_time - prev_time)*(self.tend - prev_time[0]) /
+                                     (prev_time[0] - prev_time[0]))
                     self.reactor_state_printer(interp_state, end=True)
                     timestep['time'] = self.tend
                     timestep['temperature'] = interp_state[1]
@@ -386,9 +384,9 @@ class SimulationCase(object):
                 # Print Reactor state information to the screen for
                 # monitoring.
                 if self.netw.time > self.print_time:
-                    interp_state = utils.reactor_interpolate(self.print_time,
-                                                             prev_time,
-                                                             cur_time)
+                    interp_state = prev_time
+                    interp_state += ((cur_time - prev_time)*(self.print_time - prev_time[0]) /
+                                     (prev_time[0] - prev_time[0]))
                     self.reactor_state_printer(interp_state)
                     self.print_time += self.print_time_step
                 elif self.netw.time == self.print_time:
