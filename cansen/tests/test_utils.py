@@ -6,8 +6,9 @@ import shutil
 import pytest
 import cantera as ct
 
-from ..utils import convert_mech, equivalence_ratio
+from ..utils import convert_mech, equivalence_ratio, cli_parser
 from ..exceptions import CanSenError
+from .._version import __version__
 
 
 @pytest.fixture()
@@ -182,3 +183,69 @@ class TestEquivalenceRatio():
         additional_species = {'AR': 1.5}
         with pytest.raises(CanSenError, match='Additional species must sum to less than 1'):
             equivalence_ratio(gas, phi, fuel, oxidizer, complete_prod, additional_species)
+
+
+class TestCliParser():
+    """Tests of the CLI parser.
+
+    Not actually sure any of these are necessary, they would probably be
+    covered by some integration tests.
+    """
+
+    def test_no_args(self):
+        """Test that running the parser without arguments raises an error."""
+        with pytest.raises(SystemExit) as e:
+            cli_parser([])
+        assert str(e.value) == "1"
+
+    def test_version_output(self, capsys):
+        """Test that the version output is printed properly."""
+        with pytest.raises(SystemExit) as e:
+            cli_parser(['-V'])
+        assert str(e.value) == '0'
+        captured = capsys.readouterr()
+        loc = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+        assert captured.out == f"CanSen {__version__} from {loc} ()\n"
+
+        with pytest.raises(SystemExit) as e:
+            cli_parser(['--version'])
+        assert str(e.value) == '0'
+        captured = capsys.readouterr()
+        loc = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+        assert captured.out == f"CanSen {__version__} from {loc} ()\n"
+
+    def test_no_input_no_convert(self, capsys):
+        """Test that not specifying an input file and not converting raises an error."""
+        with pytest.raises(SystemExit) as e:
+            cli_parser(['--thermo', 'another argument'])
+        assert str(e.value) == "1"
+        captured = capsys.readouterr()
+        assert captured.out == 'Error: The input file must be specified\n'
+
+    def test_input_file_doesnt_exist(self, capsys):
+        """Test that specifying an input file that doesn't exist raises an error."""
+        with pytest.raises(SystemExit) as e:
+            cli_parser(['--input', 'this-file-does-not-exist'])
+        assert str(e.value) == "1"
+        captured = capsys.readouterr()
+        assert captured.out == ('Error: The specified input file '
+                                '"this-file-does-not-exist" does not exist\n')
+
+    def test_input_file_when_converting(self):
+        """Test that when specifying the convert function, the input_filename is None.
+
+        Is this just testing an implementation detail? Does it matter that the filename is None?
+        Pretty sure this test won't be necessary when actually testing the --convert option.
+        """
+        filenames, _, _, _ = cli_parser(['--convert', '-c', os.path.abspath(__file__)])
+        assert filenames['input_filename'] is None
+
+    def test_input_file_exists(self):
+        """Test that a good input file gives appropriate output.
+
+        Test that the input filename is stored in the dictionary that is the first element
+        of the tuple returned by the cli_parser. Pretty sure this is just testing an
+        implementation detail, probably don't need it.
+        """
+        filenames, _, _, _ = cli_parser(['-i', os.path.abspath(__file__), '-c', os.path.abspath(__file__)])
+        assert filenames['input_filename'] == os.path.abspath(__file__)
