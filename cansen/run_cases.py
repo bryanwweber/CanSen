@@ -10,7 +10,8 @@ import tables
 # Local imports
 from .printer import divider
 from . import utils
-from .profiles import (VolumeProfile, TemperatureProfile, ICEngineProfile)
+from .profiles import VolumeProfile, TemperatureProfile, ICEngineProfile
+from .__main__ import mech_filename as mfarg, save_filename as sfarg
 
 
 class SimulationCase(object):
@@ -18,7 +19,8 @@ class SimulationCase(object):
     Class that sets up and runs a simulation case.
     """
 
-    def __init__(self, filenames):
+    def __init__(self, input_filename, mech_filename=mfarg.default,
+                 save_filename=sfarg.default, thermo_filename=None):
         """Initialize the simulation case.
 
         Read the SENKIN-format input file is read into the ``keywords``
@@ -28,10 +30,10 @@ class SimulationCase(object):
             Dictionary containing the relevant file names for this
             case.
         """
-        self.input_filename = filenames['input_filename']
-        self.mech_filename = filenames['mech_filename']
-        self.save_filename = filenames['save_filename']
-        self.thermo_filename = filenames['thermo_filename']
+        self.input_filename = input_filename
+        self.mech_filename = mech_filename
+        self.save_filename = save_filename
+        self.thermo_filename = thermo_filename
 
         self.keywords = utils.read_input_file(self.input_filename)
 
@@ -324,7 +326,7 @@ class SimulationCase(object):
                 if self.netw.time > self.tend:
                     interp_state = prev_time
                     interp_state += ((cur_time - prev_time)*(self.tend - prev_time[0]) /
-                                     (prev_time[0] - prev_time[0]))
+                                     (cur_time[0] - prev_time[0]))
                     self.reactor_state_printer(interp_state, end=True)
                     timestep['time'] = self.tend
                     timestep['temperature'] = interp_state[1]
@@ -386,7 +388,7 @@ class SimulationCase(object):
                 if self.netw.time > self.print_time:
                     interp_state = prev_time
                     interp_state += ((cur_time - prev_time)*(self.print_time - prev_time[0]) /
-                                     (prev_time[0] - prev_time[0]))
+                                     (cur_time[0] - prev_time[0]))
                     self.reactor_state_printer(interp_state)
                     self.print_time += self.print_time_step
                 elif self.netw.time == self.print_time:
