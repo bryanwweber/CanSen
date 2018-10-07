@@ -6,58 +6,8 @@ import shutil
 import pytest
 import cantera as ct
 
-from ..utils import convert_mech, equivalence_ratio, cli_parser
+from ..utils import equivalence_ratio
 from ..exceptions import CanSenError
-from .._version import __version__
-
-
-@pytest.fixture()
-def datafiles(tmpdir, request):
-    """Move a folder of test files to a pytest ``tmpdir``.
-
-    The folder should have the same name as this module.
-    Similar to https://stackoverflow.com/a/29631801/2449192
-    """
-    test_dir, _ = os.path.splitext(request.module.__file__)
-    test_dir = os.path.abspath(test_dir)
-    dir_name = os.path.basename(test_dir)
-
-    try:
-        tmpdir = shutil.copytree(test_dir, os.path.join(tmpdir, dir_name))
-    except OSError:
-        shutil.rmtree(os.path.join(tmpdir, dir_name))
-        tmpdir = shutil.copytree(test_dir, os.path.join(tmpdir, dir_name))
-
-    return tmpdir
-
-
-def test_convert_mech_w_thermo(datafiles):
-    """Test conversion when thermo is in the input file.
-
-    This case is the single argument to ``convert_mech``.
-    """
-    input_file = os.path.join(datafiles, 'test-w-thermo.inp')
-    blessed_file = os.path.join(datafiles, 'test-blessed.cti')
-    os.chdir(datafiles)
-    output_file = convert_mech(input_file)
-    output_file = os.path.join(datafiles, output_file)
-    with open(output_file, 'r') as o_file, open(blessed_file, 'r') as b_file:
-        assert o_file.read() == b_file.read()
-
-
-def test_convert_mech_wo_thermo(datafiles):
-    """Test conversion when thermo is in a separate file.
-
-    This is the two argument case for ``convert_mech``.
-    """
-    input_file = os.path.join(datafiles, 'test-wo-thermo.inp')
-    dat_file = os.path.join(datafiles, 'test-wo-thermo.dat')
-    blessed_file = os.path.join(datafiles, 'test-blessed.cti')
-    os.chdir(datafiles)
-    output_file = convert_mech(input_file, dat_file)
-    output_file = os.path.join(datafiles, output_file)
-    with open(output_file, 'r') as o_file, open(blessed_file, 'r') as b_file:
-        assert o_file.read() == b_file.read()
 
 
 class TestEquivalenceRatio():
@@ -183,69 +133,3 @@ class TestEquivalenceRatio():
         additional_species = {'AR': 1.5}
         with pytest.raises(CanSenError, match='Additional species must sum to less than 1'):
             equivalence_ratio(gas, phi, fuel, oxidizer, complete_prod, additional_species)
-
-
-class TestCliParser():
-    """Tests of the CLI parser.
-
-    Not actually sure any of these are necessary, they would probably be
-    covered by some integration tests.
-    """
-
-    def test_no_args(self):
-        """Test that running the parser without arguments raises an error."""
-        with pytest.raises(SystemExit) as e:
-            cli_parser([])
-        assert str(e.value) == "1"
-
-    def test_version_output(self, capsys):
-        """Test that the version output is printed properly."""
-        with pytest.raises(SystemExit) as e:
-            cli_parser(['-V'])
-        assert str(e.value) == '0'
-        captured = capsys.readouterr()
-        loc = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-        assert captured.out == f"CanSen {__version__} from {loc} ()\n"
-
-        with pytest.raises(SystemExit) as e:
-            cli_parser(['--version'])
-        assert str(e.value) == '0'
-        captured = capsys.readouterr()
-        loc = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-        assert captured.out == f"CanSen {__version__} from {loc} ()\n"
-
-    def test_no_input_no_convert(self, capsys):
-        """Test that not specifying an input file and not converting raises an error."""
-        with pytest.raises(SystemExit) as e:
-            cli_parser(['--thermo', 'another argument'])
-        assert str(e.value) == "1"
-        captured = capsys.readouterr()
-        assert captured.out == 'Error: The input file must be specified\n'
-
-    def test_input_file_doesnt_exist(self, capsys):
-        """Test that specifying an input file that doesn't exist raises an error."""
-        with pytest.raises(SystemExit) as e:
-            cli_parser(['--input', 'this-file-does-not-exist'])
-        assert str(e.value) == "1"
-        captured = capsys.readouterr()
-        assert captured.out == ('Error: The specified input file '
-                                '"this-file-does-not-exist" does not exist\n')
-
-    def test_input_file_when_converting(self):
-        """Test that when specifying the convert function, the input_filename is None.
-
-        Is this just testing an implementation detail? Does it matter that the filename is None?
-        Pretty sure this test won't be necessary when actually testing the --convert option.
-        """
-        filenames, _, _, _ = cli_parser(['--convert', '-c', os.path.abspath(__file__)])
-        assert filenames['input_filename'] is None
-
-    def test_input_file_exists(self):
-        """Test that a good input file gives appropriate output.
-
-        Test that the input filename is stored in the dictionary that is the first element
-        of the tuple returned by the cli_parser. Pretty sure this is just testing an
-        implementation detail, probably don't need it.
-        """
-        filenames, _, _, _ = cli_parser(['-i', os.path.abspath(__file__), '-c', os.path.abspath(__file__)])
-        assert filenames['input_filename'] == os.path.abspath(__file__)

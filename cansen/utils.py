@@ -1,10 +1,7 @@
 # Standard libraries
-import sys
 import os
 from math import pi
 from tempfile import NamedTemporaryFile
-from argparse import ArgumentParser
-from multiprocessing import cpu_count
 from warnings import warn
 
 # Third-party modules
@@ -421,116 +418,6 @@ def read_input_file(input_filename):
         keywords['tempThresh'] = 400
 
     return keywords
-
-
-def cli_parser(argv):
-    """Parse command line interface input.
-
-    :param argv:
-        List of command line options.
-    """
-    parser = ArgumentParser(
-        prog='cansen',
-        description='CanSen - the SENKIN-like wrapper for Cantera written in Python.'
-    )
-
-    parser.add_argument('-V', '--version',
-                        action='store_true',
-                        help='Show the version of CanSen and quit')
-
-    parser.add_argument('-i', '--input',
-                        type=str,
-                        help='The simulation input file in SENKIN format.')
-    parser.add_argument('-o', '--output',
-                        type=str,
-                        default='output.out',
-                        help='The text output file.')
-    parser.add_argument('-x', '--save',
-                        type=str,
-                        default='save.hdf',
-                        help='The binary save output file.')
-    parser.add_argument('-c', '--chem',
-                        type=str,
-                        default='chem.xml',
-                        help='The chemistry input file, in either CHEMKIN,'
-                             ' Cantera CTI or CTML format.')
-    parser.add_argument('-d', '--thermo',
-                        type=str,
-                        help='The thermodynamic database. Optional if the'
-                             ' thermodynamic database is specified in the'
-                             ' chemistry input file. Otherwise, required.')
-    parser.add_argument('--convert',
-                        action='store_true',
-                        help='Convert the input mechanism to CTI format '
-                             'and quit. If ``--convert`` is specified, '
-                             'the SENKIN input file is optional.')
-    parser.add_argument('-m', '--multi',
-                        type=int,
-                        nargs='?',
-                        const=cpu_count(),
-                        default=False,
-                        help='Run multiple cases from the input file. '
-                             'Optional. If ``-m`` is used, must specify '
-                             'number of processors to be used (e.g., '
-                             '``-m 4``). If ``--multi`` is specified, '
-                             'CanSen uses the available number of '
-                             'processors by default.')
-
-    if len(argv) == 0:
-        parser.print_help()
-        sys.exit(1)
-
-    args = parser.parse_args(argv)
-
-    filenames = {}
-
-    if args.version:
-        from ._version import __version__
-        print('CanSen {version} from {path} ()'.format(
-            version=__version__,
-            path=os.path.abspath(os.path.dirname(__file__))))
-        sys.exit(0)
-
-    if args.input:
-        input_filename = args.input
-        if not os.path.isfile(input_filename):
-            print('Error: The specified input file '
-                  '"{}" does not exist'.format(input_filename)
-                  )
-            sys.exit(1)
-        filenames['input_filename'] = input_filename
-    elif not args.input and not args.convert:
-        print('Error: The input file must be specified')
-        sys.exit(1)
-    else:
-        filenames['input_filename'] = None
-
-    filenames['output_filename'] = args.output
-    filenames['save_filename'] = args.save
-
-    if not os.path.isfile(args.chem):
-        print('Error: The specified chemistry file '
-              '"{}" does not exist'.format(args.chem)
-              )
-        sys.exit(1)
-    filenames['mech_filename'] = args.chem
-
-    if args.thermo:
-        if not os.path.isfile(args.thermo):
-            print('Error: The specified thermodynamic database '
-                  '"{}" does not exist'.format(args.thermo))
-            sys.exit(1)
-    filenames['thermo_filename'] = args.thermo
-
-    convert = args.convert
-
-    num_proc = None
-    multi = False
-    if args.multi:
-        multi = True
-        num_proc = args.multi
-
-    return filenames, convert, multi, num_proc
 
 
 def equivalence_ratio(gas, eq_ratio, fuel, oxidizer, complete_products,
