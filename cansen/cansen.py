@@ -1,5 +1,6 @@
 # Standard libraries
 import sys
+import os
 from multiprocessing import Pool
 
 # Local imports
@@ -7,18 +8,18 @@ from . import utils
 from .printer import Tee
 from .run_cases import SimulationCase, MultiSimulationCase
 from ._version import __version__
+from .__main__ import output_filename as ofarg, save_filename as sfarg, mech_filename as mfarg
 
 
 def worker(sim_index_tup):
     """Worker for multiprocessing of cases.
 
     :param sim_index_tup:
-        Tuple containing the MultiSimulationCase object to be run and
+        Tuple containing the `MultiSimulationCase` object to be run and
         the index of current case for status messages.
     :return res:
         List of simulation results.
     """
-
     sim, index = sim_index_tup
     sim.run_simulation()
 
@@ -39,24 +40,37 @@ def worker(sim_index_tup):
     return res
 
 
-def main(filenames, convert, multi, num_proc, version):
-    """The main driver function of CanSen.
+def main(input_filename,
+         mech_filename=mfarg.default,
+         output_filename=ofarg.default,
+         save_filename=sfarg.default,
+         thermo_filename=None,
+         multi=False):
+    """Read command line arguments and run the simulation.
 
-    :param filenames:
-        Dictionary of filenames related to the simulation.
-    :param convert:
-        Boolean indicating that the user wishes only to convert the
-        input mechanism and quit.
-    :param multi:
-        Boolean indicating multiple cases to be run.
-    :param num_proc:
-        Number of processors to use for multiprocessing.
-    :param version:
-        Version string of CanSen.
+    :param args:
+        List of arguments to the function
     """
+    if not os.path.isfile(input_filename):
+        raise FileNotFoundError('The specified input file "{}"'
+                                ' does not exist'.format(input_filename))
 
-    # Open the text output file from the printer module
-    output_filename = filenames['output_filename']
+    if thermo_filename is not None and not os.path.isfile(thermo_filename):
+        raise FileNotFoundError('The specified thermodynamic database "{}"'
+                                ' does not exist'.format(thermo_filename))
+
+    if not os.path.isfile(mech_filename):
+        raise FileNotFoundError('The specified chemistry file "{}"'
+                                ' does not exist'.format(mech_filename))
+    # Convert the mechanism if it is in CHEMKIN format
+    if mech_filename.endswith('.inp'):
+        mech_filename = utils.convert_mech(mech_filename, thermo_filename)
+
+    num_proc = None
+    if multi:
+        num_proc = multi
+        multi = True
+
     out = None
     if multi:
         out = open(output_filename, 'w')
@@ -66,18 +80,7 @@ def main(filenames, convert, multi, num_proc, version):
     if not multi:
         # Print version information to screen at the start of the problem
         print("This is CanSen, the SENKIN-like wrapper for Cantera, "
-              "written in Python.\nVersion: {!s}\n".format(version))
-
-    # Convert the mechanism if it is in CHEMKIN format. If ``convert``
-    # is True, exit the simulation.
-    mech_filename = filenames['mech_filename']
-    thermo_filename = filenames['thermo_filename']
-    if mech_filename.endswith('.inp'):
-        mech_filename = utils.convert_mech(mech_filename, thermo_filename)
-
-    if convert:
-        print('User requested conversion only. Goodbye.')
-        sys.exit(0)
+              "written in Python.\nVersion: {!s}\n".format(__version__))
 
     # Run the simulation
     if multi:
@@ -127,48 +130,8 @@ def main(filenames, convert, multi, num_proc, version):
             print(line, file=out)
 
     else:
-        sim = SimulationCase(filenames)
+        sim = SimulationCase(input_filename, mech_filename, save_filename, thermo_filename)
         sim.run_simulation()
 
     # Clean up
     out.close()
-
-
-def cansen(argv):
-    """CanSen - the SENKIN-like wrapper for Cantera written in Python.
-
-    Usage:
-     -i:
-        Specify the simulation input file in SENKIN format. Required.
-     -o:
-        Specify the text output file. Optional, default: ``output.out``
-     -x:
-        Specify the binary save output file. Optional, default:
-        ``save.hdf``
-     -c:
-        Specify the chemistry input file, in either CHEMKIN, Cantera
-        CTI or CTML format. Optional, default: ``chem.xml``
-     -d:
-        Specify the thermodynamic database. Optional if the
-        thermodynamic database is specified in the chemistry input
-        file. Otherwise, required.
-     --convert:
-        Convert the input mechanism to CTI format and quit. If
-        ``--convert`` is specified, the SENKIN input file is optional.
-     -m, --multi:
-        Run multiple cases from the input file. Optional. If ``-m`` is
-        used, must specify number of processors to be used (e.g.,
-        ``-m 4``). If ``--multi`` is specified, CanSen uses the available
-        number of processors by default.
-     -h, --help:
-        Print this help message and quit.
-    """
-
-    ret = utils.cli_parser(argv)
-
-    filenames = ret[0]
-    convert = ret[1]
-    multi = ret[2]
-    num_proc = ret[3]
-
-    main(filenames, convert, multi, num_proc, __version__)
