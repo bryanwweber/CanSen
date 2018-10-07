@@ -14,6 +14,7 @@ omit =
     setup.py
     cansen/_version.py
     */tmp/*
+    */private/*
 
 [html]
 directory = htmlcov
