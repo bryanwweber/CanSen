@@ -28,17 +28,23 @@ def main(argv: Optional[List[str]] = None) -> 'argparse.Namespace':
     args = parser.parse_args(argv)
 
     if args.version:
-        print('CanSen {version} from {path} ()'.format(
-            version=__version__,
-            path=os.path.abspath(os.path.dirname(__file__))))
+        print(
+            "CanSen {version} from {path} ()".format(
+                version=__version__, path=os.path.abspath(os.path.dirname(__file__))
+            )
+        )
         sys.exit(0)
 
     if args.convert:
         if not os.path.isfile(args.chem):
-            raise FileNotFoundError('The chemistry file "{}" could not be found'.format(args.chem))
+            raise FileNotFoundError(
+                'The chemistry file "{}" could not be found'.format(args.chem)
+            )
         if args.thermo is not None and not os.path.isfile(args.thermo):
-            raise FileNotFoundError('The thermodynamic database "{}" '
-                                    'could not be found'.format(args.thermo))
+            raise FileNotFoundError(
+                'The thermodynamic database "{}" '
+                "could not be found".format(args.thermo)
+            )
 
         convert_mech(args.chem, args.thermo)
         sys.exit(0)
@@ -46,10 +52,14 @@ def main(argv: Optional[List[str]] = None) -> 'argparse.Namespace':
     return args
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     args = main()
-    c_main(input_filename=args.input, multi=args.multi, mech_filename=args.chem,
-           output_filename=args.output, save_filename=args.save,
-           thermo_filename=args.thermo,
-           )
+    c_main(
+        input_filename=args.input,
+        multi=args.multi,
+        mech_filename=args.chem,
+        output_filename=args.output,
+        save_filename=args.save,
+        thermo_filename=args.thermo,
+    )
