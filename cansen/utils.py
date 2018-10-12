@@ -3,6 +3,9 @@ import os
 from math import pi
 from tempfile import NamedTemporaryFile
 from warnings import warn
+from argparse import ArgumentParser
+from multiprocessing import cpu_count
+from typing import Optional
 
 # Third-party modules
 from cantera import ck2cti
@@ -18,8 +21,61 @@ from .exceptions import (KeywordError,
                          CanSenError,
                          )
 
+parser = ArgumentParser(
+    prog='cansen',
+    description='CanSen - the SENKIN-like wrapper for Cantera written in Python.'
+)
 
-def convert_mech(mech_filename, thermo_filename=None):
+parser.add_argument('-V', '--version',
+                    action='store_true',
+                    help='Show the version of CanSen and quit')
+
+parser.add_argument('-i', '--input',
+                    type=str,
+                    help='The simulation input file in SENKIN format.')
+
+output_filename = parser.add_argument('-o', '--output',
+                                      type=str,
+                                      default='output.out',
+                                      help='The text output file.')
+
+save_filename = parser.add_argument('-x', '--save',
+                                    type=str,
+                                    default='save.hdf',
+                                    help='The binary save output file.')
+
+mech_filename = parser.add_argument('-c', '--chem',
+                                    type=str,
+                                    default='chem.xml',
+                                    help='The chemistry input file, in either CHEMKIN,'
+                                         ' Cantera CTI or CTML format.')
+
+parser.add_argument('-d', '--thermo',
+                    type=str,
+                    help='The thermodynamic database. Optional if the'
+                         ' thermodynamic database is specified in the'
+                         ' chemistry input file. Otherwise, required.')
+
+parser.add_argument('--convert',
+                    action='store_true',
+                    help='Convert the input mechanism to CTI format '
+                         'and quit. If ``--convert`` is specified, '
+                         'the SENKIN input file is optional.')
+
+parser.add_argument('-m', '--multi',
+                    type=int,
+                    nargs='?',
+                    const=cpu_count(),
+                    default=False,
+                    help='Run multiple cases from the input file. '
+                         'Optional. If ``-m`` is used, must specify '
+                         'number of processors to be used (e.g., '
+                         '``-m 4``). If ``--multi`` is specified, '
+                         'CanSen uses the available number of '
+                         'processors by default.')
+
+
+def convert_mech(mech_filename: str, thermo_filename: Optional[str] = None) -> str:
     """Convert a mechanism and return a string with the filename.
 
     Convert a CHEMKIN format mechanism to the Cantera CTI format using
