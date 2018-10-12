@@ -1,17 +1,17 @@
 # Standard libraries
-import sys
 import os
 from multiprocessing import Pool
+from typing import Optional, Union, Tuple, List
 
 # Local imports
 from . import utils
 from .printer import Tee
 from .run_cases import SimulationCase, MultiSimulationCase
 from ._version import __version__
-from .__main__ import output_filename as ofarg, save_filename as sfarg, mech_filename as mfarg
+from .utils import output_filename as ofarg, save_filename as sfarg, mech_filename as mfarg
 
 
-def worker(sim_index_tup):
+def worker(sim_index_tup: Tuple[MultiSimulationCase, int]) -> List[float]:
     """Worker for multiprocessing of cases.
 
     :param sim_index_tup:
@@ -23,29 +23,24 @@ def worker(sim_index_tup):
     sim, index = sim_index_tup
     sim.run_simulation()
 
-    # store results
-    if sim.keywords.get('eqRatio') is None:
-        res = [sim.ignition_time,
-               sim.keywords['pressure'],
-               sim.keywords['temperature']]
-    else:
-        # store equivalence ratio if possible
-        res = [sim.ignition_time,
-               sim.keywords['pressure'],
-               sim.keywords['temperature'],
-               sim.keywords['eqRatio']]
+    res = [sim.ignition_time,
+           sim.keywords['pressure'],
+           sim.keywords['temperature']]
+
+    if sim.keywords.get('eqRatio') is not None:
+        res.append(sim.keywords['eqRatio'])
 
     print('Done with ' + str(index))
 
     return res
 
 
-def main(input_filename,
-         mech_filename=mfarg.default,
-         output_filename=ofarg.default,
-         save_filename=sfarg.default,
-         thermo_filename=None,
-         multi=False):
+def main(input_filename: str,
+         mech_filename: str = mfarg.default,
+         output_filename: str = ofarg.default,
+         save_filename: str = sfarg.default,
+         thermo_filename: Optional[str] = None,
+         multi: Union[bool, int] = False) -> None:
     """Read command line arguments and run the simulation.
 
     :param args:
@@ -71,7 +66,6 @@ def main(input_filename,
         num_proc = multi
         multi = True
 
-    out = None
     if multi:
         out = open(output_filename, 'w')
     else:
@@ -85,7 +79,7 @@ def main(input_filename,
     # Run the simulation
     if multi:
         # Preprocess the input file to separate the various cases.
-        input_files = utils.process_multi_input(filenames['input_filename'])
+        input_files = utils.process_multi_input(input_filename)
 
         # Create a pool based on the number of processors
         if num_proc is not None:
@@ -95,28 +89,25 @@ def main(input_filename,
             pool = Pool()
 
         jobs = []
-        results = []
 
         # prepare all cases
         for i, temp_file in enumerate(input_files):
 
-            local_names = filenames.copy()
-            local_names['input_filename'] = temp_file
-            sim = MultiSimulationCase(local_names)
+            sim = MultiSimulationCase(temp_file, mech_filename, save_filename, thermo_filename)
 
-            jobs.append([sim, i])
+            jobs.append((sim, i))
 
-        jobs = tuple(jobs)
         results = pool.map(worker, jobs)
 
-        # not adding more proceses
+        # not adding more processes
         pool.close()
 
         # ensure all finished
         pool.join()
 
         # clean up
-        utils.remove_files(input_files)
+        for f in input_files:
+            os.remove(f)
 
         # write output
         print('# Ignition delay [s], Pressure [atm], Temperature [K], '

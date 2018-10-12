@@ -34,3 +34,11 @@ def test_one_complete_simulation(datafiles):
     chem_file = os.path.abspath(os.path.join(datafiles, 'gri30.xml'))
     os.chdir(datafiles)
     main(input_filename=input_file, mech_filename=chem_file)
+
+
+def test_multi_simulation(datafiles):
+    """Run an integration test of multiple simulations."""
+    input_file = os.path.abspath(os.path.join(datafiles, 'test_multi_simulation.inp'))
+    chem_file = os.path.abspath(os.path.join(datafiles, 'gri30.xml'))
+    os.chdir(datafiles)
+    main(input_filename=input_file, mech_filename=chem_file, multi=1)

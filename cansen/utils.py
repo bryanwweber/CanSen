@@ -5,7 +5,7 @@ from tempfile import NamedTemporaryFile
 from warnings import warn
 from argparse import ArgumentParser
 from multiprocessing import cpu_count
-from typing import Optional
+from typing import Optional, List, Dict, TYPE_CHECKING
 
 # Third-party modules
 from cantera import ck2cti
@@ -100,7 +100,7 @@ def convert_mech(mech_filename: str, thermo_filename: Optional[str] = None) -> s
     return mech_filename
 
 
-def process_multi_input(input_filename):
+def process_multi_input(input_filename: str) -> List[str]:
     """Process a formatted input file into multiple cases.
 
     Processes a formatted input file that contains multiple cases into
@@ -115,14 +115,14 @@ def process_multi_input(input_filename):
 
     temp_file = NamedTemporaryFile(delete=False)
 
-    with open(input_filename) as input_file:
+    with open(input_filename, 'rb') as input_file:
         for line in input_file:
 
-            if (line.startswith('!') or line.startswith('.') or
-                    line.startswith('/') or line.strip() == ''):
+            if (line.startswith(b'!') or line.startswith(b'.') or
+                    line.startswith(b'/') or line.strip() == b''):
                 # skip comment or blank lines
                 continue
-            elif line.upper().startswith('END'):
+            elif line.upper().startswith(b'END'):
                 temp_file.write(line)
 
                 # store temporary file and create new
