@@ -4,7 +4,7 @@ from multiprocessing import Pool
 from typing import Optional, Union, Tuple, List
 
 # Local imports
-from . import utils
+from .utils import convert_mech, process_multi_input
 from .printer import Tee
 from .run_cases import SimulationCase, MultiSimulationCase
 from ._version import __version__
@@ -59,12 +59,7 @@ def main(input_filename: str,
                                 ' does not exist'.format(mech_filename))
     # Convert the mechanism if it is in CHEMKIN format
     if mech_filename.endswith('.inp'):
-        mech_filename = utils.convert_mech(mech_filename, thermo_filename)
-
-    num_proc = None
-    if multi:
-        num_proc = multi
-        multi = True
+        mech_filename = convert_mech(mech_filename, thermo_filename)
 
     if multi:
         out = open(output_filename, 'w')
