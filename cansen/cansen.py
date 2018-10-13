@@ -79,21 +79,14 @@ def main(input_filename: str,
     # Run the simulation
     if multi:
         # Preprocess the input file to separate the various cases.
-        input_files = utils.process_multi_input(input_filename)
-
-        # Create a pool based on the number of processors
-        if num_proc is not None:
-            pool = Pool(processes=num_proc)
-        else:
-            # use available number of processors by default
-            pool = Pool()
+        input_files = process_multi_input(input_filename)
 
         jobs = []
 
         # prepare all cases
-        for i, temp_file in enumerate(input_files):
+        for i, case in enumerate(input_files):
 
-            sim = MultiSimulationCase(temp_file, mech_filename, save_filename, thermo_filename)
+            sim = MultiSimulationCase(case, mech_filename, save_filename)
 
             jobs.append((sim, i))
 
@@ -104,10 +97,6 @@ def main(input_filename: str,
 
         # ensure all finished
         pool.join()
-
-        # clean up
-        for f in input_files:
-            os.remove(f)
 
         # write output
         print('# Ignition delay [s], Pressure [atm], Temperature [K], '
@@ -121,7 +110,10 @@ def main(input_filename: str,
             print(line, file=out)
 
     else:
-        sim = SimulationCase(input_filename, mech_filename, save_filename, thermo_filename)
+        with open(input_filename, 'r') as input_file:
+            input_contents = input_file.readlines()
+
+        sim = SimulationCase(input_contents, mech_filename, save_filename)
         sim.run_simulation()
 
     # Clean up

@@ -11,16 +11,14 @@ import tables
 from .printer import divider
 from . import utils
 from .profiles import VolumeProfile, TemperatureProfile, ICEngineProfile
-from .__main__ import mech_filename as mfarg, save_filename as sfarg
+from .utils import mech_filename as mfarg, save_filename as sfarg
 
 
 class SimulationCase(object):
-    """
-    Class that sets up and runs a simulation case.
-    """
+    """Class that sets up and runs a simulation case."""
 
-    def __init__(self, input_filename, mech_filename=mfarg.default,
-                 save_filename=sfarg.default, thermo_filename=None):
+    def __init__(self, input_contents: List[str], mech_filename: str = mfarg.default,
+                 save_filename: str = sfarg.default) -> None:
         """Initialize the simulation case.
 
         Read the SENKIN-format input file is read into the ``keywords``
@@ -30,12 +28,10 @@ class SimulationCase(object):
             Dictionary containing the relevant file names for this
             case.
         """
-        self.input_filename = input_filename
         self.mech_filename = mech_filename
         self.save_filename = save_filename
-        self.thermo_filename = thermo_filename
 
-        self.keywords = utils.read_input_file(self.input_filename)
+        self.keywords = utils.read_input_file(input_contents)
 
     def setup_case(self):
         """
