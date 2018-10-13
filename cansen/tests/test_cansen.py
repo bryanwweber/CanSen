@@ -32,13 +32,18 @@ def test_one_complete_simulation(datafiles):
     """Run an integration test of one simulation."""
     input_file = os.path.abspath(os.path.join(datafiles, 'test_one_complete_simulation.inp'))
     chem_file = os.path.abspath(os.path.join(datafiles, 'gri30.xml'))
-    os.chdir(datafiles)
-    main(input_filename=input_file, mech_filename=chem_file)
+    save_file = os.path.abspath(os.path.join(datafiles, 'save.hdf'))
+    output_file = os.path.abspath(os.path.join(datafiles, 'output.out'))
+    main(input_filename=input_file, mech_filename=chem_file, save_filename=save_file,
+         output_filename=output_file)
 
 
 def test_multi_simulation(datafiles):
     """Run an integration test of multiple simulations."""
     input_file = os.path.abspath(os.path.join(datafiles, 'test_multi_simulation.inp'))
     chem_file = os.path.abspath(os.path.join(datafiles, 'gri30.xml'))
-    os.chdir(datafiles)
-    main(input_filename=input_file, mech_filename=chem_file, multi=1)
+    chem_file = os.path.abspath(os.path.join(datafiles, 'gri30.xml'))
+    save_file = os.path.abspath(os.path.join(datafiles, 'save.hdf'))
+    output_file = os.path.abspath(os.path.join(datafiles, 'output.out'))
+    main(input_filename=input_file, mech_filename=chem_file, save_filename=save_file,
+         output_filename=output_file, multi=1)
