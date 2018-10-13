@@ -1,10 +1,9 @@
 # Standard libraries
-import os
 from math import pi
-from tempfile import NamedTemporaryFile
 from warnings import warn
 from argparse import ArgumentParser
 from multiprocessing import cpu_count
+from itertools import groupby
 from typing import Optional, List, Dict, TYPE_CHECKING
 
 # Third-party modules
@@ -100,7 +99,7 @@ def convert_mech(mech_filename: str, thermo_filename: Optional[str] = None) -> s
     return mech_filename
 
 
-def process_multi_input(input_filename: str) -> List[str]:
+def process_multi_input(input_filename: str) -> List[List[str]]:
     """Process a formatted input file into multiple cases.
 
     Processes a formatted input file that contains multiple cases into
@@ -111,39 +110,14 @@ def process_multi_input(input_filename: str) -> List[str]:
     :return filenames:
         List of temporary filenames.
     """
-    filenames = []
+    with open(input_filename, 'r') as input_file:
+        input_contents = input_file.readlines()
+    input_files = [list(g) for k, g in groupby(input_contents, lambda x: x.strip().upper() == 'END') if not k]
 
-    temp_file = NamedTemporaryFile(delete=False)
-
-    with open(input_filename, 'rb') as input_file:
-        for line in input_file:
-
-            if (line.startswith(b'!') or line.startswith(b'.') or
-                    line.startswith(b'/') or line.strip() == b''):
-                # skip comment or blank lines
-                continue
-            elif line.upper().startswith(b'END'):
-                temp_file.write(line)
-
-                # store temporary file and create new
-                temp_file.seek(0)
-                filenames.append(temp_file.name)
-
-                temp_file = NamedTemporaryFile(delete=False)
-
-                continue
-            else:
-                # just print line
-                temp_file.write(line)
-
-    # check if last file actually written to; if not, close
-    if os.stat(temp_file.name).st_size == 0:
-        temp_file.close()
-
-    return filenames
+    return input_files
 
 
-def read_input_file(input_filename):
+def read_input_file(input_file: List[str]) -> dict:
     """Read a formatted input file and return a dictionary of keywords.
 
     :param input_filename:
@@ -179,12 +153,12 @@ def read_input_file(input_filename):
         'USET',   'WENG',   'XMLI'
         ]
 
-    with open(input_filename) as input_file:
         print(divider)
         print('Keyword Input:\n')
         for line in input_file:
             # Echo the input back to the output file.
             print(' '*10, line, end='')
+        line = line.strip()
             if (line.startswith('!') or line.startswith('.') or
                     line.startswith('/') or line.strip() == ""):
                 continue
