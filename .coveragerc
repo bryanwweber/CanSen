@@ -8,10 +8,11 @@ exclude_lines =
     pragma: no cover
     raise NotImplementedError
     if __name__ == .__main__.:
+    if TYPE_CHECKING:
+    if typing.TYPE_CHECKING:
 ignore_errors = True
 omit =
     cansen/tests/*
-    setup.py
     cansen/_version.py
     */tmp/*
     */private/*
