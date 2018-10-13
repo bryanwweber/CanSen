@@ -1,6 +1,6 @@
 # Standard libraries
 import os
-from multiprocessing import Pool
+from multiprocessing import Pool, set_start_method
 from typing import Optional, Union, Tuple, List
 
 # Local imports
@@ -85,10 +85,10 @@ def main(input_filename: str,
 
             jobs.append((sim, i))
 
-        results = pool.map(worker, jobs)
-
-        # not adding more processes
-        pool.close()
+        # Create a pool based on the number of processors
+        set_start_method('spawn')
+        with Pool(processes=multi) as pool:
+            results = pool.map(worker, jobs)
 
         # ensure all finished
         pool.join()
