@@ -20,6 +20,9 @@ from .exceptions import (KeywordError,
                          CanSenError,
                          )
 
+if TYPE_CHECKING:
+    import cantera as ct  # noqa: F401 # for type checking
+
 parser = ArgumentParser(
     prog='cansen',
     description='CanSen - the SENKIN-like wrapper for Cantera written in Python.'
@@ -153,160 +156,160 @@ def read_input_file(input_file: List[str]) -> dict:
         'USET',   'WENG',   'XMLI'
         ]
 
-        print(divider)
-        print('Keyword Input:\n')
-        for line in input_file:
-            # Echo the input back to the output file.
-            print(' '*10, line, end='')
+    print(divider)
+    print('Keyword Input:\n')
+    for line in input_file:
+        # Echo the input back to the output file.
+        print(' '*10, line, end='')
         line = line.strip()
-            if (line.startswith('!') or line.startswith('.') or
-                    line.startswith('/') or line.strip() == ""):
-                continue
-            elif line.upper().startswith('CONV'):
-                if problem_type:
-                    raise MultipleProblemError(line, keywords['problemType'])
-                else:
-                    keywords['problemType'] = 1
-                    problem_type = True
-            elif line.upper().startswith('CONP'):
-                if problem_type:
-                    raise MultipleProblemError(line, keywords['problemType'])
-                else:
-                    keywords['problemType'] = 2
-                    problem_type = True
-            elif line.upper().startswith('VPRO'):
-                if not problem_type:
-                    keywords['problemType'] = 3
-                    vproTime = [float(line.split()[1])]
-                    vproVol = [float(line.split()[2])]
-                    problem_type = True
-                elif problem_type and keywords.get('problemType') != 3:
-                    raise MultipleProblemError(line, keywords['problemType'])
-                elif problem_type and keywords.get('problemType') == 3:
-                    vproTime.append(float(line.split()[1]))
-                    vproVol.append(float(line.split()[2]))
-            elif line.upper().startswith('CONT'):
-                if problem_type:
-                    raise MultipleProblemError(line, keywords['problemType'])
-                else:
-                    keywords['problemType'] = 4
-                    problem_type = True
-            elif line.upper().startswith('COTV'):
-                if problem_type:
-                    raise MultipleProblemError(line, keywords['problemType'])
-                else:
-                    keywords['problemType'] = 5
-                    problem_type = True
-            elif line.upper().startswith('VTIM'):
-                if problem_type:
-                    raise MultipleProblemError(line, keywords['problemType'])
-                else:
-                    keywords['problemType'] = 6
-                    problem_type = True
-            elif line.upper().startswith('TTIM'):
-                if problem_type:
-                    raise MultipleProblemError(line, keywords['problemType'])
-                else:
-                    keywords['problemType'] = 7
-                    problem_type = True
-            elif line.upper().startswith('TPRO'):
-                if not problem_type:
-                    keywords['problemType'] = 8
-                    TproTime = [float(line.split()[1])]
-                    TproTemp = [float(line.split()[2])]
-                    problem_type = True
-                elif problem_type and keywords.get('problemType') != 8:
-                    raise MultipleProblemError(line, keywords['problemType'])
-                elif problem_type and keywords.get('problemType') == 8:
-                    TproTime.append(float(line.split()[1]))
-                    TproTemp.append(float(line.split()[2]))
-            elif line.upper().startswith('ICEN'):
-                if problem_type:
-                    raise MultipleProblemError(line, keywords['problemType'])
-                else:
-                    keywords['problemType'] = 9
-                    problem_type = True
-            elif line.upper().startswith('TEMP'):
-                keywords['temperature'] = float(line.split()[1])
-            elif line.upper().startswith('REAC'):
-                species = line.split()[1]
-                molefrac = line.split()[2]
-                reactants.append(':'.join([species, molefrac]))
-            elif line.upper().startswith('PRES'):
-                keywords['pressure'] = float(line.split()[1])
-            elif line.upper().startswith('TIME'):
-                keywords['endTime'] = float(line.split()[1])
-            elif line.upper().startswith('TLIM'):
-                keywords['tempLimit'] = float(line.split()[1])
-            elif line.upper().startswith('DTIGN'):
-                keywords['tempThresh'] = float(line.split()[1])
-            elif line.upper().startswith('ATOL'):
-                keywords['abstol'] = float(line.split()[1])
-            elif line.upper().startswith('RTOL'):
-                keywords['reltol'] = float(line.split()[1])
-            elif line.upper().startswith('DELT'):
-                keywords['prntTimeInt'] = float(line.split()[1])
-            elif line.upper().startswith('DTSV'):
-                keywords['saveTimeInt'] = float(line.split()[1])
-            elif line.upper().startswith('STPT'):
-                keywords['maxTimeStep'] = float(line.split()[1])
-            elif line.upper().startswith('EQUI'):
-                keywords['eqRatio'] = float(line.split()[1])
-            elif line.upper().startswith('OXID'):
-                species = line.split()[1]
-                molefrac = float(line.split()[2])
-                oxidizer[species] = molefrac
-            elif line.upper().startswith('FUEL'):
-                species = line.split()[1]
-                molefrac = float(line.split()[2])
-                fuel[species] = molefrac
-            elif line.upper().startswith('CPROD'):
-                species = line.split()[1]
-                complete_products.append(species)
-            elif line.upper().startswith('ADD'):
-                species = line.split()[1]
-                molefrac = float(line.split()[2])
-                additional_species[species] = molefrac
-            elif line.upper().startswith('SENS'):
-                keywords['sensitivity'] = True
-            elif line.upper().startswith('VOL '):
-                # The default units of volume in SENKIN are cm**3, but
-                # the default in Cantera is m**3 so we have to convert.
-                keywords['reactorVolume'] = float(line.split()[1])/1.0E6
-            elif line.upper().startswith('RTLS'):
-                keywords['sensRelTol'] = float(line.split()[1])
-            elif line.upper().startswith('ATLS'):
-                keywords['sensAbsTol'] = float(line.split()[1])
-            elif line.upper().startswith('IGNBREAK'):
-                keywords['break_on_ignition'] = True
-            elif line.upper().startswith('CMPR'):
-                keywords['comp_ratio'] = float(line.split()[1])
-            elif line.upper().startswith('DEG0'):
-                keywords['start_crank_angle'] = float(line.split()[1])
-            elif line.upper().startswith('VOLD'):
-                keywords['swept_volume'] = float(line.split()[1])/1.0E6
-            elif line.upper().startswith('VOLC'):
-                keywords['clear_volume'] = float(line.split()[1])/1.0E6
-            elif line.upper().startswith('LOLR'):
-                keywords['rod_radius_ratio'] = float(line.split()[1])
-            elif line.upper().startswith('RPM'):
-                keywords['rev_per_min'] = float(line.split()[1])
-            elif line.upper().startswith('BORE'):
-                keywords['cyl_bore'] = float(line.split()[1])/1.0E2
-            elif line.upper().startswith('STROKE'):
-                keywords['stroke_length'] = float(line.split()[1])/1.0E2
-            elif line.upper().startswith('RODL'):
-                keywords['connect_rod_len'] = float(line.split()[1])/1.0E2
-            elif line.upper().startswith('CRAD'):
-                keywords['crank_radius'] = float(line.split()[1])/1.0E2
-            elif line.upper()[0:3] in unsupported_keys:
-                raise UnsupportedKeyword(line)
-                continue
-            elif line.upper().startswith('END'):
-                continue
+        if (line.startswith('!') or line.startswith('.') or
+                line.startswith('/') or line.strip() == ""):
+            continue
+        elif line.upper().startswith('CONV'):
+            if problem_type:
+                raise MultipleProblemError(line, keywords['problemType'])
             else:
-                raise UndefinedKeywordError(line)
-        print('\n', divider, '\n', sep='')
+                keywords['problemType'] = 1
+                problem_type = True
+        elif line.upper().startswith('CONP'):
+            if problem_type:
+                raise MultipleProblemError(line, keywords['problemType'])
+            else:
+                keywords['problemType'] = 2
+                problem_type = True
+        elif line.upper().startswith('VPRO'):
+            if not problem_type:
+                keywords['problemType'] = 3
+                vproTime = [float(line.split()[1])]
+                vproVol = [float(line.split()[2])]
+                problem_type = True
+            elif problem_type and keywords.get('problemType') != 3:
+                raise MultipleProblemError(line, keywords['problemType'])
+            elif problem_type and keywords.get('problemType') == 3:
+                vproTime.append(float(line.split()[1]))
+                vproVol.append(float(line.split()[2]))
+        elif line.upper().startswith('CONT'):
+            if problem_type:
+                raise MultipleProblemError(line, keywords['problemType'])
+            else:
+                keywords['problemType'] = 4
+                problem_type = True
+        elif line.upper().startswith('COTV'):
+            if problem_type:
+                raise MultipleProblemError(line, keywords['problemType'])
+            else:
+                keywords['problemType'] = 5
+                problem_type = True
+        elif line.upper().startswith('VTIM'):
+            if problem_type:
+                raise MultipleProblemError(line, keywords['problemType'])
+            else:
+                keywords['problemType'] = 6
+                problem_type = True
+        elif line.upper().startswith('TTIM'):
+            if problem_type:
+                raise MultipleProblemError(line, keywords['problemType'])
+            else:
+                keywords['problemType'] = 7
+                problem_type = True
+        elif line.upper().startswith('TPRO'):
+            if not problem_type:
+                keywords['problemType'] = 8
+                TproTime = [float(line.split()[1])]
+                TproTemp = [float(line.split()[2])]
+                problem_type = True
+            elif problem_type and keywords.get('problemType') != 8:
+                raise MultipleProblemError(line, keywords['problemType'])
+            elif problem_type and keywords.get('problemType') == 8:
+                TproTime.append(float(line.split()[1]))
+                TproTemp.append(float(line.split()[2]))
+        elif line.upper().startswith('ICEN'):
+            if problem_type:
+                raise MultipleProblemError(line, keywords['problemType'])
+            else:
+                keywords['problemType'] = 9
+                problem_type = True
+        elif line.upper().startswith('TEMP'):
+            keywords['temperature'] = float(line.split()[1])
+        elif line.upper().startswith('REAC'):
+            species = line.split()[1]
+            molefrac = line.split()[2]
+            reactants.append(':'.join([species, molefrac]))
+        elif line.upper().startswith('PRES'):
+            keywords['pressure'] = float(line.split()[1])
+        elif line.upper().startswith('TIME'):
+            keywords['endTime'] = float(line.split()[1])
+        elif line.upper().startswith('TLIM'):
+            keywords['tempLimit'] = float(line.split()[1])
+        elif line.upper().startswith('DTIGN'):
+            keywords['tempThresh'] = float(line.split()[1])
+        elif line.upper().startswith('ATOL'):
+            keywords['abstol'] = float(line.split()[1])
+        elif line.upper().startswith('RTOL'):
+            keywords['reltol'] = float(line.split()[1])
+        elif line.upper().startswith('DELT'):
+            keywords['prntTimeInt'] = float(line.split()[1])
+        elif line.upper().startswith('DTSV'):
+            keywords['saveTimeInt'] = float(line.split()[1])
+        elif line.upper().startswith('STPT'):
+            keywords['maxTimeStep'] = float(line.split()[1])
+        elif line.upper().startswith('EQUI'):
+            keywords['eqRatio'] = float(line.split()[1])
+        elif line.upper().startswith('OXID'):
+            species = line.split()[1]
+            molefrac = float(line.split()[2])
+            oxidizer[species] = molefrac
+        elif line.upper().startswith('FUEL'):
+            species = line.split()[1]
+            molefrac = float(line.split()[2])
+            fuel[species] = molefrac
+        elif line.upper().startswith('CPROD'):
+            species = line.split()[1]
+            complete_products.append(species)
+        elif line.upper().startswith('ADD'):
+            species = line.split()[1]
+            molefrac = float(line.split()[2])
+            additional_species[species] = molefrac
+        elif line.upper().startswith('SENS'):
+            keywords['sensitivity'] = True
+        elif line.upper().startswith('VOL '):
+            # The default units of volume in SENKIN are cm**3, but
+            # the default in Cantera is m**3 so we have to convert.
+            keywords['reactorVolume'] = float(line.split()[1])/1.0E6
+        elif line.upper().startswith('RTLS'):
+            keywords['sensRelTol'] = float(line.split()[1])
+        elif line.upper().startswith('ATLS'):
+            keywords['sensAbsTol'] = float(line.split()[1])
+        elif line.upper().startswith('IGNBREAK'):
+            keywords['break_on_ignition'] = True
+        elif line.upper().startswith('CMPR'):
+            keywords['comp_ratio'] = float(line.split()[1])
+        elif line.upper().startswith('DEG0'):
+            keywords['start_crank_angle'] = float(line.split()[1])
+        elif line.upper().startswith('VOLD'):
+            keywords['swept_volume'] = float(line.split()[1])/1.0E6
+        elif line.upper().startswith('VOLC'):
+            keywords['clear_volume'] = float(line.split()[1])/1.0E6
+        elif line.upper().startswith('LOLR'):
+            keywords['rod_radius_ratio'] = float(line.split()[1])
+        elif line.upper().startswith('RPM'):
+            keywords['rev_per_min'] = float(line.split()[1])
+        elif line.upper().startswith('BORE'):
+            keywords['cyl_bore'] = float(line.split()[1])/1.0E2
+        elif line.upper().startswith('STROKE'):
+            keywords['stroke_length'] = float(line.split()[1])/1.0E2
+        elif line.upper().startswith('RODL'):
+            keywords['connect_rod_len'] = float(line.split()[1])/1.0E2
+        elif line.upper().startswith('CRAD'):
+            keywords['crank_radius'] = float(line.split()[1])/1.0E2
+        elif line.upper()[0:3] in unsupported_keys:
+            raise UnsupportedKeyword(line)
+            continue
+        elif line.upper().startswith('END'):
+            continue
+        else:
+            raise UndefinedKeywordError(line)
+    print('\n', divider, '\n', sep='')
 
     # The endTime, temperature, pressure, and problemType are required
     # input. Exit if any of them are not found.
@@ -369,7 +372,7 @@ def read_input_file(input_file: List[str]) -> dict:
 
         # Handle the various ways to calculate the initial volume
         if 'reactorVolume' in keywords:
-            print("Info: The inital reactor volume was specified by the VOL "
+            print("Info: The initial reactor volume was specified by the VOL "
                   "keyword and this value will be used regardless of other "
                   "settings.")
         elif all(key in keywords for key in ('swept_volume', 'clear_volume',
@@ -450,8 +453,9 @@ def read_input_file(input_file: List[str]) -> dict:
     return keywords
 
 
-def equivalence_ratio(gas, eq_ratio, fuel, oxidizer, complete_products,
-                      additional_species):
+def equivalence_ratio(gas: 'ct.Solution', eq_ratio: float, fuel: Dict[str, float],
+                      oxidizer: Dict[str, float], complete_products: List[str],
+                      additional_species: Dict[str, float]) -> Dict[str, float]:
     """Calculate the mixture mole fractions from the equivalence ratio.
 
     Given the equivalence ratio, fuel mixture, oxidizer mixture,

@@ -1,6 +1,7 @@
 # Standard libraries
 import math
 from itertools import zip_longest
+from typing import Union, Dict, List
 
 # Third-party modules
 import cantera as ct
@@ -33,21 +34,20 @@ class SimulationCase(object):
 
         self.keywords = utils.read_input_file(input_contents)
 
-    def setup_case(self):
-        """
-        Sets up the case to be run. Initializes the :py:class:`~cantera.ThermoPhase`,
-        :py:class:`~cantera.Reactor`, and :py:class:`~cantera.ReactorNet` according
-        to the values from the input file.
-        """
+    def setup_case(self) -> None:
+        """Set up the case to be run.
 
+        Initializes the :py:class:`~cantera.ThermoPhase`, :py:class:`~cantera.Reactor`,
+        and :py:class:`~cantera.ReactorNet` according to the values from the input file.
+        """
         self.gas = ct.Solution(self.mech_filename)
 
         initial_temp = self.keywords['temperature']
         # The initial pressure in Cantera is expected in Pa; in SENKIN
         # it is expected in atm, so convert
         initial_pres = self.keywords['pressure']*ct.one_atm
-        # If the equivalence ratio has been specified, send the
-        # keywords for conversion.
+
+        reactants: Union[Dict[str, float], str]
         if 'eqRatio' in self.keywords:
             reactants = utils.equivalence_ratio(
                 self.gas,
@@ -108,7 +108,7 @@ class SimulationCase(object):
             self.n_vars = self.reac.kinetics.n_species + 3
             self.wall = ct.Wall(self.reac, env, A=1.0, velocity=0)
         elif self.keywords['problemType'] == 6:
-            from user_routines import VolumeFunctionTime
+            from .user_routines import VolumeFunctionTime
             self.reac = ct.IdealGasReactor(self.gas)
             # Number of solution variables is number of species + mass,
             # volume, temperature
@@ -116,7 +116,7 @@ class SimulationCase(object):
             self.wall = ct.Wall(self.reac, env, A=1.0,
                                 velocity=VolumeFunctionTime())
         elif self.keywords['problemType'] == 7:
-            from user_routines import TemperatureFunctionTime
+            from .user_routines import TemperatureFunctionTime
             self.reac = ct.IdealGasConstPressureReactor(self.gas, energy='off')
             # Number of solution variables is number of species + mass,
             # temperature
@@ -223,10 +223,10 @@ class SimulationCase(object):
         # before ignition occurs
         self.ignition_time = None
 
-    def run_case(self):
-        """
-        Actually run the case set up by `setup_case`. Sets binary
-        output file format, then runs the simulation by using
+    def run_case(self) -> None:
+        """Actually run the case set up by `setup_case`.
+
+        Sets binary output file format, then runs the simulation by using
         :py:`~cantera.ReactorNet.step`.
         """
         # Use the table format of hdf instead of the array format. This
@@ -405,7 +405,7 @@ class SimulationCase(object):
                 # array so we can go to the next time step.
                 prev_time = cur_time
 
-    def run_simulation(self):
+    def run_simulation(self) -> None:
         """
         Helper function that sequentially sets up the simulation case
         and runs it. Useful for cases where nothing needs to be changed
@@ -502,12 +502,8 @@ class MultiSimulationCase(SimulationCase):
     are written to the output file.
     """
 
-    def run_case(self):
-        """
-        Actually run the case set up by ``setup_case``. Runs the
-        simulation by using ``ReactorNet.step(self.tend)``.
-        """
-
+    def run_case(self) -> None:
+        """Actually run the case set up by ``setup_case``."""
         ignition_found = False
 
         # Main loop to run the calculation. As long as the time in
