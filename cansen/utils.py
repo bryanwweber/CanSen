@@ -3,7 +3,6 @@ from math import pi
 from warnings import warn
 from argparse import ArgumentParser
 from multiprocessing import cpu_count
-from itertools import groupby
 from typing import Optional, List, Dict, TYPE_CHECKING
 
 # Third-party modules
@@ -100,24 +99,6 @@ def convert_mech(mech_filename: str, thermo_filename: Optional[str] = None) -> s
     print('Mechanism conversion successful, written to '
           '{}'.format(mech_filename))
     return mech_filename
-
-
-def process_multi_input(input_filename: str) -> List[List[str]]:
-    """Process a formatted input file into multiple cases.
-
-    Processes a formatted input file that contains multiple cases into
-    separate temporary files, for individual reading of keywords.
-
-    :param input_filename:
-        Filename of the SENKIN input file.
-    :return filenames:
-        List of temporary filenames.
-    """
-    with open(input_filename, 'r') as input_file:
-        input_contents = input_file.readlines()
-    input_files = [list(g) for k, g in groupby(input_contents, lambda x: x.strip().upper() == 'END') if not k]
-
-    return input_files
 
 
 def read_input_file(input_file: List[str]) -> dict:

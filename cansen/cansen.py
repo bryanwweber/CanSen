@@ -2,9 +2,10 @@
 import os
 from multiprocessing import Pool, set_start_method
 from typing import Optional, Union, Tuple, List
+from itertools import groupby
 
 # Local imports
-from .utils import convert_mech, process_multi_input
+from .utils import convert_mech
 from .printer import Tee
 from .run_cases import SimulationCase, MultiSimulationCase
 from ._version import __version__
@@ -71,19 +72,19 @@ def main(input_filename: str,
         print("This is CanSen, the SENKIN-like wrapper for Cantera, "
               "written in Python.\nVersion: {!s}\n".format(__version__))
 
+    with open(input_filename, 'r') as input_file:
+        input_contents = input_file.readlines()
+
     # Run the simulation
     if multi:
-        # Preprocess the input file to separate the various cases.
-        input_files = process_multi_input(input_filename)
-
         jobs = []
 
         # prepare all cases
-        for i, case in enumerate(input_files):
+        for i, (k, g) in enumerate(groupby(input_contents, lambda x: x.strip().upper() == 'END')):
+            if not k:
+                sim = MultiSimulationCase(list(g), mech_filename, save_filename)
 
-            sim = MultiSimulationCase(case, mech_filename, save_filename)
-
-            jobs.append((sim, i))
+                jobs.append((sim, i))
 
         # Create a pool based on the number of processors
         set_start_method('spawn')
@@ -105,9 +106,6 @@ def main(input_filename: str,
             print(line, file=out)
 
     else:
-        with open(input_filename, 'r') as input_file:
-            input_contents = input_file.readlines()
-
         sim = SimulationCase(input_contents, mech_filename, save_filename)
         sim.run_simulation()
 
