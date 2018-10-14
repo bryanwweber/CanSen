@@ -2,6 +2,7 @@
 import math
 from itertools import zip_longest
 from typing import Union, Dict, List
+import logging
 
 # Third-party modules
 import cantera as ct
@@ -9,10 +10,11 @@ import numpy as np
 import tables
 
 # Local imports
-from .printer import divider
-from . import utils
 from .profiles import VolumeProfile, TemperatureProfile, ICEngineProfile
-from .utils import mech_filename as mfarg, save_filename as sfarg
+from .utils import (mech_filename as mfarg, save_filename as sfarg, divider,
+                    read_input_file, equivalence_ratio)
+
+log = logging.getLogger('cansen')
 
 
 class SimulationCase(object):
@@ -32,7 +34,7 @@ class SimulationCase(object):
         self.mech_filename = mech_filename
         self.save_filename = save_filename
 
-        self.keywords = utils.read_input_file(input_contents)
+        self.keywords = read_input_file(input_contents)
 
     def setup_case(self) -> None:
         """Set up the case to be run.
@@ -49,7 +51,7 @@ class SimulationCase(object):
 
         reactants: Union[Dict[str, float], str]
         if 'eqRatio' in self.keywords:
-            reactants = utils.equivalence_ratio(
+            reactants = equivalence_ratio(
                 self.gas,
                 self.keywords['eqRatio'],
                 self.keywords['fuel'],
@@ -278,16 +280,16 @@ class SimulationCase(object):
                                    self.reac.thermo.X
                                    ))
             # Print the initial information to the screen
-            print(divider)
-            print('Kinetic Mechanism Details:\n')
-            print(('Total Gas Phase Species     = {0}\n'
-                   'Total Gas Phase Reactions   = {1}'
-                   ).format(self.reac.kinetics.n_species,
-                            self.reac.kinetics.n_reactions))
+            log.info(divider)
+            log.info('Kinetic Mechanism Details:\n')
+            log.info(('Total Gas Phase Species     = {0}\n'
+                      'Total Gas Phase Reactions   = {1}'
+                      ).format(self.reac.kinetics.n_species,
+                               self.reac.kinetics.n_reactions))
             if self.sensitivity:
-                print(('Total Sensitivity Reactions = {}'
-                       ).format(self.netw.n_sensitivity_params))
-            print(divider, '\n')
+                log.info(('Total Sensitivity Reactions = {}'
+                          ).format(self.netw.n_sensitivity_params))
+            log.info(divider + '\n')
 
             self.reactor_state_printer(prev_time)
 
@@ -434,25 +436,25 @@ class SimulationCase(object):
         molefracs = state[5:]
 
         # Begin printing
-        print(divider)
+        log.info(divider)
         if not end:
-            print('Solution time (s) = {:E}'.format(time))
+            log.info('Solution time (s) = {:E}'.format(time))
         else:
-            print('End time reached (s) = {:E}'.format(time))
+            log.info('End time reached (s) = {:E}'.format(time))
 
         if self.ignition_time is not None:
-            print('Ignition time (s) = {:E}'.format(self.ignition_time))
+            log.info('Ignition time (s) = {:E}'.format(self.ignition_time))
         elif end:
-            print('Ignition was not found.')
+            log.info('Ignition was not found.')
         else:
             pass
 
-        print(("Reactor Temperature (K) = {0:>13.4f}\n"
-               "Reactor Pressure (Pa)   = {1:>13.4E}\n"
-               "Reactor Volume (m**3)   = {2:>13.4E}\n"
-               "Reactor Vdot (m**3/s)   = {3:>13.4E}"
-               ).format(temperature, pressure, volume, vdot))
-        print('Gas Phase Mole Fractions:')
+        log.info(("Reactor Temperature (K) = {0:>13.4f}\n"
+                  "Reactor Pressure (Pa)   = {1:>13.4E}\n"
+                  "Reactor Volume (m**3)   = {2:>13.4E}\n"
+                  "Reactor Vdot (m**3/s)   = {3:>13.4E}"
+                  ).format(temperature, pressure, volume, vdot))
+        log.info('Gas Phase Mole Fractions:')
 
         # Here we calculate the number of columns of species mole fractions
         # that will best fill the available number of columns in the
@@ -467,8 +469,8 @@ class SimulationCase(object):
         mole_frac_precision = 8
         # Calculate how much space each species print will take. It is the
         # max_species length + len(' = ') + the mole_frac_precision +
-        # len('E+00').
-        part_length = max_species_length + 3 + mole_frac_precision + 4
+        # len('E+000').
+        part_length = max_species_length + 3 + mole_frac_precision + 5
         # Set the default number of columns in the terminal. Choose 80
         # because it is the preferred width of Python source code, and
         # putting a bigger number may make the output text file harder
@@ -488,10 +490,8 @@ class SimulationCase(object):
                 )
         grouped = zip_longest(*[iter(outlist)]*num_print_cols, fillvalue='')
         for items in grouped:
-            for item in items:
-                print(item, end='')
-            print('\n', end='')
-        print(divider, '\n')
+            log.info(''.join(items))
+        log.info(divider + '\n')
 
 
 class MultiSimulationCase(SimulationCase):
