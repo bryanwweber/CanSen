@@ -6,6 +6,7 @@ import pytest
 from ..__main__ import main
 from .._version import __version__
 
+
 @pytest.fixture()
 def datafiles(tmpdir, request):
     """Move a folder of test files to a pytest ``tmpdir``.
@@ -17,13 +18,7 @@ def datafiles(tmpdir, request):
     test_dir = os.path.abspath(test_dir)
     dir_name = os.path.basename(test_dir)
 
-    try:
-        tmpdir = shutil.copytree(test_dir, os.path.join(tmpdir, dir_name))
-    except OSError:
-        shutil.rmtree(os.path.join(tmpdir, dir_name))
-        tmpdir = shutil.copytree(test_dir, os.path.join(tmpdir, dir_name))
-
-    return tmpdir
+    return shutil.copytree(test_dir, os.path.join(tmpdir, dir_name))
 
 
 class TestCliParser():

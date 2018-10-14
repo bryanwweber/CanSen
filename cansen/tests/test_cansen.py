@@ -19,13 +19,8 @@ def datafiles(tmpdir, request):
     test_dir = os.path.abspath(test_dir)
     dir_name = os.path.basename(test_dir)
 
-    try:
-        tmpdir = shutil.copytree(test_dir, os.path.join(tmpdir, dir_name))
-    except OSError:
-        shutil.rmtree(os.path.join(tmpdir, dir_name))
-        tmpdir = shutil.copytree(test_dir, os.path.join(tmpdir, dir_name))
+    return shutil.copytree(test_dir, os.path.join(tmpdir, dir_name))
 
-    return tmpdir
 
 def test_one_complete_simulation(datafiles, capsys):
     """Run an integration/regression test of one simulation."""
