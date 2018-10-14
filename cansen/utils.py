@@ -4,12 +4,12 @@ from warnings import warn
 from argparse import ArgumentParser
 from multiprocessing import cpu_count
 from typing import Optional, List, Dict, TYPE_CHECKING
+import logging
 
 # Third-party modules
 from cantera import ck2cti
 
 # Local imports
-from .printer import divider
 from .exceptions import (KeywordError,
                          MultipleProblemError,
                          UnsupportedKeyword,
@@ -21,6 +21,12 @@ from .exceptions import (KeywordError,
 
 if TYPE_CHECKING:
     import cantera as ct  # noqa: F401 # for type checking
+
+# Create a string to use as a divider. Use a default column width of
+# 80 chars.
+divider = '*'*80
+
+log = logging.getLogger('cansen')
 
 parser = ArgumentParser(
     prog='cansen',
@@ -137,12 +143,12 @@ def read_input_file(input_file: List[str]) -> dict:
         'USET',   'WENG',   'XMLI'
         ]
 
-    print(divider)
-    print('Keyword Input:\n')
+    log.info(divider)
+    log.info('Keyword Input:\n')
     for line in input_file:
         # Echo the input back to the output file.
-        print(' '*10, line, end='')
         line = line.strip()
+        log.info(' '*10 + line)
         if (line.startswith('!') or line.startswith('.') or
                 line.startswith('/') or line.strip() == ""):
             continue
@@ -290,7 +296,7 @@ def read_input_file(input_file: List[str]) -> dict:
             continue
         else:
             raise UndefinedKeywordError(line)
-    print('\n', divider, '\n', sep='')
+    log.info('\n' + divider + '\n')
 
     # The endTime, temperature, pressure, and problemType are required
     # input. Exit if any of them are not found.
@@ -326,24 +332,24 @@ def read_input_file(input_file: List[str]) -> dict:
 
         # Handle the various ways to calculate the stroke length
         if 'stroke_length' in keywords:
-            print("Info: 'STROKE' was specified, and will be used for the "
-                  "stroke length regardless of other parameters.")
+            log.info("Info: 'STROKE' was specified, and will be used for the "
+                     "stroke length regardless of other parameters.")
         elif all(key in keywords for key in ('swept_volume', 'cyl_bore')):
-            print("Info: Using swept volume and cylinder bore to "
-                  "calculate stroke length.")
+            log.info("Info: Using swept volume and cylinder bore to "
+                     "calculate stroke length.")
             keywords['stroke_length'] = (keywords['swept_volume']*4 /
                                          (pi*keywords['cyl_bore']**2))
         elif all(key in keywords for key in ('comp_ratio',
                                              'clear_volume',
                                              'cyl_bore')):
-            print("Info: Using compression ratio, clearance volume, and "
-                  "cylinder bore to calculate stroke length.")
+            log.info("Info: Using compression ratio, clearance volume, and "
+                     "cylinder bore to calculate stroke length.")
             keywords['swept_volume'] = (keywords['clear_volume'] *
                                         (keywords['comp_ratio'] - 1))
             keywords['stroke_length'] = (keywords['swept_volume']*4 /
                                          (pi*keywords['cyl_bore']**2))
         elif 'crank_radius' in keywords:
-            print("Info: Using crank radius to compute the stroke length.")
+            log.info("Info: Using crank radius to compute the stroke length.")
             keywords['stroke_length'] = 2*keywords['crank_radius']
         else:
             raise MissingReqdKeywordError(
@@ -353,31 +359,31 @@ def read_input_file(input_file: List[str]) -> dict:
 
         # Handle the various ways to calculate the initial volume
         if 'reactorVolume' in keywords:
-            print("Info: The initial reactor volume was specified by the VOL "
-                  "keyword and this value will be used regardless of other "
-                  "settings.")
+            log.info("Info: The initial reactor volume was specified by the VOL "
+                     "keyword and this value will be used regardless of other "
+                     "settings.")
         elif all(key in keywords for key in ('swept_volume', 'clear_volume',
                                              'comp_ratio')):
             raise KeywordError("Only two of 'VOLD', 'VOLC', and 'CMPR' may be "
                                "specified.")
         elif all(key in keywords for key in ('swept_volume', 'clear_volume')):
-            print("Info: Computing initial reactor volume from the swept "
-                  "volume and the clearance volume.")
+            log.info("Info: Computing initial reactor volume from the swept "
+                     "volume and the clearance volume.")
             keywords['reactorVolume'] = (keywords['swept_volume'] +
                                          keywords['clear_volume'])
         elif all(key in keywords for key in ('comp_ratio', 'clear_volume')):
-            print("Info: Computing initial reactor volume from the "
-                  "compression ratio and clearance volume.")
+            log.info("Info: Computing initial reactor volume from the "
+                     "compression ratio and clearance volume.")
             keywords['reactorVolume'] = (keywords['comp_ratio'] *
                                          keywords['clear_volume'])
         elif all(key in keywords for key in ('comp_ratio', 'swept_volume')):
-            print("Info: Computing initial reactor volume from the "
-                  "compression ratio and swept volume.")
+            log.info("Info: Computing initial reactor volume from the "
+                     "compression ratio and swept volume.")
             keywords['reactorVolume'] = (keywords['swept_volume'] *
                                          (1 + 1/(keywords['comp_ratio'] - 1)))
         elif all(key in keywords for key in ('clear_volume', 'cyl_bore')):
-            print("Info: Computing initial reactor volume from the cylinder "
-                  "bore, stroke length, and clearance volume.")
+            log.info("Info: Computing initial reactor volume from the cylinder "
+                     "bore, stroke length, and clearance volume.")
             keywords['reactorVolume'] = (pi/4*keywords['cyl_bore']**2 *
                                          keywords['stroke_length'] +
                                          keywords['clear_volume'])
@@ -387,13 +393,13 @@ def read_input_file(input_file: List[str]) -> dict:
 
         # Handle the ways to calculate the rod length to radius ratio
         if 'rod_radius_ratio' in keywords:
-            print("Info: The connecting rod length to crank radius ratio was "
-                  "specified by the 'LOLR' keyword and this value will be "
-                  "used regardless of other settings.")
+            log.info("Info: The connecting rod length to crank radius ratio was "
+                     "specified by the 'LOLR' keyword and this value will be "
+                     "used regardless of other settings.")
         elif all(key in keywords for key in ('connect_rod_len',
                                              'crank_radius')):
-            print("Info: Using given connecting rod length and crank radius "
-                  "to compute the ratio.")
+            log.info("Info: Using given connecting rod length and crank radius "
+                     "to compute the ratio.")
             keywords['rod_radius_ratio'] = (keywords['connect_rod_len'] /
                                             keywords['crank_radius'])
         else:
