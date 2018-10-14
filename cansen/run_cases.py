@@ -69,9 +69,7 @@ class SimulationCase(object):
         # Create a non-interacting ``Reservoir`` to be on the other
         # side of the ``Wall``.
         env = ct.Reservoir(ct.Solution('air.xml'))
-        # Set the ``temp_func`` to ``None`` as default; it will be set
-        # later if needed.
-        self.temp_func = None
+
         # All of the reactors are ``IdealGas`` Reactors. Set a ``Wall``
         # for every case so that later code can be more generic. If the
         # velocity is set to zero, the ``Wall`` won't affect anything.
@@ -118,20 +116,22 @@ class SimulationCase(object):
             self.wall = ct.Wall(self.reac, env, A=1.0,
                                 velocity=VolumeFunctionTime())
         elif self.keywords['problemType'] == 7:
-            from .user_routines import TemperatureFunctionTime
-            self.reac = ct.IdealGasConstPressureReactor(self.gas, energy='off')
-            # Number of solution variables is number of species + mass,
-            # temperature
-            self.n_vars = self.reac.kinetics.n_species + 2
-            self.wall = ct.Wall(self.reac, env, A=1.0, velocity=0)
-            self.temp_func = ct.Func1(TemperatureFunctionTime())
+            raise NotImplementedError
+            # from .user_routines import TemperatureFunctionTime
+            # self.reac = ct.IdealGasConstPressureReactor(self.gas, energy='off')
+            # # Number of solution variables is number of species + mass,
+            # # temperature
+            # self.n_vars = self.reac.kinetics.n_species + 2
+            # self.wall = ct.Wall(self.reac, env, A=1.0, velocity=0)
+            # self.temp_func = ct.Func1(TemperatureFunctionTime())
         elif self.keywords['problemType'] == 8:
-            self.reac = ct.IdealGasConstPressureReactor(self.gas, energy='off')
-            # Number of solution variables is number of species + mass,
-            # temperature
-            self.n_vars = self.reac.kinetics.n_species + 2
-            self.wall = ct.Wall(self.reac, env, A=1.0, velocity=0)
-            self.temp_func = ct.Func1(TemperatureProfile(self.keywords))
+            raise NotImplementedError
+            # self.reac = ct.IdealGasConstPressureReactor(self.gas, energy='off')
+            # # Number of solution variables is number of species + mass,
+            # # temperature
+            # self.n_vars = self.reac.kinetics.n_species + 2
+            # self.wall = ct.Wall(self.reac, env, A=1.0, velocity=0)
+            # self.temp_func = ct.Func1(TemperatureProfile(self.keywords))
         elif self.keywords['problemType'] == 9:
             self.reac = ct.IdealGasReactor(self.gas)
             # Number of solution variables is number of species + mass,
@@ -298,10 +298,6 @@ class SimulationCase(object):
             # Main loop to run the calculation. As long as the time in
             # the ``ReactorNet`` is less than the end time, keep going.
             while self.netw.time < self.tend:
-                # If we are using a function to set the temperature as
-                # a function of time, use it here.
-                if self.temp_func is not None:
-                    self.gas.TP = self.temp_func(self.netw.time), None
 
                 # Take the step towards the end time.
                 self.netw.step()
@@ -509,10 +505,6 @@ class MultiSimulationCase(SimulationCase):
         # Main loop to run the calculation. As long as the time in
         # the ``ReactorNet`` is less than the end time, keep going.
         while self.netw.time < self.tend:
-            # If we are using a function to set the temperature as
-            # a function of time, use it here.
-            if self.temp_func is not None:
-                self.gas.TP = self.temp_func(self.netw.time), None
 
             # Take the step towards the end time.
             self.netw.step()
