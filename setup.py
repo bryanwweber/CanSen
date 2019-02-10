@@ -1,24 +1,20 @@
 """A setuptools based setup module.
+
 See:
 https://packaging.python.org/en/latest/distributing.html
 https://github.com/pypa/sampleproject
 """
 
-# Always prefer setuptools over distutils
 from setuptools import setup, find_packages
-# To use a consistent encoding
-from codecs import open
-from os import path
+from pathlib import Path
 
-version = {}
-with open('cansen/_version.py', mode='r') as version_file:
+HERE = Path(__file__).parent
+
+with (HERE / "cansen" / "_version.py").open(mode='r') as version_file:
     exec(version_file.read(), version)
 
-here = path.abspath(path.dirname(__file__))
-
 # Get the long description from the relevant file
-with open(path.join(here, 'README.md'), mode='r', encoding='utf-8') as f:
-    long_description = f.read()
+long_description = (HERE / "README.md").read_text()
 
 setup(
     name='CanSen',
@@ -35,8 +31,6 @@ setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
     ],
@@ -47,7 +41,7 @@ setup(
         'numpy>=1.8.1,<2.0',
         'tables>=3.1.1,<4.0',
     ],
-    python_requires='~=3.4',
+    python_requires='~=3.6',
     package_data={
         'cansen': ['README.md', 'LICENSE.txt'],
     },

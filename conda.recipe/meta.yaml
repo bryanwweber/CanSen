@@ -21,7 +21,7 @@ requirements:
     - setuptools
 
   run:
-    - python >=3.4
+    - python >=3.6
     - numpy >=1.8.1,<2.0
     - pytables >=3.1.1,<4.0
     - cantera >=2.2,<3.0
