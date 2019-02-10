@@ -27,6 +27,9 @@ requirements:
     - cantera >=2.2,<3.0
 
 test:
+  requirements:
+    - pytest >=3.0
+    - pytest-datadir >=1.3
   imports:
     - cansen
 

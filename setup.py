@@ -39,6 +39,7 @@ setup(
     keywords="experiments chemistry",
     packages=find_packages(exclude=["docs"]),
     install_requires=["cantera>=2.2,<3.0", "numpy>=1.8.1,<2.0", "tables>=3.1.1,<4.0"],
+    tests_require=["pytest>=3.0", "pytest-datadir>=1.3"],
     python_requires="~=3.6",
     package_data={"cansen": ["README.md", "LICENSE.txt"]},
     entry_points={"console_scripts": ["cansen=cansen.__main__:main"]},
