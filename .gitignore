@@ -223,17 +223,5 @@ htmlcov/
 #iPython Notebooks
 *.ipynb*
 
-#Data files
-*.csv
-*.hdf
-
-#Input files
-*.inp
-*.cti
-*.xml
-
-#Output files
-*.out
-
 #Documentation files
 docs/_*

@@ -1,13 +1,10 @@
 """Test the CanSen utilities."""
 
-import os
-import shutil
-
 import pytest
 import cantera as ct
 
-from ..utils import equivalence_ratio
-from ..exceptions import CanSenError
+from cansen.utils import equivalence_ratio
+from cansen.exceptions import CanSenError
 
 
 class TestEquivalenceRatio():
