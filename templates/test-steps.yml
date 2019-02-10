@@ -1,0 +1,15 @@
+ steps:
+  # Conda Environment
+  # Create and activate a Conda environment.
+  - task: CondaEnvironment@1
+    inputs:
+      environmentName: base
+      packageSpecs: 'python=$(python.version) pytest pytest-datadir cantera pytables'
+      installOptions: '-c cantera -c conda-forge'
+  - script: |
+      pip install --user pytest-azurepipelines
+      pip install --user .
+    displayName: 'Install dependencies'
+  - script: |
+      python -m pytest tests/
+    displayName: 'pytest'
