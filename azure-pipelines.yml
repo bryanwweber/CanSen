@@ -17,14 +17,23 @@ jobs:
     maxParallel: 4
 
   steps:
-  - task: UsePythonVersion@0
+  # - task: UsePythonVersion@0
+  #   inputs:
+  #     versionSpec: '$(python.version)'
+  #     architecture: 'x64'
+  # Conda Environment
+  # Create and activate a Conda environment.
+  - task: CondaEnvironment@1
     inputs:
-      versionSpec: '$(python.version)'
-      architecture: 'x64'
-
+      #createCustomEnvironment: # Optional
+      environmentName: base # Required when createCustomEnvironment == True
+      packageSpecs: 'python=$(python.version) pytest pytest-datadirs cantera'
+      #updateConda: true # Optional
+      installOptions: '-c cantera' # Optional
+      #createOptions: # Optional
+      #cleanEnvironment: # Optional
   - script: |
-      python -m pip install --upgrade pip
-      pip install pytest pytest-datadirs pytest-azurepipelines
+      pip pytest-azurepipelines
       pip install -e .
     displayName: 'Install dependencies'
 
@@ -32,11 +41,11 @@ jobs:
       python -m pytest tests/
     displayName: 'pytest'
 
-  - task: PublishTestResults@2
-    inputs:
-      testResultsFiles: '**/test-results.xml'
-      testRunTitle: 'Python $(python.version)'
-    condition: succeededOrFailed()
+  # - task: PublishTestResults@2
+  #   inputs:
+  #     testResultsFiles: '**/test-results.xml'
+  #     testRunTitle: 'Python $(python.version)'
+  #   condition: succeededOrFailed()
 
 # - job: 'Publish'
 #   dependsOn: 'Test'
