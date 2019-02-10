@@ -7,9 +7,11 @@ https://github.com/pypa/sampleproject
 
 from setuptools import setup, find_packages
 from pathlib import Path
+from typing import Dict
 
 HERE = Path(__file__).parent
 
+version: Dict[str, str] = {}
 with (HERE / "cansen" / "_version.py").open(mode='r') as version_file:
     exec(version_file.read(), version)
 
