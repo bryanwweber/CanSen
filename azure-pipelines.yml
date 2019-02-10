@@ -27,7 +27,7 @@ jobs:
     inputs:
       #createCustomEnvironment: # Optional
       environmentName: base # Required when createCustomEnvironment == True
-      packageSpecs: 'python=$(python.version) pytest pytest-datadir cantera'
+      packageSpecs: 'python=$(python.version) pytest pytest-datadir cantera pytables'
       #updateConda: true # Optional
       installOptions: '-c cantera -c conda-forge' # Optional
       #createOptions: # Optional
