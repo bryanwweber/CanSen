@@ -4,6 +4,7 @@ from pathlib import Path
 
 import pytest
 
+import cansen
 from cansen.__main__ import main
 from cansen._version import __version__
 
@@ -19,7 +20,7 @@ def test_no_args():
 
 def test_version_output(capsys):
     """Test that the version output is printed properly."""
-    loc = Path(__file__).parent.parent.joinpath("cansen")
+    loc = Path(cansen.__file__).parent
 
     with pytest.raises(SystemExit) as e:
         main(["-V"])
