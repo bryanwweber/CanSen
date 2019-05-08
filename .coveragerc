@@ -1,6 +1,5 @@
 [run]
 branch = True
-source = cansen
 
 [report]
 exclude_lines =
@@ -12,8 +11,6 @@ exclude_lines =
     if typing.TYPE_CHECKING:
 ignore_errors = True
 omit =
-    cansen/tests/*
-    cansen/_version.py
     */tmp/*
     */private/*
 
