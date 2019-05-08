@@ -11,7 +11,7 @@ if TYPE_CHECKING:
     import argparse  # noqa: F401 # typing import only
 
 
-def main(argv: Optional[List[str]] = None) -> 'argparse.Namespace':
+def main(argv: Optional[List[str]] = None) -> "argparse.Namespace":
     """Process command line arguments and return the Namespace.
 
     Process arguments from the command line, printing the version

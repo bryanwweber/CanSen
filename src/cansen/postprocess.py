@@ -4,9 +4,9 @@
 import tables
 import cantera as ct
 
-# Use a ``with`` statmement to ensure that the file is closed when the
+# Use a ``with`` statement to ensure that the file is closed when the
 # code completes, even if there is an error.
-with tables.open_file('save.hdf', 'r') as save_file:
+with tables.open_file("save.hdf", "r") as save_file:
     # To print information about the save file, just type the name of
     # its variable
     print(save_file)
@@ -43,7 +43,7 @@ with tables.open_file('save.hdf', 'r') as save_file:
     # natural name indexing. In this case, we print the value of the
     # time at each time step.
     for row in table.iterrows():
-        print(row['time'])
+        print(row["time"])
 
     # Note that numerical indexing is also supported. The following is
     # equivalent to the above:
@@ -96,9 +96,9 @@ with tables.open_file('save.hdf', 'r') as save_file:
     # actually be able to do something with it. Fortunately, Cantera
     # offers a simple way to do this, simply by initializing a
     # Solution to the desired conditions.
-    gas = ct.Solution('mech.xml')
+    gas = ct.Solution("mech.xml")
     for row in table.iterrows():
-        gas.TPY = row['temperature'], row['pressure'], row['massfractions']
+        gas.TPY = row["temperature"], row["pressure"], row["massfractions"]
         print(gas.creation_rates)
 
     # This will print the creation rates of each species at each time
@@ -108,4 +108,4 @@ with tables.open_file('save.hdf', 'r') as save_file:
     # Further information about the PyTables package can be found at
     # http://pytables.github.io/usersguide/index.html and information
     # about Cantera can be found at
-    # http://cantera.github.io/docs/sphinx/html/index.html
+    # https://cantera.org/documentation/index.html

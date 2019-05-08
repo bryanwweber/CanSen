@@ -11,17 +11,26 @@ import tables
 
 # Local imports
 from .profiles import VolumeProfile, TemperatureProfile, ICEngineProfile
-from .utils import (mech_filename as mfarg, save_filename as sfarg, divider,
-                    read_input_file, equivalence_ratio)
+from .utils import (
+    mech_filename as mfarg,
+    save_filename as sfarg,
+    divider,
+    read_input_file,
+    equivalence_ratio,
+)
 
-log = logging.getLogger('cansen')
+log = logging.getLogger("cansen")
 
 
 class SimulationCase(object):
     """Class that sets up and runs a simulation case."""
 
-    def __init__(self, input_contents: List[str], mech_filename: str = mfarg.default,
-                 save_filename: str = sfarg.default) -> None:
+    def __init__(
+        self,
+        input_contents: List[str],
+        mech_filename: str = mfarg.default,
+        save_filename: str = sfarg.default,
+    ) -> None:
         """Initialize the simulation case.
 
         Read the SENKIN-format input file is read into the ``keywords``
@@ -44,31 +53,31 @@ class SimulationCase(object):
         """
         self.gas = ct.Solution(self.mech_filename)
 
-        initial_temp = self.keywords['temperature']
+        initial_temp = self.keywords["temperature"]
         # The initial pressure in Cantera is expected in Pa; in SENKIN
         # it is expected in atm, so convert
-        initial_pres = self.keywords['pressure']*ct.one_atm
+        initial_pres = self.keywords["pressure"] * ct.one_atm
 
         reactants: Union[Dict[str, float], str]
-        if 'eqRatio' in self.keywords:
+        if "eqRatio" in self.keywords:
             reactants = equivalence_ratio(
                 self.gas,
-                self.keywords['eqRatio'],
-                self.keywords['fuel'],
-                self.keywords['oxidizer'],
-                self.keywords['completeProducts'],
-                self.keywords['additionalSpecies'],
-                )
+                self.keywords["eqRatio"],
+                self.keywords["fuel"],
+                self.keywords["oxidizer"],
+                self.keywords["completeProducts"],
+                self.keywords["additionalSpecies"],
+            )
         else:
             # The reactants are stored in the ``keywords`` dictionary
             # as a list of strings, so they need to be joined.
-            reactants = ','.join(self.keywords['reactants'])
+            reactants = ",".join(self.keywords["reactants"])
 
         self.gas.TPX = initial_temp, initial_pres, reactants
 
         # Create a non-interacting ``Reservoir`` to be on the other
         # side of the ``Wall``.
-        env = ct.Reservoir(ct.Solution('air.xml'))
+        env = ct.Reservoir(ct.Solution("air.xml"))
 
         # All of the reactors are ``IdealGas`` Reactors. Set a ``Wall``
         # for every case so that later code can be more generic. If the
@@ -76,46 +85,47 @@ class SimulationCase(object):
         # We have to set the ``n_vars`` here because until the first
         # time step, ``ReactorNet.n_vars`` is zero, but we need the
         # ``n_vars`` before the first time step.
-        if self.keywords['problemType'] == 1:
+        if self.keywords["problemType"] == 1:
             self.reac = ct.IdealGasReactor(self.gas)
             # Number of solution variables is number of species + mass,
             # volume, temperature
             self.n_vars = self.reac.kinetics.n_species + 3
             self.wall = ct.Wall(self.reac, env, A=1.0, velocity=0)
-        elif self.keywords['problemType'] == 2:
+        elif self.keywords["problemType"] == 2:
             self.reac = ct.IdealGasConstPressureReactor(self.gas)
             # Number of solution variables is number of species + mass,
             # temperature
             self.n_vars = self.reac.kinetics.n_species + 2
             self.wall = ct.Wall(self.reac, env, A=1.0, velocity=0)
-        elif self.keywords['problemType'] == 3:
+        elif self.keywords["problemType"] == 3:
             self.reac = ct.IdealGasReactor(self.gas)
             # Number of solution variables is number of species + mass,
             # volume, temperature
             self.n_vars = self.reac.kinetics.n_species + 3
-            self.wall = ct.Wall(self.reac, env, A=1.0,
-                                velocity=VolumeProfile(self.keywords))
-        elif self.keywords['problemType'] == 4:
-            self.reac = ct.IdealGasConstPressureReactor(self.gas, energy='off')
+            self.wall = ct.Wall(
+                self.reac, env, A=1.0, velocity=VolumeProfile(self.keywords)
+            )
+        elif self.keywords["problemType"] == 4:
+            self.reac = ct.IdealGasConstPressureReactor(self.gas, energy="off")
             # Number of solution variables is number of species + mass,
             # temperature
             self.n_vars = self.reac.kinetics.n_species + 2
             self.wall = ct.Wall(self.reac, env, A=1.0, velocity=0)
-        elif self.keywords['problemType'] == 5:
-            self.reac = ct.IdealGasReactor(self.gas, energy='off')
+        elif self.keywords["problemType"] == 5:
+            self.reac = ct.IdealGasReactor(self.gas, energy="off")
             # Number of solution variables is number of species + mass,
             # volume, temperature
             self.n_vars = self.reac.kinetics.n_species + 3
             self.wall = ct.Wall(self.reac, env, A=1.0, velocity=0)
-        elif self.keywords['problemType'] == 6:
+        elif self.keywords["problemType"] == 6:
             from .user_routines import VolumeFunctionTime
+
             self.reac = ct.IdealGasReactor(self.gas)
             # Number of solution variables is number of species + mass,
             # volume, temperature
             self.n_vars = self.reac.kinetics.n_species + 3
-            self.wall = ct.Wall(self.reac, env, A=1.0,
-                                velocity=VolumeFunctionTime())
-        elif self.keywords['problemType'] == 7:
+            self.wall = ct.Wall(self.reac, env, A=1.0, velocity=VolumeFunctionTime())
+        elif self.keywords["problemType"] == 7:
             raise NotImplementedError
             # from .user_routines import TemperatureFunctionTime
             # self.reac = ct.IdealGasConstPressureReactor(self.gas, energy='off')
@@ -124,7 +134,7 @@ class SimulationCase(object):
             # self.n_vars = self.reac.kinetics.n_species + 2
             # self.wall = ct.Wall(self.reac, env, A=1.0, velocity=0)
             # self.temp_func = ct.Func1(TemperatureFunctionTime())
-        elif self.keywords['problemType'] == 8:
+        elif self.keywords["problemType"] == 8:
             raise NotImplementedError
             # self.reac = ct.IdealGasConstPressureReactor(self.gas, energy='off')
             # # Number of solution variables is number of species + mass,
@@ -132,21 +142,22 @@ class SimulationCase(object):
             # self.n_vars = self.reac.kinetics.n_species + 2
             # self.wall = ct.Wall(self.reac, env, A=1.0, velocity=0)
             # self.temp_func = ct.Func1(TemperatureProfile(self.keywords))
-        elif self.keywords['problemType'] == 9:
+        elif self.keywords["problemType"] == 9:
             self.reac = ct.IdealGasReactor(self.gas)
             # Number of solution variables is number of species + mass,
             # volume, temperature
             self.n_vars = self.reac.kinetics.n_species + 3
-            self.wall = ct.Wall(env, self.reac, A=1.0,
-                                velocity=ICEngineProfile(self.keywords))
+            self.wall = ct.Wall(
+                env, self.reac, A=1.0, velocity=ICEngineProfile(self.keywords)
+            )
 
-        if 'reactorVolume' in self.keywords:
-            self.reac.volume = self.keywords['reactorVolume']
+        if "reactorVolume" in self.keywords:
+            self.reac.volume = self.keywords["reactorVolume"]
 
         # Create the Reactor Network.
         self.netw = ct.ReactorNet([self.reac])
 
-        if 'sensitivity' in self.keywords:
+        if "sensitivity" in self.keywords:
             self.sensitivity = True
             # There is no automatic way to calculate the sensitivity of
             # all of the reactions, so do it manually.
@@ -154,62 +165,62 @@ class SimulationCase(object):
                 self.reac.add_sensitivity_reaction(i)
             # If no tolerances for the sensitivity are specified, set
             # to the SENKIN defaults.
-            if 'sensAbsTol' in self.keywords:
-                self.netw.atol_sensitivity = self.keywords['sensAbsTol']
+            if "sensAbsTol" in self.keywords:
+                self.netw.atol_sensitivity = self.keywords["sensAbsTol"]
             else:
-                self.netw.atol_sensitivity = 1.0E-06
-            if 'sensRelTol' in self.keywords:
-                self.netw.rtol_sensitivity = self.keywords['sensRelTol']
+                self.netw.atol_sensitivity = 1.0e-06
+            if "sensRelTol" in self.keywords:
+                self.netw.rtol_sensitivity = self.keywords["sensRelTol"]
             else:
-                self.netw.rtol_sensitivity = 1.0E-04
+                self.netw.rtol_sensitivity = 1.0e-04
         else:
             self.sensitivity = False
 
         # If no solution tolerances are specified, set to the default
         # SENKIN values.
-        if 'abstol' in self.keywords:
-            self.netw.atol = self.keywords['abstol']
+        if "abstol" in self.keywords:
+            self.netw.atol = self.keywords["abstol"]
         else:
-            self.netw.atol = 1.0E-20
+            self.netw.atol = 1.0e-20
 
-        if 'reltol' in self.keywords:
-            self.netw.rtol = self.keywords['reltol']
+        if "reltol" in self.keywords:
+            self.netw.rtol = self.keywords["reltol"]
         else:
-            self.netw.rtol = 1.0E-08
+            self.netw.rtol = 1.0e-08
 
-        if 'tempLimit' in self.keywords:
-            self.temp_limit = self.keywords['tempLimit']
+        if "tempLimit" in self.keywords:
+            self.temp_limit = self.keywords["tempLimit"]
         else:
             # tempThresh is set in the parser even if it is not present
             # in the input file
-            self.temp_limit = (self.keywords['tempThresh'] +
-                               self.keywords['temperature'])
+            self.temp_limit = self.keywords["tempThresh"] + self.keywords["temperature"]
 
-        self.tend = self.keywords['endTime']
+        self.tend = self.keywords["endTime"]
 
         # Set the maximum time step the solver can take. If a value is
         # not specified in the input file, default to 0.001*self.tend.
         # Set the time steps for saving to the binary file and writing
         # to the screen. If the time step for printing to the screen is
         # not set, default to printing 100 times.
-        print_time_int = self.keywords.get('prntTimeInt')
-        save_time_int = self.keywords.get('saveTimeInt')
-        max_time_int = self.keywords.get('maxTimeStep')
+        print_time_int = self.keywords.get("prntTimeInt")
+        save_time_int = self.keywords.get("saveTimeInt")
+        max_time_int = self.keywords.get("maxTimeStep")
 
-        time_ints = [value for value in
-                     [print_time_int, save_time_int, max_time_int]
-                     if value is not None
-                     ]
+        time_ints = [
+            value
+            for value in [print_time_int, save_time_int, max_time_int]
+            if value is not None
+        ]
 
         if time_ints:
             self.netw.set_max_time_step(min(time_ints))
         else:
-            self.netw.set_max_time_step(self.tend/100)
+            self.netw.set_max_time_step(self.tend / 100)
 
         if print_time_int is not None:
             self.print_time_step = print_time_int
         else:
-            self.print_time_step = self.tend/100
+            self.print_time_step = self.tend / 100
 
         self.print_time = self.print_time_step
 
@@ -238,58 +249,72 @@ class SimulationCase(object):
         # steps into numpy arrays. The arrays are not vertically
         # appended so we should eliminate the hassle associated with
         # that.
-        table_def = {'time': tables.Float64Col(pos=0),
-                     'temperature': tables.Float64Col(pos=1),
-                     'pressure': tables.Float64Col(pos=2),
-                     'volume': tables.Float64Col(pos=3),
-                     'massfractions': tables.Float64Col(
-                          shape=(self.reac.thermo.n_species), pos=4
-                          ),
-                     }
+        table_def = {
+            "time": tables.Float64Col(pos=0),
+            "temperature": tables.Float64Col(pos=1),
+            "pressure": tables.Float64Col(pos=2),
+            "volume": tables.Float64Col(pos=3),
+            "massfractions": tables.Float64Col(
+                shape=(self.reac.thermo.n_species), pos=4
+            ),
+        }
         if self.sensitivity:
-            table_def['sensitivity'] = tables.Float64Col(
+            table_def["sensitivity"] = tables.Float64Col(
                 shape=(self.n_vars, self.netw.n_sensitivity_params), pos=5
-                )
+            )
 
-        with tables.open_file(self.save_filename, mode='w',
-                              title='CanSen Save File') as save_file:
-            table = save_file.create_table(save_file.root, 'reactor',
-                                           table_def, 'Reactor State'
-                                           )
+        with tables.open_file(
+            self.save_filename, mode="w", title="CanSen Save File"
+        ) as save_file:
+            table = save_file.create_table(
+                save_file.root, "reactor", table_def, "Reactor State"
+            )
             # Create a row instance to save information to.
             timestep = table.row
             # Save information before the first time step.
-            timestep['time'] = self.netw.time
-            (timestep['temperature'], timestep['pressure'],
-                timestep['massfractions']) = self.reac.thermo.TPY
-            timestep['volume'] = self.reac.volume
+            timestep["time"] = self.netw.time
+            (
+                timestep["temperature"],
+                timestep["pressure"],
+                timestep["massfractions"],
+            ) = self.reac.thermo.TPY
+            timestep["volume"] = self.reac.volume
             if self.sensitivity:
-                timestep['sensitivity'] = np.zeros((
-                    self.n_vars,
-                    self.netw.n_sensitivity_params
-                    ))
+                timestep["sensitivity"] = np.zeros(
+                    (self.n_vars, self.netw.n_sensitivity_params)
+                )
             # Add the ``timestep`` to the ``table`` and write it to
             # disk.
             timestep.append()
             table.flush()
             # Set an array with values from before the first time step
             # in case we have to interpolate after the first time step
-            prev_time = np.hstack((self.netw.time, self.reac.thermo.T,
-                                   self.reac.thermo.P, self.reac.volume,
-                                   self.wall.vdot(self.netw.time),
-                                   self.reac.thermo.X
-                                   ))
+            prev_time = np.hstack(
+                (
+                    self.netw.time,
+                    self.reac.thermo.T,
+                    self.reac.thermo.P,
+                    self.reac.volume,
+                    self.wall.vdot(self.netw.time),
+                    self.reac.thermo.X,
+                )
+            )
             # Print the initial information to the screen
             log.info(divider)
-            log.info('Kinetic Mechanism Details:\n')
-            log.info(('Total Gas Phase Species     = {0}\n'
-                      'Total Gas Phase Reactions   = {1}'
-                      ).format(self.reac.kinetics.n_species,
-                               self.reac.kinetics.n_reactions))
+            log.info("Kinetic Mechanism Details:\n")
+            log.info(
+                (
+                    "Total Gas Phase Species     = {0}\n"
+                    "Total Gas Phase Reactions   = {1}"
+                ).format(self.reac.kinetics.n_species, self.reac.kinetics.n_reactions)
+            )
             if self.sensitivity:
-                log.info(('Total Sensitivity Reactions = {}'
-                          ).format(self.netw.n_sensitivity_params))
-            log.info(divider + '\n')
+                log.info(
+                    ("Total Sensitivity Reactions = {}").format(
+                        self.netw.n_sensitivity_params
+                    )
+                )
+            log.info(divider + "\n")
 
             self.reactor_state_printer(prev_time)
 
@@ -304,11 +329,16 @@ class SimulationCase(object):
 
                 # Set an array with the information from the current
                 # time step for printing.
-                cur_time = np.hstack((self.netw.time, self.reac.thermo.T,
-                                      self.reac.thermo.P, self.reac.volume,
-                                      self.wall.vdot(self.netw.time),
-                                      self.reac.thermo.X
-                                      ))
+                cur_time = np.hstack(
+                    (
+                        self.netw.time,
+                        self.reac.thermo.T,
+                        self.reac.thermo.P,
+                        self.reac.volume,
+                        self.wall.vdot(self.netw.time),
+                        self.reac.thermo.X,
+                    )
+                )
 
                 # If we have passed the end time, interpolate backwards
                 # to get the solution at the end time. Because linear
@@ -319,20 +349,24 @@ class SimulationCase(object):
                 # steps near ignition.
                 if self.netw.time > self.tend:
                     interp_state = prev_time
-                    interp_state += ((cur_time - prev_time)*(self.tend - prev_time[0]) /
-                                     (cur_time[0] - prev_time[0]))
+                    interp_state += (
+                        (cur_time - prev_time)
+                        * (self.tend - prev_time[0])
+                        / (cur_time[0] - prev_time[0])
+                    )
                     self.reactor_state_printer(interp_state, end=True)
-                    timestep['time'] = self.tend
-                    timestep['temperature'] = interp_state[1]
-                    timestep['pressure'] = interp_state[2]
+                    timestep["time"] = self.tend
+                    timestep["temperature"] = interp_state[1]
+                    timestep["pressure"] = interp_state[2]
                     # Mass fractions are saved, so convert the mole
                     # fractions in ``interp_state`` to mass fractions.
-                    timestep['massfractions'] = \
-                        (interp_state[5:] *
-                         self.reac.thermo.molecular_weights /
-                         self.reac.thermo.mean_molecular_weight)
+                    timestep["massfractions"] = (
+                        interp_state[5:]
+                        * self.reac.thermo.molecular_weights
+                        / self.reac.thermo.mean_molecular_weight
+                    )
 
-                    timestep['volume'] = interp_state[3]
+                    timestep["volume"] = interp_state[3]
                     if self.sensitivity:
                         # Add sensitivity interpolation here by reading
                         # from file on disk. Only have to do it once,
@@ -341,10 +375,12 @@ class SimulationCase(object):
                         cur_sens = self.netw.sensitivities()
                         prev_time = table.cols.time[-1]
                         cur_time = self.netw.time
-                        interp_sens = prev_sens + ((self.tend - prev_time) *
-                                                   (cur_sens - prev_sens) /
-                                                   (cur_time - prev_time))
-                        timestep['sensitivity'] = interp_sens
+                        interp_sens = prev_sens + (
+                            (self.tend - prev_time)
+                            * (cur_sens - prev_sens)
+                            / (cur_time - prev_time)
+                        )
+                        timestep["sensitivity"] = interp_sens
                     # We don't need any of the rest of this step, so
                     # break
                     break
@@ -358,22 +394,28 @@ class SimulationCase(object):
                 if self.save_time_step is not None:
                     # Add what to do here if the save_time_step is set.
                     if self.netw.time > self.save_time:
-                        timestep['time'] = self.netw.time
-                        (timestep['temperature'], timestep['pressure'],
-                            timestep['massfractions']) = self.reac.thermo.TPY
-                        timestep['volume'] = self.reac.volume
+                        timestep["time"] = self.netw.time
+                        (
+                            timestep["temperature"],
+                            timestep["pressure"],
+                            timestep["massfractions"],
+                        ) = self.reac.thermo.TPY
+                        timestep["volume"] = self.reac.volume
                         if self.sensitivity:
-                            timestep['sensitivity'] = self.netw.sensitivities()
+                            timestep["sensitivity"] = self.netw.sensitivities()
                         timestep.append()
                         table.flush()
                         self.save_time += self.save_time_step
                 else:
-                    timestep['time'] = self.netw.time
-                    (timestep['temperature'], timestep['pressure'],
-                        timestep['massfractions']) = self.reac.thermo.TPY
-                    timestep['volume'] = self.reac.volume
+                    timestep["time"] = self.netw.time
+                    (
+                        timestep["temperature"],
+                        timestep["pressure"],
+                        timestep["massfractions"],
+                    ) = self.reac.thermo.TPY
+                    timestep["volume"] = self.reac.volume
                     if self.sensitivity:
-                        timestep['sensitivity'] = self.netw.sensitivities()
+                        timestep["sensitivity"] = self.netw.sensitivities()
                     timestep.append()
                     table.flush()
 
@@ -381,8 +423,11 @@ class SimulationCase(object):
                 # monitoring.
                 if self.netw.time > self.print_time:
                     interp_state = prev_time
-                    interp_state += ((cur_time - prev_time)*(self.print_time - prev_time[0]) /
-                                     (cur_time[0] - prev_time[0]))
+                    interp_state += (
+                        (cur_time - prev_time)
+                        * (self.print_time - prev_time[0])
+                        / (cur_time[0] - prev_time[0])
+                    )
                     self.reactor_state_printer(interp_state)
                     self.print_time += self.print_time_step
                 elif self.netw.time == self.print_time:
@@ -395,7 +440,7 @@ class SimulationCase(object):
                 if self.reac.T >= self.temp_limit and ignition_found is False:
                     self.ignition_time = self.netw.time
                     ignition_found = True
-                    if self.keywords.get('break_on_ignition', False):
+                    if self.keywords.get("break_on_ignition", False):
                         self.reactor_state_printer(cur_time, end=False)
                         break
 
@@ -434,23 +479,26 @@ class SimulationCase(object):
         # Begin printing
         log.info(divider)
         if not end:
-            log.info('Solution time (s) = {:E}'.format(time))
+            log.info("Solution time (s) = {:E}".format(time))
         else:
-            log.info('End time reached (s) = {:E}'.format(time))
+            log.info("End time reached (s) = {:E}".format(time))
 
         if self.ignition_time is not None:
-            log.info('Ignition time (s) = {:E}'.format(self.ignition_time))
+            log.info("Ignition time (s) = {:E}".format(self.ignition_time))
         elif end:
-            log.info('Ignition was not found.')
+            log.info("Ignition was not found.")
         else:
             pass
 
-        log.info(("Reactor Temperature (K) = {0:>13.4f}\n"
-                  "Reactor Pressure (Pa)   = {1:>13.4E}\n"
-                  "Reactor Volume (m**3)   = {2:>13.4E}\n"
-                  "Reactor Vdot (m**3/s)   = {3:>13.4E}"
-                  ).format(temperature, pressure, volume, vdot))
-        log.info('Gas Phase Mole Fractions:')
+        log.info(
+            (
+                "Reactor Temperature (K) = {0:>13.4f}\n"
+                "Reactor Pressure (Pa)   = {1:>13.4E}\n"
+                "Reactor Volume (m**3)   = {2:>13.4E}\n"
+                "Reactor Vdot (m**3/s)   = {3:>13.4E}"
+            ).format(temperature, pressure, volume, vdot)
+        )
+        log.info("Gas Phase Mole Fractions:")
 
         # Here we calculate the number of columns of species mole fractions
         # that will best fill the available number of columns in the
@@ -474,20 +522,19 @@ class SimulationCase(object):
         cols = 80
         # Calculate the optimum number of columns as the floor of the
         # quotient of the print columns and the part_length
-        num_print_cols = int(math.floor(cols/part_length))
+        num_print_cols = int(math.floor(cols / part_length))
         # Create a list to store the values to be printed.
         outlist = []
         for species_name, mole_frac in zip(self.species_names, molefracs):
-            outlist.append('{0:>{1}s} = {2:{3}E}'.format(
-                species_name,
-                max_species_length,
-                mole_frac,
-                mole_frac_precision)
+            outlist.append(
+                "{0:>{1}s} = {2:{3}E}".format(
+                    species_name, max_species_length, mole_frac, mole_frac_precision
                 )
-        grouped = zip_longest(*[iter(outlist)]*num_print_cols, fillvalue='')
+            )
+        grouped = zip_longest(*[iter(outlist)] * num_print_cols, fillvalue="")
         for items in grouped:
-            log.info(''.join(items))
-        log.info(divider + '\n')
+            log.info("".join(items))
+        log.info(divider + "\n")
 
 
 class MultiSimulationCase(SimulationCase):
