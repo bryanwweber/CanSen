@@ -4,7 +4,7 @@
   - task: CondaEnvironment@1
     inputs:
       environmentName: base
-      packageSpecs: 'python=$(python.version) pytest pytest-datadir cantera pytables'
+      packageSpecs: 'python=$(python.version) pytest pytest-datadir cantera pytables pytest-cov'
       installOptions: '-c cantera -c conda-forge'
   - script: |
       pip install --user pytest-azurepipelines
